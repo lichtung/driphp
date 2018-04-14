@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit stopOnFailure="true" bootstrap="tests/boot.php">
+    <testsuites>
+        <!-- test suit:all -->
+        <testsuite>
+            <directory suffix="Test.php">tests</directory>
+        </testsuite>
+        <testsuite name="service">
+            <directory suffix="Test.php">tests/service</directory>
+        </testsuite>
+    </testsuites>
+    <!-- test exclude -->
+    <filter>
+        <whitelist>
+            <directory>test</directory>
+            <exclude>
+                <!-- directory exclude -->
+                <directory>test/language</directory>
+                <!--<file></file>-->
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

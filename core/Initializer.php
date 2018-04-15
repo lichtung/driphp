@@ -32,11 +32,11 @@ class Initializer extends Component
         'session.cache_expire' => 3600,
     ];
 
-
-    protected function __construct(string $index = '', array $config = [])
+    protected function __construct(string $index = '')
     {
-        parent::__construct($index, $config);
+        parent::__construct($index);
         date_default_timezone_set($this->config['timezone_zone']) or die('timezone set failed!');
+        # ini_set('expose_php', 'Off'); # ini_set 无效，需要修改 php.ini 文件
         false === ini_set('session.save_handler', $this->config['session.save_handler']) and die('set session.save_handler failed');
         false === ini_set('session.save_path', $this->config['session.save_path']) and die('set session.save_path failed');
         false === ini_set('session.gc_maxlifetime', (string)$this->config['session.gc_maxlifetime']) and die('set session.gc_maxlifetime failed');
@@ -55,22 +55,21 @@ class Initializer extends Component
 
     /**
      * @return void
-     * @throws \sharin\throws\core\ClassNotFoundException
      */
     public function registerExceptionHandler()
     {
-        $handler = $this->config['exception_handler'] ?? '';
-        if ($handler and class_implements($handler, ExceptionHandlerInterface::class)) {
-            $handler = Kernel::factory($handler);
-            $errorHandler = [$handler, 'error'];
-            $exceptionHandler = [$handler, 'exception'];
-        }
-        set_error_handler($errorHandler ?? function (int $code, string $message, string $file, int $line) {
-                SharinException::dispose(null, $code, $message, $file, $line);
-            });
-        set_exception_handler($exceptionHandler ?? function (Throwable $e) {
-                SharinException::dispose($e);
-            });
+//        $handler = $this->config['exception_handler'] ?? '';
+//        if ($handler and class_implements($handler, ExceptionHandlerInterface::class)) {
+//            $handler = Kernel::factory($handler);
+//            $errorHandler = [$handler, 'error'];
+//            $exceptionHandler = [$handler, 'exception'];
+//        }
+        set_error_handler(function (int $code, string $message, string $file, int $line) {
+            SharinException::dispose(null, $code, $message, $file, $line);
+        });
+        set_exception_handler(function (Throwable $e) {
+            SharinException::dispose($e);
+        });
     }
 
     /**

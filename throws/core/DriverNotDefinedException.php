@@ -15,5 +15,8 @@ use sharin\SharinException;
 class DriverNotDefinedException extends SharinException
 {
 
-
+    public function __construct(string $index)
+    {
+        parent::__construct("driver '{$index}' not found");
+    }
 }

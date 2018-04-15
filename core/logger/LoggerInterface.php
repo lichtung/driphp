@@ -31,66 +31,74 @@ interface LoggerInterface
     /**
      * 记录详细的debug信息
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function debug($message, bool $saveImmediately = false): bool;
+    public function debug($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 记录具体的事件，如用户登录、sql查询等
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function info($message, bool $saveImmediately = false): bool;
+    public function info($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 记录需要注意的事件
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function notice($message, bool $saveImmediately = false): bool;
+    public function notice($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 记录警告事件，如调用了弃用的API，使用了不推荐的代码等
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function warning($message, bool $saveImmediately = false): bool;
+    public function warning($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 记录运行时的错误信息
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function error($message, bool $saveImmediately = false): bool;
+    public function error($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 记录至关重要的信息，如检测到异常的抛出、组件不存在、类／函数不存在等
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function critical($message, bool $saveImmediately = false): bool;
+    public function critical($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 记录极其重要的信息，如数据库不可用、第三方服务挂掉的情况，如果条件许可发短信和邮件联系管理员
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function alert($message, bool $saveImmediately = false): bool;
+    public function alert($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 记录最高级别的日志，必须立即通知管理员处理相关错误
      * @param string|array $message
+     * @param string $tag
      * @param bool $saveImmediately
      * @return mixed
      */
-    public function emergency($message, bool $saveImmediately = false): bool;
+    public function emergency($message, string $tag = 'default', bool $saveImmediately = false): bool;
 
     /**
      * 立即存储数据

@@ -16,14 +16,6 @@ use sharin\core\Request;
 
 /**
  * Class FileHandler
- * @method bool debug($message, string $tag = 'default', bool $storeImmediately = false)
- * @method bool info($message, string $tag = 'default', bool $storeImmediately = false)
- * @method bool notice($message, string $tag = 'default', bool $storeImmediately = false)
- * @method bool warning($message, string $tag = 'default', bool $storeImmediately = false)
- * @method bool error($message, string $tag = 'default', bool $storeImmediately = false)
- * @method bool critical($message, string $tag = 'default', bool $storeImmediately = false)
- * @method bool alert($message, string $tag = 'default', bool $storeImmediately = false)
- * @method bool emergency($message, string $tag = 'default', bool $storeImmediately = false)
  *
  * @package sharin\core\logger
  */
@@ -34,19 +26,6 @@ class FileHandler implements DriverInterface, LoggerInterface
      */
     protected $context = null;
     protected $config = [];
-    private $loggerName = 'default';
-
-    /**
-     * @param array $config
-     * @param Logger $context
-     * @return DriverInterface
-     */
-    public function init(array $config, $context): DriverInterface
-    {
-        $this->config = $config;
-        $this->context = $context;
-        return $this;
-    }
 
     /**
      * @var array 日志信息
@@ -55,11 +34,17 @@ class FileHandler implements DriverInterface, LoggerInterface
         'default' => [],
     ];
 
-
-    public function __construct()
+    /**
+     * FileHandler constructor.
+     * @param array $config
+     * @param Logger $context
+     */
+    public function __construct(array $config, $context)
     {
         # web模式下脚本结束自动保存
         if (!SR_IS_CLI) register_shutdown_function([$this, 'store']);
+        $this->config = $config;
+        $this->context = $context;
     }
 
     public function store(): void
@@ -126,13 +111,53 @@ class FileHandler implements DriverInterface, LoggerInterface
         return false;
     }
 
-    public function __call($name, $arguments)
+    public function debug($message, string $tag = 'default', bool $storeImmediately = false): bool
     {
-        return call_user_func_array([$this, 'record'], [
-            $arguments[0],
-            Logger::LEVEL_MAP[$name],
-            $arguments[1],
-            $arguments[2],
-        ]);
+        return $this->record($message, Logger::DEBUG, $tag, $storeImmediately);
     }
+
+    public function info($message, string $tag = 'default', bool $storeImmediately = false): bool
+    {
+        return $this->record($message, Logger::INFO, $tag, $storeImmediately);
+    }
+
+    public function notice($message, string $tag = 'default', bool $storeImmediately = false): bool
+    {
+        return $this->record($message, Logger::NOTICE, $tag, $storeImmediately);
+    }
+
+    public function warning($message, string $tag = 'default', bool $storeImmediately = false): bool
+    {
+        return $this->record($message, Logger::WARNING, $tag, $storeImmediately);
+    }
+
+    public function error($message, string $tag = 'default', bool $storeImmediately = false): bool
+    {
+        return $this->record($message, Logger::ERROR, $tag, $storeImmediately);
+    }
+
+    public function critical($message, string $tag = 'default', bool $storeImmediately = false): bool
+    {
+        return $this->record($message, Logger::CRITICAL, $tag, $storeImmediately);
+    }
+
+    public function alert($message, string $tag = 'default', bool $storeImmediately = false): bool
+    {
+        return $this->record($message, Logger::ALERT, $tag, $storeImmediately);
+    }
+
+    public function emergency($message, string $tag = 'default', bool $storeImmediately = false): bool
+    {
+        return $this->record($message, Logger::EMERGENCY, $tag, $storeImmediately);
+    }
+
+//    public function __call($name, $arguments)
+//    {
+//        return call_user_func_array([$this, 'record'], [
+//            $arguments[0],
+//            Logger::LEVEL_MAP[$name],
+//            $arguments[1],
+//            $arguments[2],
+//        ]);
+//    }
 }

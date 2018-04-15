@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace sharin\core;
 
-
+use Closure;
 use sharin\Component;
 use sharin\Kernel;
 use sharin\throws\core\RouteException;
@@ -30,7 +30,7 @@ class Route extends Component
         //------------------------
         'route_on' => true, # main switch
         //static route
-        'static_route_on' => false,
+        'static_route_on' => true,
         'static_route_rules' => [],
         // wildcard route will be parsed to regular expression and this idea is come from the framework of CodeIgniter
         'wildcard_route_on' => false,
@@ -63,67 +63,31 @@ class Route extends Component
 
     /**
      * @param Request $request
-     * @return bool
-     * @throws \sharin\throws\core\dispatch\ActionAccessException
-     * @throws \sharin\throws\core\dispatch\ActionNotFoundException
-     * @throws \sharin\throws\core\dispatch\ControllerNotFoundException
-     * @throws \sharin\throws\core\dispatch\ModulesNotFoundException
-     * @throws \sharin\throws\core\dispatch\ParameterNotFoundException
+     * @return bool|mixed|object
      */
-    public function dispatch(Request $request)
+    public function parse(Request $request)
     {
         $this->request = $request;
         $pathinfo = $request->getPathInfo();
         # 静态式路由
         if ($this->config['static_route_on'] and $rule = $this->config['static_route_rules'][$pathinfo] ?? false) {
-            return $this->handleRoute($rule);
-        }
-        # 规则式路由
-        if ($this->config['wildcard_route_on'] and $wildcard = $this->config['wildcard_route_rules']) {
+            return $rule;
+        } elseif ($this->config['wildcard_route_on'] and $wildcard = $this->config['wildcard_route_rules']) {
+            # 规则式路由
             foreach ($wildcard as $pattern => $rule) {
                 $matched = self::match($pathinfo, $pattern);
-                if (isset($matched)) return $this->handleRoute($rule, $matched);
-            }
-        }
-        return $this->handleRoute(Request::parsePathInfo($pathinfo));
-    }
-
-    /**
-     * @param $rule
-     * @param array $extra
-     * @return bool|mixed
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\dispatch\ActionAccessException
-     * @throws \sharin\throws\core\dispatch\ActionNotFoundException
-     * @throws \sharin\throws\core\dispatch\ControllerNotFoundException
-     * @throws \sharin\throws\core\dispatch\ModulesNotFoundException
-     * @throws \sharin\throws\core\dispatch\ParameterNotFoundException
-     */
-    private function handleRoute($rule, array $extra = [])
-    {
-        if (is_array($rule)) {
-            empty($rule[0]) and $rule[0] = $this->config['default_modules'];
-            $this->request->setModule(is_array($rule[0]) ? implode('/', $rule[0]) : $rule[0]);
-            $this->request->setController($rule[1] ?? $this->config['default_controller']);
-            $this->request->setAction($rule[2] ?? $this->config['default_action']);
-            $this->request->setParams($extra);
-            return Dispatcher::dispatch($this->request);
-        } elseif (is_string($rule)) {
-            if (strpos($rule, 'http') === 0) {
-                Response::getInstance()->redirect($rule); # 立即重定向
-            } else {
-                if (class_exists($rule)) {
-                    $instance = Kernel::factory($rule, [$this->request]);
-                    return $instance;
-                } else {
-                    $rule = self::parsePath($rule);
+                if (isset($matched)) {
+                    $request->setParams($matched);
+                    return $rule;
                 }
             }
-        } elseif (is_callable($rule)) {
-            return call_user_func_array($rule, $extra);
-        } else {
-            throw new RouteException('Invalid Route', $rule);
         }
+        list($modules, $controller, $action) = Request::parsePathInfo($pathinfo);
+        $modules or $modules = $this->config['default_modules'];
+        $this->request->setModule(is_array($modules) ? implode('/', $modules) : $modules);
+        $this->request->setController($controller ?: $this->config['default_controller']);
+        $this->request->setAction($action ?: $this->config['default_action']);
+        return null;
     }
 
     ##################################### static method #############################################################
@@ -162,7 +126,7 @@ class Route extends Component
                 ['{any}', '{num}', '/[any]', '/[num]'], # 花括号表示参数是必须要有的，中括号表示可选
                 ['([^/]+)', '([0-9]+)', '(/[^/]+)?', '(/[0-9]+)?'], # 可选的会把前面的"/"一并带走
                 $pattern);  //$pattern = preg_replace('/\[.+?\]/','([^/\[\]]+)',$pattern);//non-greediness mode
-        } # dumpout($pattern,);
+        } # dumpout($pattern);
         if (preg_match('#^' . $pattern . '$#', rtrim($pathinfo, '/'), $matches)) { # 使用 '#' 代替开头和结尾的 '/'，可以忽略 $pattern 中的 "/"
             array_shift($matches);
             array_walk($matches, function (&$item) {
@@ -174,41 +138,5 @@ class Route extends Component
         }
         return $matches;
     }
-
-
-
-//    public function handleRouteRule($rule, array $extra = []): RoutePacket
-//    {
-//        switch ($routeType = gettype($rule)) {
-//            case SR_TYPE_STR:
-//                if (strpos($rule, 'http') === 0) {
-//                    # redirect to a new url that begin with http or https protocol
-//                    $_REQUEST and $rule .= (strpos($rule, '?') ? '&' : '?') . http_build_query($_REQUEST);
-//                    return $this->createRoutePacket('', '', '', $extra, $rule);
-//                } else {
-//                    list($module, $controller, $action) = Request::parsePathInfo($rule);
-//                    return $this->createRoutePacket($module, $controller, $action, $extra, '');
-//                }
-//            case SR_TYPE_ARRAY:
-//                return $this->createRoutePacket($rule[0] ?? null, $rule[1] ?? null,
-//                    $rule[2] ?? null, empty($rule[3]) ? $extra : array_merge($rule[3], $extra), '');
-//            case SR_TYPE_OBJ:
-//                if (!is_callable($rule)) throw new RouteException('invalid route object, expect to be callable');
-//                $result = call_user_func_array($rule, [
-//                    'extra' => $extra,
-//                    'context' => $this,
-//                ]);
-//                if (!$result instanceof RoutePacket) throw new RouteException('invalid route callable, expect execute result to be an instance of RoutePacket');
-//                return $result;
-//            default:
-//                throw new RouteException("invalid route type : $routeType");
-//        }
-//    }
-
-
-//    public static function module(string $groupName, callable $callable): void
-//    {
-//
-//    }
 
 }

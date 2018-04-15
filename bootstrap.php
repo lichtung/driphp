@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace {
 
-    use sharin\core\conch\TracePage;
     use sharin\Kernel;
     const SR_VERSION = 'Asura'; # 首字母A-Z
 
@@ -75,7 +74,7 @@ namespace {
         require __DIR__ . '/include/debug.php';
         SR_IS_CLI or register_shutdown_function(function () {
             Kernel::status('shutdown');
-            echo TracePage::getInstance();
+            SR_IS_AJAX or require(__DIR__ . '/include/trace.php');
         });
     } else {
         function dumpin(...$a)
@@ -90,7 +89,8 @@ namespace {
 
 namespace sharin {
 
-    use sharin\core\conch\ErrorPage;
+    use sharin\core\database\driver\Driver;
+    use sharin\core\Dispatcher;
     use sharin\core\Logger;
     use sharin\core\Request;
     use sharin\core\Response;
@@ -106,9 +106,9 @@ namespace sharin {
      */
     class SharinException extends \Exception
     {
-        public function __construct(...$params)
+        public function __construct(string $message, int $code = -1)
         {
-            parent::__construct(var_export($params, true));
+            parent::__construct($message, $code);
         }
 
         /**
@@ -164,10 +164,9 @@ namespace sharin {
     interface InvokeInterface
     {
         /**
-         * @param Request $request
          * @return mixed
          */
-        public function run(Request $request);
+        public function invoke();
 
     }
 
@@ -178,12 +177,12 @@ namespace sharin {
     interface DriverInterface
     {
         /**
-         * 初始化参数
+         * DriverInterface constructor.
          * @param array $config 初始化配置
          * @param Component $context 驱动依附的组件类作为其上下文环境
-         * @return $this
          */
-        public function init(array $config, $context): DriverInterface;
+        public function __construct(array $config, $context);
+
     }
 
     /**
@@ -198,11 +197,23 @@ namespace sharin {
         /** @var string $index 默认驱动索引 */
         protected $index = '';
 
+        protected $driverName = '';
+        protected $driverConfig = [];
+
         /** @var array $driverConfig 可用驱动列表 */
         protected $driverPool = [];
 
         /** @var DriverInterface $driver 驱动实例 */
         protected $driver = null;
+
+        /**
+         * 获取驱动索引
+         * @return string
+         */
+        public function getIndex(): string
+        {
+            return $this->index;
+        }
 
         /**
          * 外部无法实例化组件
@@ -229,15 +240,33 @@ namespace sharin {
             static $_instances = [];
             $className = static::class;
             if (!isset($_instances[$key = $index . $className])) {
-                $_instances[$key] = new $className($index);# 因为构造哈叔私有的缘故不能使用反射
+                /** @var Component $instance */
+                $instance = new $className($index);# 因为构造哈叔私有的缘故不能使用反射
+                $_instances[$key] = $instance;
             }
             return $_instances[$key];
+        }
+
+        /**
+         * @return string
+         */
+        public function getDriverName(): string
+        {
+            return $this->driverName;
+        }
+
+        /**
+         * @return array
+         */
+        public function getDriverConfig(): array
+        {
+            return $this->driverConfig;
         }
 
 
         /**
          * 加载驱动
-         * @return object 返回驱动实例
+         * @return Driver |object 返回驱动实例
          * @throws DriverNotDefinedException 适配器未定义
          * @throws ClassNotFoundException  适配器类不存在
          */
@@ -245,9 +274,11 @@ namespace sharin {
         {
             if (!isset($this->driver)) {
                 if (isset($this->driverPool[$this->index])) {
-                    $className = $this->driverPool[$this->index]['class'];
-                    $this->driver = Kernel::factory($className);
-                    $this->driver->init($this->driverPool[$this->index]['config'] ?? [], $this);
+                    $this->driverName = $this->driverPool[$this->index]['name'];
+                    $this->driverConfig = $this->driverPool[$this->index]['config'] ?? [];
+                    $this->driver = Kernel::factory($this->driverName, [
+                        $this->driverConfig, $this
+                    ]);
                 } else {
                     throw new DriverNotDefinedException($this->index);
                 }
@@ -312,28 +343,37 @@ namespace sharin {
         /**
          * @param array $config
          * @return Kernel
-         * @throws ClassNotFoundException
          */
         public function init(array $config = []): Kernel
         {
+            Kernel::status('init_begin');
             spl_autoload_register(function (string $className) {
                 $path = (strpos($className, 'sharin\\') === 0) ? SR_PATH_ROOT : SR_PATH_PROJECT;
                 $path .= str_replace('\\', '/', $className) . '.php';
                 if (is_file($path)) require($path);
             }, false, true) or die('register class loader failed');
 
-            $config and $this->config = array_merge($this->config, $config);
+            if ($config) foreach ($config as $className => $item) {
+                $this->config[$className] = array_merge($this->config[$className] ?? [], $item);
+            }
             $initializer = Initializer::getInstance();
             $initializer->registerShutdownHandler();
             $initializer->registerExceptionHandler();
+
+
+            Kernel::status('init_end');
             return $this;
         }
 
-        public function start(): Kernel
+        /**
+         * @return void
+         * @throws
+         */
+        public function start(): void
         {
             $request = Request::getInstance();
-            Route::getInstance()->dispatch($request);
-            return $this;
+            $route = Route::getInstance()->parse($request);
+            Dispatcher::getInstance()->dispatch($route);
         }
 
         /**
@@ -447,25 +487,24 @@ namespace sharin {
             return $_instances[$key];
         }
 
-        public static function getOperateSystem()
+
+        /**
+         * load template with variables
+         * @param string $tpl It is the path of template if the fourth parameter is true, but is name of inside template name if fourth is false which is default
+         * @param array $vars Variables assigned to the template
+         * @param bool $isFile The additional parameter which is related to first parameter
+         * @return void
+         */
+        public static function template(string $tpl, array $vars = [], bool $isFile = false): void
         {
-
-            switch (PHP_OS) {
-                case 'Darwin':
-                    return 'Darwin';
-                case 'DragonFly':
-                case 'FreeBSD':
-                case 'NetBSD':
-                case 'OpenBSD':
-                    return 'BSD';
-                case 'Linux':
-                    return 'Linux';
-
-                case 'SunOS':
-                    return 'Solaris';
-                default:
-                    return 'Unknown';
+//            Response::getInstance()->clean();
+            $isFile or $tpl = SR_PATH_FRAMEWORK . "include/template/{$tpl}.php";
+            if (!is_file($tpl)) {
+                $vars['error'] = "'{$tpl}' not found";
+                $tpl = SR_PATH_FRAMEWORK . 'include/template/error.php';
             }
+            $vars and extract($vars, EXTR_OVERWRITE);
+            include $tpl;
         }
 
     }

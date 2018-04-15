@@ -74,6 +74,14 @@ class Request extends Component
     }
 
     /**
+     * @return array
+     */
+    public function getCommandArguments(): array
+    {
+        return $this->commandArguments;
+    }
+
+    /**
      * 非80端口时$_SERVER['HTTP_HOST'] 带上端口号，如 sharin.online:8080 ,等效于 HTTP_HOST = SERVER_NAME : SERVER_PORT
      * @return string
      */
@@ -105,7 +113,7 @@ class Request extends Component
             # 删除伪后缀 如 .html .htm .jsp(假透了)
             $pathinfo = substr($pathinfo, 0, $pos);
         }
-        return $pathinfo;
+        return $pathinfo ?: '/';
     }
 
     /**

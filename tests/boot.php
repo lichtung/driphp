@@ -11,6 +11,7 @@ namespace {
     use sharin\Kernel;
 
     require __DIR__ . '/../bootstrap.php';
+
     Kernel::getInstance()->init();
 
 }

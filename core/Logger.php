@@ -120,7 +120,7 @@ class Logger extends Component
         'level' => self::ALL,
         'drivers' => [
             '' => [
-                'class' => FileHandler::class,
+                'name' => FileHandler::class,
                 'config' => [],
             ],
         ],

@@ -115,6 +115,11 @@ class Response extends Component
      */
     private $output = '';
 
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
     /**
      * @param string $key
      * @param string $value
@@ -200,6 +205,7 @@ class Response extends Component
         $this->output = '';
         $level = ob_get_level();
         while ($level--) ob_end_clean();
+        ob_start();
         return $this;
     }
 
@@ -220,9 +226,9 @@ class Response extends Component
      */
     public function json(array $data, $options = 0): Response
     {
-        $this->setHeader('Content-Type:application/json', 'charset=utf-8');
+        $this->setHeader('Content-Type', 'application/json;charset=utf-8');
         $this->output = json_encode($data, $options);
-        return $this;
+        exit(0);
     }
 
     /**
@@ -233,6 +239,7 @@ class Response extends Component
     public function jsonp(array $data)
     {
         $this->output = ($_GET['callback'] ?? 'callback') . '(' . json_encode($data) . ')';
+        exit(0);
     }
 
     /**
@@ -242,7 +249,7 @@ class Response extends Component
      * @param string $message
      * @return void
      */
-    public function redirect(string $url, int $time = 0, string $message = '')
+    public function redirect(string $url, int $time = 0, string $message = ''): void
     {
         if (strpos($url, 'http') !== 0) {
             $url = Request::getInstance()->getPublicUrl() . str_replace(["\n", "\r"], ' ', $url);
@@ -258,6 +265,12 @@ class Response extends Component
             $this->setHeader('refresh', "{$time};url={$url}");
             $this->output = $message;
         }
+        exit(0);
+    }
+
+    public function render(View $view): void
+    {
+        echo $view;
         exit(0);
     }
 
@@ -279,7 +292,7 @@ class Response extends Component
 
     public function __destruct()
     {
-        echo $this->output;
+        echo $this;
     }
 
     public function __toString(): string

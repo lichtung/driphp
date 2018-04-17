@@ -71,6 +71,19 @@ class Request extends Component
         parent::__construct($index);
         # Gets options from the command line argument list
         SR_IS_CLI and $this->commandArguments = getopt('p:');
+        # TODO:restful support
+        if (SR_REQUEST_METHOD and SR_REQUEST_METHOD !== 'GET' and SR_REQUEST_METHOD !== 'POST') {
+            # GET       Get resource from server(one or more)
+            # POST      Create resource
+            # PUT       Update resource with full properties
+            # PATCH     Update resource with some properties
+            # DELETE    Delete resource
+            if ($_input = file_get_contents('php://input')) {
+                parse_str($_input, $_request_data);
+                $_request_data and $_REQUEST = array_merge($_REQUEST, $_request_data);
+            }
+            return true;
+        }
     }
 
     /**

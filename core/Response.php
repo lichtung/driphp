@@ -167,12 +167,6 @@ class Response extends Component
         return ob_get_level();
     }
 
-    protected function __construct(string $index = '')
-    {
-        parent::__construct($index);
-        ob_start(null);
-    }
-
     /**
      * 打开输出控制缓冲
      * 当输出缓冲激活后，脚本将不会输出内容（除http标头外），需要输出的内容被存储在内部缓冲区中。
@@ -290,11 +284,10 @@ class Response extends Component
         return false;
     }
 
-    public function __destruct()
-    {
-        echo $this;
-    }
-
+    /**
+     * 输出内容
+     * @return string
+     */
     public function __toString(): string
     {
         # 设置状态码
@@ -308,7 +301,7 @@ class Response extends Component
         }
         # 设置头部
         foreach ($this->headers as $key => $value) header("{$key}:{$value}");
-        return $this->output;
+        return $this->flush();
     }
 
     # browser type

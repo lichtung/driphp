@@ -13,5 +13,9 @@ use sharin\throws\core\DispatchException;
 
 class ParameterNotFoundException extends DispatchException
 {
+    public function __construct(string $message, int $code = -1)
+    {
+        parent::__construct("action parameter '$message' not found");
+    }
 
 }

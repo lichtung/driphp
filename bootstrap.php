@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace {
 
+    use sharin\core\Response;
     use sharin\Kernel;
     const SR_VERSION = 'Asura'; # 首字母A-Z
 
@@ -73,8 +74,9 @@ namespace {
     if (SR_DEBUG_ON) {
         require __DIR__ . '/include/debug.php';
         SR_IS_CLI or register_shutdown_function(function () {
+            if (class_exists(Response::class)) echo Response::getInstance();
             Kernel::status('shutdown');
-            SR_IS_AJAX or require(__DIR__ . '/include/trace.php');
+            require(__DIR__ . '/include/trace.php');
         });
     } else {
         function dumpin(...$a)
@@ -337,7 +339,15 @@ namespace sharin {
          * @var array 保存所有组件类的配置
          */
         private $config = [
-            Initializer::class => [],
+
+            'timezone_zone' => 'Asia/Shanghai',
+            'shutdown_handler' => null,
+            'exception_handler' => null,
+            'session.save_handler' => 'files',# redis
+            'session.save_path' => SR_PATH_RUNTIME,# tcp://127.0.0.1:6379
+            'session.gc_maxlifetime' => 3600,
+            'session.cache_expire' => 3600,
+
         ];
 
         /**
@@ -356,10 +366,19 @@ namespace sharin {
             if ($config) foreach ($config as $className => $item) {
                 $this->config[$className] = array_merge($this->config[$className] ?? [], $item);
             }
-            $initializer = Initializer::getInstance();
-            $initializer->registerShutdownHandler();
-            $initializer->registerExceptionHandler();
+            date_default_timezone_set($this->config['timezone_zone']) or die('timezone set failed!');
+            # ini_set('expose_php', 'Off'); # ini_set 无效，需要修改 php.ini 文件
+            false === ini_set('session.save_handler', $this->config['session.save_handler']) and die('set session.save_handler failed');
+            false === ini_set('session.save_path', $this->config['session.save_path']) and die('set session.save_path failed');
+            false === ini_set('session.gc_maxlifetime', (string)$this->config['session.gc_maxlifetime']) and die('set session.gc_maxlifetime failed');
+            false === ini_set('session.cache_expire', (string)$this->config['session.cache_expire']) and die('set session.cache_expire failed');
 
+            set_error_handler(function (int $code, string $message, string $file, int $line) {
+                SharinException::dispose(null, $code, $message, $file, $line);
+            });
+            set_exception_handler(function (Throwable $e) {
+                SharinException::dispose($e);
+            });
 
             Kernel::status('init_end');
             return $this;

@@ -12,6 +12,12 @@ namespace sharin\core;
 
 use sharin\Component;
 
+/**
+ * Class FileSystem
+ *
+ * TODO:use symfony
+ * @package sharin\core
+ */
 class FileSystem extends Component
 {
 

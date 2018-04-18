@@ -47,7 +47,7 @@ class FileHandler implements DriverInterface, LoggerInterface
         $this->context = $context;
     }
 
-    public function store(): void
+    public function store()
     {
         $yearMonth = date('Ym');
         $day = date('d');

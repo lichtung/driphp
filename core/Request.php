@@ -65,25 +65,64 @@ class Request extends Component
     private $action = '';
     private $params = [];
     protected $commandArguments = [];
+    private $headers = [];
 
-    protected function __construct(string $index = '')
+    /**
+     * Request constructor.
+     *
+     * @see @see https://stackoverflow.com/questions/5483851/manually-parse-raw-multipart-form-data-data-with-php
+     *
+     * @param string $connect
+     */
+    protected function __construct(string $connect = '')
     {
-        parent::__construct($index);
+        parent::__construct($connect);
         # Gets options from the command line argument list
         SR_IS_CLI and $this->commandArguments = getopt('p:');
-        # TODO:restful support
-        if (SR_REQUEST_METHOD and SR_REQUEST_METHOD !== 'GET' and SR_REQUEST_METHOD !== 'POST') {
-            # GET       Get resource from server(one or more)
-            # POST      Create resource
-            # PUT       Update resource with full properties
-            # PATCH     Update resource with some properties
-            # DELETE    Delete resource
-            if ($_input = file_get_contents('php://input')) {
-                parse_str($_input, $_request_data);
-                $_request_data and $_REQUEST = array_merge($_REQUEST, $_request_data);
-            }
-            return true;
+        SR_IS_CLI or $this->headers = getallheaders();
+        switch (SR_REQUEST_METHOD) {
+            case '':# client script
+                break;
+            case 'GET': # Get resource from server(one or more)
+                break;
+            case 'POST': # Create resource
+                break;
+            case 'PUT': # Update resource with full properties
+            case 'PATCH': # Update resource with some properties
+            case 'DELETE': # Delete resource
+                if ($_input = $this->rawInput()) {
+                    parse_str($_input, $_request_data);
+                    $_request_data and $_REQUEST = array_merge($_REQUEST, $_request_data);
+                }
+                break;
+
         }
+    }
+
+    /**
+     * 兼容put,delete,patch方法
+     * @return string
+     */
+    public function getRequestMethod()
+    {
+        if ($method = $this->headers['X-HTTP-METHOD-OVERRIDE'] ?? false) {
+            return strtoupper($method);
+        } else {
+            return $_REQUEST['_method'] ?? SR_REQUEST_METHOD;
+        }
+    }
+
+    /**
+     * 获取请求的原始数据的流输入
+     * PHP 5.6 之前 php://input 打开的数据流只能读取一次
+     * @see http://php.net/manual/zh/wrappers.php.php
+     * @return int|string
+     */
+    public function rawInput(): string
+    {
+        static $raw = null;
+        isset($raw) or $raw = file_get_contents('php://input') ?: '';
+        return $raw;
     }
 
     /**
@@ -113,20 +152,23 @@ class Request extends Component
     public function getPathInfo(): string
     {
         if (SR_IS_CLI) {
-            $pathinfo = $this->commandArguments['p'] ?? '';
+            $pathInfo = $this->commandArguments['p'] ?? '';
         } else {
             if (empty($_SERVER['PATH_INFO'])) {
                 $pos = strpos($_SERVER['PHP_SELF'], '/index.php');
-                $_SERVER['PATH_INFO'] = substr($_SERVER['PHP_SELF'], $pos + 10);
+                $path = substr($_SERVER['PHP_SELF'], 0, $pos);
+                $requestURL = $_SERVER['REQUEST_URI'] ?? $_SERVER['REDIRECT_URL'] ?? ''; # .htaccess 重定向产生了 REDIRECT_URL
+                $pathInfo = substr($requestURL, strlen($path));
+            } else {
+                $pathInfo = $_SERVER['PATH_INFO'] ?? '';
             }
-            $pathinfo = $_SERVER['PATH_INFO'] ?? '';
         }
-        $pathinfo = trim($pathinfo, '.');
-        if ($pos = strpos($pathinfo, '.')) {
+        $pathInfo = trim($pathInfo, '.');
+        if ($pos = strpos($pathInfo, '.')) {
             # 删除伪后缀 如 .html .htm .jsp(假透了)
-            $pathinfo = substr($pathinfo, 0, $pos);
+            $pathInfo = substr($pathInfo, 0, $pos);
         }
-        return $pathinfo ?: '/';
+        return $pathInfo ?: '/';
     }
 
     /**
@@ -209,6 +251,16 @@ class Request extends Component
     public function getParams(): array
     {
         return $this->params;
+    }
+
+    /**
+     * 获取输入参数
+     * @param string $index
+     * @return mixed|null
+     */
+    public function getParam(string $index)
+    {
+        return $this->params[$index] ?? null;
     }
 
     /**

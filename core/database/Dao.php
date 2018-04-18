@@ -46,12 +46,12 @@ class Dao extends Component
 
     protected $config = [
         'drivers' => [
-            'default' => [
+            '' => [
                 'name' => MySQL::class,
                 'config' => [
-                    'name' => 'test',
+                    'name' => 'homestead',
                     'user' => 'root',
-                    'passwd' => '123456',
+                    'passwd' => 'asdqwe123_ZXC',
                     'host' => '127.0.0.1',
                     'port' => 3306,
                     'charset' => 'UTF8',
@@ -61,16 +61,16 @@ class Dao extends Component
         ],
     ];
 
-    protected function __construct(string $index = 'default')
+    protected function __construct(string $connect = '')
     {
-        parent::__construct($index);
+        parent::__construct($connect);
     }
 
     /**
      * @param string $index
      * @return Dao
      */
-    public static function getInstance(string $index = 'default')
+    public static function getInstance(string $index = '')
     {
         /** @var Dao $instance */
         $instance = parent::getInstance($index);
@@ -158,6 +158,7 @@ class Dao extends Component
      * @param array|null $params 输入参数,具体参考query方法的参数二
      * @return int 返回受到影响的行数
      * @throws ExecuteException
+     * @throws ConnectException
      * @throws DriverNotDefinedException
      * @throws ClassNotFoundException
      */
@@ -220,6 +221,7 @@ class Dao extends Component
      * @throws GeneralException 服务事务关闭了自动提交并且嵌套开启了事务，抛出异常，警告"There is already an active transaction"
      * @throws DriverNotDefinedException
      * @throws ClassNotFoundException
+     * @throws ConnectException
      */
     public function beginTransaction(): bool
     {

@@ -51,26 +51,26 @@ class Response extends Component
         201 => 'Created',
         202 => 'Accepted',
         203 => 'Non-Authoritative Information',
-        204 => 'No Content',
+        204 => 'No Content',  # 资源有空表示
         205 => 'Reset Content',
         206 => 'Partial Content',
 
         // Redirection 3xx
         300 => 'Multiple Choices',
-        301 => 'Moved Permanently',
+        301 => 'Moved Permanently', # 资源的URI已被更新
         302 => 'Found',  // 1.1
-        303 => 'See Other',
-        304 => 'Not Modified',
+        303 => 'See Other', # 其他（如，负载均衡）
+        304 => 'Not Modified', # 资源未更改（缓存）
         305 => 'Use Proxy',
         // 306 is deprecated but reserved
         307 => 'Temporary Redirect',
 
         // Client Error 4xx
-        400 => 'Bad Request',
+        400 => 'Bad Request', # 指代坏请求（如，参数错误）
         401 => 'Unauthorized',
         402 => 'Payment Required',
         403 => 'Forbidden',
-        404 => 'Resource Not Found',
+        404 => 'Resource Not Found', # 资源不存在
         405 => 'Method Not Allowed',
         406 => 'Not Acceptable',
         407 => 'Proxy Authentication Required',
@@ -86,10 +86,10 @@ class Response extends Component
         417 => 'Expectation Failed',
 
         // Server Error 5xx
-        500 => 'Internal Server Error',
+        500 => 'Internal Server Error', # 通用错误响应
         501 => 'Not Implemented',
         502 => 'Bad Gateway',
-        503 => 'Service Unavailable',
+        503 => 'Service Unavailable', # 服务端当前无法处理请求
         504 => 'Gateway Timeout',
         505 => 'HTTP Version Not Supported',
         509 => 'Bandwidth Limit Exceeded',
@@ -243,7 +243,7 @@ class Response extends Component
      * @param string $message
      * @return void
      */
-    public function redirect(string $url, int $time = 0, string $message = ''): void
+    public function redirect(string $url, int $time = 0, string $message = '')
     {
         if (strpos($url, 'http') !== 0) {
             $url = Request::getInstance()->getPublicUrl() . str_replace(["\n", "\r"], ' ', $url);
@@ -262,7 +262,7 @@ class Response extends Component
         exit(0);
     }
 
-    public function render(View $view): void
+    public function render(View $view)
     {
         echo $view;
         exit(0);
@@ -290,17 +290,19 @@ class Response extends Component
      */
     public function __toString(): string
     {
-        # 设置状态码
-        $message = self::CODE_MAP[$this->code] ?? 'Unknown';
-        header("HTTP/1.1 {$this->code} {$message}");
-        # 设置跨域
-        if ($this->config['cors_all']) {
-            header('Access-Control-Allow-Origin:*');
-        } else {
-            in_array($origin = $_SERVER['HTTP_ORIGIN'] ?? '', $this->accessControlAllowOrigins) and header('Access-Control-Allow-Origin:' . $origin);
+        if(!headers_sent()){
+            # 设置状态码
+            $message = self::CODE_MAP[$this->code] ?? 'Unknown';
+            header("HTTP/1.1 {$this->code} {$message}");
+            # 设置跨域
+            if ($this->config['cors_all']) {
+                header('Access-Control-Allow-Origin:*');
+            } else {
+                in_array($origin = $_SERVER['HTTP_ORIGIN'] ?? '', $this->accessControlAllowOrigins) and header('Access-Control-Allow-Origin:' . $origin);
+            }
+            # 设置头部
+            foreach ($this->headers as $key => $value) header("{$key}:{$value}");
         }
-        # 设置头部
-        foreach ($this->headers as $key => $value) header("{$key}:{$value}");
         return $this->flush();
     }
 

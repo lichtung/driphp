@@ -105,6 +105,14 @@ endline;
         return sprintf($format, $message, $line, ltrim(str_replace(array(SR_PATH_ROOT, '\\'), array('', '/'), $file), '/'));
     }
 
+    /**
+     * @param string $message
+     * @param string $className
+     * @param string $file
+     * @param int $line
+     * @param int $code
+     * @param array $traces
+     */
     function _display_error(string $message, string $className, string $file, int $line, int $code, array $traces)
     {
         echo '<style>

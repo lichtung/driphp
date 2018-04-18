@@ -104,5 +104,5 @@ interface LoggerInterface
      * 立即存储数据
      * @return void
      */
-    public function store(): void;
+    public function store();
 }

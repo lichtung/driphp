@@ -19,9 +19,9 @@ use sharin\Component;
 abstract class Service extends Component
 {
 
-    protected function __construct(string $index = '')
+    protected function __construct(string $connect = '')
     {
-        parent::__construct($index);
+        parent::__construct($connect);
         require_once __DIR__ . '/../vendor/autoload.php';
     }
 

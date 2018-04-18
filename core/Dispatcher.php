@@ -41,7 +41,7 @@ class Dispatcher extends Component
      * @throws ParameterNotFoundException
      * @throws RouteInvalidException 错误的路由规则
      */
-    public function dispatch($route): void
+    public function dispatch($route)
     {
         if (isset($route)) {
             if (is_array($route)) {
@@ -82,13 +82,13 @@ class Dispatcher extends Component
      * @param string $controllerName 控制器类名（全称）
      * @param string $actionName 操作名（方法名）
      * @param array $arguments 参数列表，默认从
-     * @return Response
+     * @return mixed
      * @throws ActionAccessException
      * @throws ActionNotFoundException
      * @throws ControllerNotFoundException
      * @throws ParameterNotFoundException
      */
-    public static function runMethod(string $controllerName, string $actionName, array $arguments = null): Response
+    public static function runMethod(string $controllerName, string $actionName, array $arguments = null)
     {
         try {
             /** @var ReflectionClass $controller */

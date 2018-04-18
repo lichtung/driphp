@@ -79,7 +79,7 @@ namespace {
             require(__DIR__ . '/include/trace.php');
         });
     } else {
-        function dumpin(...$a)
+        function dumpon(...$a)
         {
         }
 
@@ -107,6 +107,11 @@ namespace sharin {
      */
     class SharinException extends \Exception
     {
+        /**
+         * SharinException constructor.
+         * @param string $message
+         * @param int $code
+         */
         public function __construct(string $message, int $code = -1)
         {
             parent::__construct($message, $code);
@@ -121,7 +126,7 @@ namespace sharin {
          * @param int $line
          * @return void
          */
-        public static function dispose(Throwable $throwable = null, int $code = 0, string $message = '', string $file = '', int $line = 0): void
+        public static function dispose(Throwable $throwable = null, int $code = 0, string $message = '', string $file = '', int $line = 0)
         {
             if (null !== $throwable) {
                 $message = $throwable->getMessage();
@@ -218,9 +223,9 @@ namespace sharin {
 
         /**
          * 外部无法实例化组件
-         * @param string $index 驱动名称
+         * @param string $connect 驱动名称
          */
-        protected function __construct(string $index = '')
+        protected function __construct(string $connect = '')
         {
             $className = static::class;
             $this->config = array_merge($this->config, Kernel::getInstance()->config($className));
@@ -228,7 +233,7 @@ namespace sharin {
                 $this->driverPool = $this->config['drivers'];
                 unset($this->config['drivers']);
             }
-            $index and $this->index = $index;
+            $connect and $this->index = $connect;
         }
 
         /**
@@ -293,7 +298,7 @@ namespace sharin {
          * @param mixed $value
          * @return void
          */
-        public function __set(string $name, $value): void
+        public function __set(string $name, $value)
         {
             $this->config[$name] = $value;
         }
@@ -353,16 +358,18 @@ namespace sharin {
          * @param array $config
          * @return Kernel
          */
-        public function init(array $config = []): Kernel
+        public function init(array $config = null): Kernel
         {
             Kernel::status('init_begin');
+
+            # 类自动装载函数
             spl_autoload_register(function (string $className) {
                 $path = (strpos($className, 'sharin\\') === 0) ? SR_PATH_ROOT : SR_PATH_PROJECT;
                 $path .= str_replace('\\', '/', $className) . '.php';
                 if (is_file($path)) require($path);
             }, false, true) or die('register class loader failed');
 
-            if ($config) foreach ($config as $className => $item) {
+            if (isset($config)) foreach ($config as $className => $item) {
                 $this->config[$className] = array_merge($this->config[$className] ?? [], $item);
             }
             date_default_timezone_set($this->config['timezone_zone']) or die('timezone set failed!');
@@ -387,17 +394,22 @@ namespace sharin {
          * @return void
          * @throws
          */
-        public function start(): void
+        public function start()
         {
+            if (SR_IS_CLI) return;
+            self::status('start');
             $request = Request::getInstance();
+            self::status('route');
             $route = Route::getInstance()->parse($request);
+            self::status('dispatch');
             Dispatcher::getInstance()->dispatch($route);
+            self::status('end');
         }
 
         /**
          * 获取组件配置
          * @param string $component 组件名称
-         * @param array $config 组件配置
+         * @param array|null $config 组件配置
          * @return array
          */
         public function config(string $component, array $config = null): array
@@ -420,10 +432,10 @@ namespace sharin {
         /**
          * 记录状态或者返回全部状态
          * It will return current record value if tag is not empty ,and whole status records will return if tag is empty
-         * @param string $tag
+         * @param string|null $tag
          * @return array 如果参数tag为空字符串，则返回全部状态，否则记录当前状态并返回
          */
-        public static function status(string $tag = ''): array
+        public static function status(string $tag = null): array
         {
             static $_status = [
                 'onload' => [
@@ -431,7 +443,7 @@ namespace sharin {
                     SR_MEMORY,
                 ],
             ];
-            return $tag ? ($_status[$tag] = [microtime(true), memory_get_usage()]) : $_status;
+            return isset($tag) ? ($_status[$tag] = [microtime(true), memory_get_usage()]) : $_status;
         }
 
         /**
@@ -490,15 +502,15 @@ namespace sharin {
 
         /**
          * @param string $className
-         * @param array $params Constructor parameters in order
+         * @param array|null $params Constructor parameters in order
          * @return object Return an instance of this class which is separated by parameters
          * @throws ClassNotFoundException
          */
-        public static function factory(string $className, array $params = [])
+        public static function factory(string $className, array $params = null)
         {
             static $_instances = [];
             $key = $className;
-            $params and $key .= self::hash($params);
+            isset($params) and $key .= self::hash($params);
             if (!isset($_instances[$key])) {
                 $_instances[$key] = $params ? self::reflect($className)->newInstanceArgs($params) : new $className();
             }
@@ -513,7 +525,7 @@ namespace sharin {
          * @param bool $isFile The additional parameter which is related to first parameter
          * @return void
          */
-        public static function template(string $tpl, array $vars = [], bool $isFile = false): void
+        public static function template(string $tpl, array $vars = [], bool $isFile = false)
         {
 //            Response::getInstance()->clean();
             $isFile or $tpl = SR_PATH_FRAMEWORK . "include/template/{$tpl}.php";

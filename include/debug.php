@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-version_compare(PHP_VERSION, '7.1', '<') and die('require php >= 7.1!');
+version_compare(PHP_VERSION, '7.0', '<') and die('require php >= 7.0!');
 
 function sr_build_message($params, $traces)
 {
@@ -31,7 +31,7 @@ function sr_build_message_for_cli($params, $traces)
 /**
  * @param array ...$params
  */
-function dumpin(...$params)
+function dumpon(...$params)
 {
     echo call_user_func_array(SR_IS_CLI ? 'sr_build_message_for_cli' : 'sr_build_message', [
         $params, debug_backtrace()

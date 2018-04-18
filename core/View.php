@@ -48,7 +48,7 @@ class View extends Component
      * @return void
      * @throws FileNotFoundException
      */
-    private function __parse_layout(string &$content, string $module, string $theme): void
+    private function __parse_layout(string &$content, string $module, string $theme)
     {
         if (strpos($content, '<!--layout:') !== false) {
             if (preg_match('/\<\!--layout\:([^-]+)--\>/', $content, $match) and !empty($match[1])) {

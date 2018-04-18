@@ -33,7 +33,7 @@ class Database extends Component
 {
     protected $config = [
         'paths' => [
-            SR_PATH_PROJECT,
+            SR_PATH_PROJECT . 'entity/',
         ],
     ];
 

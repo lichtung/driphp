@@ -5,5 +5,9 @@
  * Date: 2018/4/18
  * Time: 11:50
  */
+
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use sharin\core\Database;
+
 require __DIR__ . '/public/index.php';
-return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet(\sharin\core\Database::getInstance()->getEntityManager());
+return ConsoleRunner::createHelperSet(Database::getInstance()->getEntityManager());

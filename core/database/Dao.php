@@ -48,6 +48,7 @@ class Dao extends Component
         'drivers' => [
             '' => [
                 'name' => MySQL::class,
+                # CREATE SCHEMA `homestead` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
                 'config' => [
                     'name' => 'homestead',
                     'user' => 'root',

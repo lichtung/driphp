@@ -99,7 +99,6 @@ namespace sharin {
     use sharin\core\Route;
     use sharin\throws\core\DriverNotDefinedException;
     use Throwable;
-    use sharin\core\Initializer;
     use sharin\throws\core\ClassNotFoundException;
 
     /**

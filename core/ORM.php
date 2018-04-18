@@ -10,6 +10,10 @@ declare(strict_types=1);
 namespace sharin\core;
 
 
+use sharin\core\database\Dao;
+use sharin\Kernel;
+use sharin\throws\core\database\GeneralException;
+
 abstract class ORM extends Model
 {
 
@@ -30,9 +34,6 @@ abstract class ORM extends Model
      * @param $primaryKey
      * @param Dao $dao
      * @return ORM
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
      */
     public static function getInstance($primaryKey = 0, Dao $dao = null)
     {
@@ -41,7 +42,7 @@ abstract class ORM extends Model
             $key = (is_array($primaryKey) ? serialize($primaryKey) : $primaryKey) . $dao->getDriver()->getDSN();
             if (!isset($_instances[$key])) {
                 /** @var ORM $object */
-                $_instances[$key] = FooBar::factory(static::class, [$primaryKey, $dao]);
+                $_instances[$key] = Kernel::factory(static::class, [$primaryKey, $dao]);
             }
             return $_instances[$key];
         } else {
@@ -86,14 +87,6 @@ abstract class ORM extends Model
      * 添加记录
      * @param bool $autoReload 添加完成后自动刷新数据（适合有主键的情况下）
      * @return bool
-     * @throws DatabaseException
-     * @throws RecordNotFoundException
-     * @throws RecordNotUniqueException
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\ExecuteException
-     * @throws \dripex\throwable\database\QueryException
      */
     public function insert(bool $autoReload = true): bool
     {
@@ -122,18 +115,13 @@ abstract class ORM extends Model
             }
             return $result;
         } else {
-            throw new DatabaseException("No data to insert");
+            throw new GeneralException("No data to insert");
         }
     }
 
     /**
      * @param array $data
      * @return bool
-     * @throws DatabaseException
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\ExecuteException
      */
     public function update(array $data = []): bool
     {
@@ -154,7 +142,7 @@ abstract class ORM extends Model
             return $dao->exec("UPDATE `{$this->_table}` SET {$fields} WHERE {$where} LIMIT 1;",
                     $bind) === 1;
         } else {
-            throw new DatabaseException("No data to update");
+            throw new GeneralException("No data to update");
         }
     }
 
@@ -162,12 +150,6 @@ abstract class ORM extends Model
      * 重新加载数据
      * @param bool $force 强制刷新
      * @return $this
-     * @throws RecordNotFoundException 记录不存在时抛出
-     * @throws RecordNotUniqueException 记录不唯一时抛出
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\QueryException
      */
     public function find(bool $force = false)
     {
@@ -176,10 +158,10 @@ abstract class ORM extends Model
             $sql = "SELECT * FROM {$this->_table} WHERE {$where} LIMIT 2;";
             $list = $this->dao()->query($sql, $bind);
             $count = count($list);
-            if ($count !== 1) {
-                throw new RecordNotFoundException($raw);
+            if ($count === 0) {
+                throw new GeneralException('record not found');
             } elseif ($count === 2) {
-                throw new RecordNotUniqueException($raw);
+                throw new GeneralException('record not unique');
             }
             #  释放主键
             if (is_array($this->primaryKey)) {
@@ -196,10 +178,6 @@ abstract class ORM extends Model
 
     /**
      * @return bool
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\ExecuteException
      */
     public function delete(): bool
     {

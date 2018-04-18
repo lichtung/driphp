@@ -10,6 +10,7 @@
     }
   ],
   "require": {
+    "php": ">=7.1.0",
     "monolog/monolog": "^1.23",
     "symfony/filesystem": "^4.0",
     "doctrine/orm": "2.4.*",

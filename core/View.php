@@ -35,10 +35,6 @@ class View extends Component
         return $this->content;
     }
 
-    public function registerTemplateConstant(string $name, string $value)
-    {
-        $this->_template_constants[$name] = $value;
-    }
 
     /**
      * parse layout content
@@ -74,11 +70,15 @@ class View extends Component
      * @param array $vars An array of parameters to pass to the template
      * @param string $template The template name,default using the method name
      * @param string $theme template theme
+     * @param array $constants
      * @return void
      */
-    public function __construct(array $vars = [], string $template = '', string $theme = 'default')
+    public function __construct(array $vars = [], string $template = '', string $theme = 'default', array $constants = null)
     {
         parent::__construct();
+        if ($constants) foreach ($constants as $name => $value) {
+            $this->_template_constants[$name] = $value;
+        }
         try {
             $cache = null;
             if ('' === $template) {
@@ -127,7 +127,7 @@ class View extends Component
         $mc = explode('\\', substr($className, 11));#strlen('controller\\') == 10
         $_controller = array_pop($mc);
         $_module = $mc ? implode('/', $mc) : '';
-        return [$_module, $_controller];
+        return [$_module, strtolower($_controller)];
     }
 
     public static function getPrevious(string $item = 'function', int $place = 2): string

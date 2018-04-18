@@ -79,7 +79,6 @@ class Request extends Component
         parent::__construct($connect);
         # Gets options from the command line argument list
         SR_IS_CLI and $this->commandArguments = getopt('p:');
-        SR_IS_CLI or $this->headers = getallheaders();
         switch (SR_REQUEST_METHOD) {
             case '':# client script
                 break;

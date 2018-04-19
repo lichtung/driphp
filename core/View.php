@@ -9,120 +9,106 @@ declare(strict_types=1);
 
 namespace sharin\core;
 
-
 use sharin\Component;
+use Twig_Function;
+use Twig_Loader_Filesystem;
+use Twig_Environment;
 use sharin\SharinException;
-use sharin\throws\io\FileNotFoundException;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class View
- * TODO:use twig
- * @method View getInstance(string $index = '') static
+ * @method View getInstance() static
  * @package sharin\core
  */
 class View extends Component
 {
 
-    /**
-     * @var array
-     */
-    private $_template_constants = [];
+    private $_className = '';
+    private $_controller = '';
+    private $_module = '';
 
-    protected $content = '';
 
-    public function __toString(): string
+    protected function __construct(string $className = '')
     {
-        return $this->content;
+        parent::__construct();
+        $this->_className = self::getPrevious('class', 3);
+        # fetch module and controller name
+        list($this->_module, $this->_controller) = self::fetchModuleAndControllerFromControllerName($this->_className);
     }
 
 
-    /**
-     * parse layout content
-     * @param string $content Template content
-     * @param string $module
-     * @param string $theme
-     * @return void
-     * @throws FileNotFoundException
-     */
-    private function __parse_layout(string &$content, string $module, string $theme)
+    private function twigEnvironment(string $theme): Twig_Environment
     {
-        if (strpos($content, '<!--layout:') !== false) {
-            if (preg_match('/\<\!--layout\:([^-]+)--\>/', $content, $match) and !empty($match[1])) {
-                $layout = trim($match[1] ?? '', '/');
-                if (strpos($layout, '/') === 0) {
-                    $layout_file = SR_PATH_PROJECT . $layout . '.php';
-                } else {
-                    $layout_file = SR_PATH_PROJECT . "view/{$theme}/{$module}/layout/{$layout}.php";
-                }
-                if (is_file($layout_file)) {
-                    $layout_content = file_get_contents($layout_file);
-                    $this->__parse_layout($layout_content, $module, $theme);
-                    $content = str_replace('<!--layout-content-->', str_replace($match[0], '', $content), $layout_content);
-                } else {
-                    throw new FileNotFoundException($layout_file);
-                }
-            }
-        }
+        # Loaders are responsible for loading templates from a resource such as the file system.
+        # Twig_Loader_Filesystem loads templates from the file system.
+        # This loader can find templates in folders on the file system and is the preferred way to load them:
+        $loader = new Twig_Loader_Filesystem(SR_PATH_PROJECT . "view/{$theme}/{$this->_module}/");
+
+        # Instances of Twig_Environment are used to store the configuration and extensions,
+        # and are used to load templates from the file system or other locations.
+        $twig = new Twig_Environment($loader, array(
+            # When set to true, the generated templates have a __toString() method that you can use to display the
+            # generated nodes (default to false).
+            'debug' => false,
+            # When developing with Twig, it's useful to recompile the template whenever the source code changes.
+            # If you don't provide a value for the auto_reload option, it will be determined automatically based on the debug value.
+            'auto_reload' => true,
+            # If set to false, Twig will silently ignore invalid variables (variables and or attributes/methods that do not exist)
+            # and replace them with a null value. When set to true, Twig throws an exception instead (default to false).
+            'strict_variables' => false,
+//            'charset' => 'utf-8', # The charset used by the templates.
+//            'base_template_class' => 'Twig_Template', # The base template class to use for generated templates.
+            # An absolute path where to store the compiled templates, or false to disable caching (which is the default).
+            # Dripex :Building cache will load more files.
+            'cache' => SR_PATH_RUNTIME . "view/{$theme}-{$this->_controller}/",
+            # ???
+            # Sets the default auto-escaping strategy (name, html, js, css, url, html_attr, or a PHP callback that takes
+            # the template "filename" and returns the escaping strategy to use -- the callback cannot be a function name
+            # to avoid collision with built-in escaping strategies); set it to false to disable auto-escaping.
+            # The name escaping strategy determines the escaping strategy to use for a template based on the template
+            # filename extension (this strategy does not incur any overhead at runtime as auto-escaping is done at compilation time.)
+//            'autoescape' => '',
+            #  A flag that indicates which optimizations to apply (default to -1 -- all optimizations are enabled; set it to 0 to disable).
+            'optimizations' => -1,
+        ));
+        return $twig;
+    }
+
+    private $_functions = [];
+
+    protected function registerFunction(string $functionName, callable $callable)
+    {
+        $this->_functions[$functionName] = $callable;
+        return $this;
     }
 
     /**
-     * display template content
      * @param array $vars An array of parameters to pass to the template
      * @param string $template The template name,default using the method name
      * @param string $theme template theme
-     * @param array $constants
-     * @return void
      */
-    public function __construct(array $vars = [], string $template = '', string $theme = 'default', array $constants = null)
+    public function render(array $vars = [], string $template = '', string $theme = 'default')
     {
-        parent::__construct();
-        if ($constants) foreach ($constants as $name => $value) {
-            $this->_template_constants[$name] = $value;
-        }
         try {
-            $cache = null;
             if ('' === $template) {
+                # fetch method name who call the render method
                 $template = self::getPrevious();
             }
-            list($module, $controller) = self::fetchModuleAndControllerFromControllerName(self::getPrevious('class'));
-
-
-            # check the compiled template
-            $view = SR_PATH_PROJECT . "view/{$theme}/{$module}/{$controller}/{$template}.php";
-            $compile_view = SR_PATH_RUNTIME . "view/{$module}-{$controller}/{$template}.{$theme}.php";;
-            if (SR_DEBUG_ON or !is_file($compile_view) or (filemtime($view) > filemtime($compile_view))) {
-                # compiled template not exist or template has modified
-                if (is_file($view)) {
-                    $content = file_get_contents($view);
-                    $this->__parse_layout($content, $module, $theme);
-
-                    $request = Request::getInstance();
-                    $this->_template_constants['__PUBLIC__'] = $request->getPublicUrl();
-                    $this->_template_constants['__HOST__'] = $request->getHostUrl();
-
-                    # template constant replace
-                    $content = str_replace(array_keys($this->_template_constants), array_values($this->_template_constants), $content);
-                    # template variable replace
-                    $content = preg_replace('/\{\{(\w[\w\d_]*)\}\}/', '<?php echo \$${1}; ?>', $content);
-
-                    if (!is_dir($parent_dir = dirname($compile_view))) mkdir($parent_dir, 0700, true);
-                    file_put_contents($compile_view, $content);
-                } else {
-                    throw new FileNotFoundException($view);
-                }
+            $twig = $this->twigEnvironment($theme);
+            foreach ($this->_functions as $name => $callable) {
+                $twig->addFunction(new Twig_Function($name, $callable));
             }
-
-            ob_start();
-            $vars and extract($vars, EXTR_OVERWRITE);
-            include $compile_view;
-            $this->content = ob_get_clean();
-        } catch (\Throwable $throwable) {
-            SharinException::dispose($throwable);
+            echo $twig->render($this->_controller . '/' . $template . '.twig', $vars);
+        } catch (\Throwable $e) {
+            SharinException::dispose($e);
         }
+        exit(0);
     }
 
 
-    private static function fetchModuleAndControllerFromControllerName(string $className)
+    public static function fetchModuleAndControllerFromControllerName(string $className)
     {
         $mc = explode('\\', substr($className, 11));#strlen('controller\\') == 10
         $_controller = array_pop($mc);

@@ -14,7 +14,6 @@ use Twig_Loader_Filesystem;
 use Twig_Environment;
 use sharin\SharinException;
 
-require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class View
@@ -30,12 +29,11 @@ class View
 
     public function __construct(string $className = '')
     {
-        $this->_className = self::getPrevious('class', 3);
+        $this->_className = $className ?: self::getPrevious('class', 2);
         # fetch module and controller name
         list($this->_module, $this->_controller) = self::fetchModuleAndControllerFromControllerName($this->_className);
     }
 
-    
 
     private function twigEnvironment(string $theme): Twig_Environment
     {
@@ -89,6 +87,7 @@ class View
      */
     public function render(array $vars = [], string $template = '', string $theme = 'default')
     {
+        require_once __DIR__ . '/../vendor/autoload.php';
         try {
             if ('' === $template) {
                 # fetch method name who call the render method

@@ -23,13 +23,6 @@ trait Render
      */
     private $_template_constants = [];
 
-    protected $content = '';
-
-    public function __toString(): string
-    {
-        return $this->content;
-    }
-
     protected function constant(string $name, string $value)
     {
         $this->_template_constants[$name] = $value;
@@ -111,7 +104,7 @@ trait Render
             ob_start();
             $vars and extract($vars, EXTR_OVERWRITE);
             include $compile_view;
-            $this->content = ob_get_clean();
+            echo ob_get_clean();
         } catch (\Throwable $throwable) {
             SharinException::dispose($throwable);
         }

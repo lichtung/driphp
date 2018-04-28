@@ -35,6 +35,7 @@ class View
         list($this->_module, $this->_controller) = self::fetchModuleAndControllerFromControllerName($this->_className);
     }
 
+    
 
     private function twigEnvironment(string $theme): Twig_Environment
     {

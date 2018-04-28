@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace sharin\core;
 
-use sharin\Component;
 use Twig_Function;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
@@ -19,10 +18,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class View
- * @method View getInstance() static
  * @package sharin\core
  */
-class View extends Component
+class View
 {
 
     private $_className = '';
@@ -30,9 +28,8 @@ class View extends Component
     private $_module = '';
 
 
-    protected function __construct(string $className = '')
+    public function __construct(string $className = '')
     {
-        parent::__construct();
         $this->_className = self::getPrevious('class', 3);
         # fetch module and controller name
         list($this->_module, $this->_controller) = self::fetchModuleAndControllerFromControllerName($this->_className);

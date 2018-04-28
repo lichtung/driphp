@@ -1,3 +1,6 @@
 .idea
 composer.lock
 env.yaml
+.buildpath
+.project
+.settings/

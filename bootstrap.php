@@ -74,7 +74,7 @@ namespace {
     if (SR_DEBUG_ON) {
         require __DIR__ . '/include/debug.php';
         SR_IS_CLI or register_shutdown_function(function () {
-            if (class_exists(Response::class)) echo Response::getInstance();
+//            if (class_exists(Response::class)) echo Response::getInstance();
             Kernel::status('shutdown');
             require(__DIR__ . '/include/trace.php');
         });
@@ -247,7 +247,7 @@ namespace sharin {
             $className = static::class;
             if (!isset($_instances[$key = $index . $className])) {
                 /** @var Component $instance */
-                $instance = new $className($index);# 因为构造哈叔私有的缘故不能使用反射
+                $instance = new $className($index);# 因为构造函数私有的缘故不能使用反射
                 $_instances[$key] = $instance;
             }
             return $_instances[$key];

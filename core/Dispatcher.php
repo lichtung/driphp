@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace sharin\core;
 
 use sharin\Component;
+use sharin\core\response\Redirect;
 use sharin\throws\core\dispatch\ActionAccessException;
 use sharin\throws\core\ClassNotFoundException;
 use sharin\throws\core\dispatch\ParameterNotFoundException;
@@ -49,7 +50,7 @@ class Dispatcher extends Component
                 Dispatcher::runMethod($controller, $action, $_REQUEST);
             } elseif (is_string($route)) {
                 if (strpos($route, 'http') === 0) {
-                    Response::getInstance()->redirect($route); # 立即重定向
+                    echo new Redirect($route);# 立即重定向
                 } else {
                     Dispatcher::runMethod($route, 'invoke');
                 }
@@ -82,7 +83,7 @@ class Dispatcher extends Component
      * @param string $controllerName 控制器类名（全称）
      * @param string $actionName 操作名（方法名）
      * @param array $arguments 参数列表，默认从
-     * @return mixed
+     * @return void
      * @throws ActionAccessException
      * @throws ActionNotFoundException
      * @throws ControllerNotFoundException
@@ -131,6 +132,8 @@ class Dispatcher extends Component
         } else {
             $result = $method->invoke($controller);
         }
-        return $result;
+        if (isset($result) and $result instanceof Response) {
+            echo $result;
+        }
     }
 }

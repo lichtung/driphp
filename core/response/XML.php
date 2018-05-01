@@ -9,9 +9,10 @@ declare(strict_types=1);
 
 namespace sharin\core\response;
 
+
 use sharin\core\Response;
 
-class ViewResponse extends Response
+class XML extends Response
 {
 
 }

@@ -11,11 +11,17 @@ namespace sharin\core\cache;
 
 
 use sharin\throws\core\cache\RedisException;
-
+/**
+ * 缓存驱动
+ * @author zhonghuanglin
+ */
 abstract class Driver
 {
     protected $config = [];
-
+	/**
+ 	* 构造函数 
+ 	* @param array $config
+ 	*/
     public function __construct(array $config = [])
     {
         $config and $this->config = array_merge($this->config, $config);

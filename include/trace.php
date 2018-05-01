@@ -167,13 +167,13 @@ endline;
     }
 
     if (!SR_IS_AJAX) {
-        $headers = Response::getInstance()->getHeaders();
-        foreach ($headers as $key => $val) {
-            if ('content-type' === strtolower($key)) {
-                if (strpos($val, 'html')) {
-                    echo new TracePage();
-                }
-            }
-        }
+//        $headers = Response::getInstance()->getHeaders();
+//        foreach ($headers as $key => $val) {
+//            if ('content-type' === strtolower($key)) {
+//                if (strpos($val, 'html')) {
+//                    echo new TracePage();
+//                }
+//            }
+//        }
     }
 }

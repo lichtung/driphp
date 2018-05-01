@@ -28,34 +28,17 @@ class Route extends Component
 {
     /** @var array 默认配置 */
     protected $config = [
-        //------------------------
-        //For URL route
-        //------------------------
-        'route_on' => true, # main switch
-        //static route
-        'static_route_on' => true,
-        // wildcard route will be parsed to regular expression and this idea is come from the framework of CodeIgniter
-        'wildcard_route_on' => true,
 
-        //------------------------
-        //For URL parser
-        //------------------------
-        //API模式，直接使用$_GET
-        'api_mode_on' => false,
-        //API模式 对应的$_GET变量名称
-        'api_modules_variable' => '_m',
-        'api_controller_variable' => '_c',
-        'api_action_variable' => '_a',
-
-        //普通模式
-        'masquerade_tail' => '.html',
-
+        #  默认模块、控制器、操作
         'default_modules' => '',
         'default_controller' => 'index',
         'default_action' => 'index',
 
     ];
-//    private static $rules = [];
+    /**
+     * @var array
+     */
+    private static $vhost2controller = [];
 
     /**
      * @var Request
@@ -70,11 +53,21 @@ class Route extends Component
     {
         $this->request = $request;
         $pathInfo = $request->getPathInfo();
+
+        if (!empty(self::$vhost2controller)) {
+            $host = $_SERVER['HTTP_HOST'] ?? '';
+            $controller = self::$vhost2controller[$host] ?? null;
+            if (isset($controller)) {
+                $action = trim($pathInfo, '/');
+                return [$controller, $action ?: $this->config['default_action']];
+            }
+        }
+
         $method = strtolower(SR_REQUEST_METHOD);
         # 静态式路由
-        if ($this->config['static_route_on'] and $rule = self::$staticRoute[$method . '-' . $pathInfo] ?? self::$staticRoute['any-' . $pathInfo] ?? false) {
+        if (!empty(self::$staticRoute) and $rule = self::$staticRoute[$method . '-' . $pathInfo] ?? self::$staticRoute['any-' . $pathInfo] ?? false) {
             return $rule;
-        } elseif ($this->config['wildcard_route_on'] and $wildcard = self::$wildcardRoute) {
+        } elseif ($wildcard = self::$wildcardRoute) {
             # 规则式路由
             foreach ($wildcard as $pattern => $rule) {
                 if (strpos($pattern, $method) === 0) { # 检查请求方法
@@ -176,13 +169,23 @@ class Route extends Component
         self::$currentGroup = '';
     }
 
+    /**
+     * @param string $host 虚拟主机名称，如'blog.sharin.online'
+     * @param string $controller 控制器名称，如 \controller\Blog::class | 'controller\Blog' | "controller\Blog"
+     * @return void
+     */
+    public static function vhost(string $host, string $controller)
+    {
+        self::$vhost2controller[$host] = $controller;
+    }
+
     public static function __callStatic(string $name, array $arguments)
     {
         if (in_array($name, ['get', 'post', 'delete', 'put', 'any'])) {
             $url = $arguments[0];
             $rule = $arguments[1];
             self::$currentGroup and $url = '/' . self::$currentGroup . '/' . ltrim($url, '/');
-            if (strpos($url, '{') !== false and strpos($url, '[') !== false) {
+            if (strpos($url, '{') === false and strpos($url, '[') === false) {
                 self::$staticRoute[$name . '-' . $url] = $rule;
             } else {
                 self::$wildcardRoute[$name . '-' . $url] = $rule;

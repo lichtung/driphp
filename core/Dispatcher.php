@@ -45,19 +45,25 @@ class Dispatcher extends Component
     public function dispatch($route)
     {
         if (isset($route)) {
-            if (is_array($route)) {
-                list($controller, $action) = $route;
-                Dispatcher::runMethod($controller, $action, $_REQUEST);
-            } elseif (is_string($route)) {
-                if (strpos($route, 'http') === 0) {
-                    echo new Redirect($route);# 立即重定向
-                } else {
-                    Dispatcher::runMethod($route, 'invoke');
-                }
-            } elseif ($route instanceof Closure) {
-                call_user_func($route);
-            } else {
-                throw new RouteInvalidException($route);
+            # 闭包，返回路由结果
+            if ($route instanceof Closure) {
+                $route = call_user_func($route);
+            }
+            switch ($type = gettype($route)) {
+                case SR_TYPE_ARRAY:
+                    list($controller, $action) = $route;
+                    Dispatcher::runMethod($controller, $action);
+                    break;
+                case SR_TYPE_STR:
+                    if (strpos($route, 'http') === 0) {
+                        exit(new Redirect($route));# 立即重定向
+                    } else {
+                        Dispatcher::runMethod($route, 'invoke');
+                    }
+                    break;
+                default:
+                    throw new RouteInvalidException($route);
+
             }
         } else {
             $request = Request::getInstance();
@@ -68,10 +74,10 @@ class Dispatcher extends Component
             if (!class_exists($controllerName = 'controller\\' . ($requestModules ? $requestModules . '\\' : '') . ucfirst($request->getController())))
                 throw new ControllerNotFoundException($controllerName);
             try {
-                self::runMethod($controllerName, $request->getAction(), $_REQUEST);
+                self::runMethod($controllerName, $request->getAction());
             } catch (ActionNotFoundException $e1) {
                 try {
-                    self::runMethod($controllerName, '_empty', $_REQUEST);
+                    self::runMethod($controllerName, 'invoke');
                 } catch (ActionNotFoundException $e2) {
                     throw $e1;
                 }
@@ -109,6 +115,13 @@ class Dispatcher extends Component
         } catch (ClassNotFoundException $e) {
             throw new ControllerNotFoundException($controllerName);
         }
+
+        $mc = explode('\\', substr($controllerName, 11));#strlen('controller\\') == 10
+
+        # 建立请求常量
+        Request::getInstance()->setController(array_pop($mc) ?? '')
+            ->setModule($mc ? implode('/', $mc) : '')
+            ->setAction($actionName);
 
         if ($method->getNumberOfParameters()) {//有参数
             $args = [];

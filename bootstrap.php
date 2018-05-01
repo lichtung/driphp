@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace {
 
-    use sharin\core\Response;
     use sharin\Kernel;
     const SR_VERSION = 'Asura'; # 首字母A-Z
 
@@ -95,7 +94,7 @@ namespace sharin {
     use sharin\core\Dispatcher;
     use sharin\core\Logger;
     use sharin\core\Request;
-    use sharin\core\Response;
+    use sharin\core\response\JSON;
     use sharin\core\Route;
     use sharin\throws\core\DriverNotDefinedException;
     use Throwable;
@@ -150,7 +149,7 @@ namespace sharin {
             if (SR_IS_CLI) {
                 var_dump($information);
             } elseif (SR_IS_AJAX) {
-                Response::getInstance()->json($information);
+                exit(new JSON($information));
             } else {
                 if (SR_DEBUG_ON) {
                     require_once __DIR__ . '/include/error.php';

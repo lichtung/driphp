@@ -12,14 +12,16 @@ namespace sharin\core;
 
 final class FooBar
 {
-
-    public static function fetchModuleAndControllerFromControllerName(string $className)
-    {
-        $mc = explode('\\', substr($className, 11));#strlen('controller\\') == 10
-        $_controller = array_pop($mc);
-        $_module = $mc ? implode('/', $mc) : '';
-        return [$_module, strtolower($_controller)];
-    }
+//    /**
+//     * @deprecated
+//     */
+//    public static function fetchModuleAndControllerFromControllerName(string $className)
+//    {
+//        $mc = explode('\\', substr($className, 11));#strlen('controller\\') == 10
+//        $_controller = array_pop($mc);
+//        $_module = $mc ? implode('/', $mc) : '';
+//        return [$_module, strtolower($_controller)];
+//    }
 
     public static function getPrevious(string $item = 'function', int $place = 2): string
     {

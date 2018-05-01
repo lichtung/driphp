@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace sharin\core\response;
 
-use sharin\core\FooBar;
+use sharin\core\Request;
 use sharin\core\Response;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
@@ -27,14 +27,12 @@ class View extends Response
      * @param string $template The template name,default using the method name
      * @param string $theme template theme
      */
-    public function __construct(array $vars = [], string $template = '', string $theme = 'default')
+    public function __construct(string $template = '', array $vars = [], string $theme = 'default')
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
-        $controller = $trace[1]['class'] ?? '';
-        $template or $template = $trace[1]['function'] ?? '';
-
-        # fetch module and controller name
-        list($modules, $controller) = FooBar::fetchModuleAndControllerFromControllerName($controller);
+        $request = Request::getInstance();
+        $modules = $request->getModule();
+        $controller = strtolower($request->getController());
+        $template or $template = $request->getAction();
         require_once __DIR__ . '/../../vendor/autoload.php';
         try {
             # Loaders are responsible for loading templates from a resource such as the file system.
@@ -58,7 +56,7 @@ class View extends Response
 //            'base_template_class' => 'Twig_Template', # The base template class to use for generated templates.
                 # An absolute path where to store the compiled templates, or false to disable caching (which is the default).
                 # Dripex :Building cache will load more files.
-                'cache' => SR_PATH_RUNTIME . "view/{$theme}-{$controller}/",
+                'cache' => SR_PATH_RUNTIME . "view/{$theme}_{$controller}/",
                 # ???
                 # Sets the default auto-escaping strategy (name, html, js, css, url, html_attr, or a PHP callback that takes
                 # the template "filename" and returns the escaping strategy to use -- the callback cannot be a function name

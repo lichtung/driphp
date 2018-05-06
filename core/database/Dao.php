@@ -46,7 +46,7 @@ class Dao extends Component
 
     protected $config = [
         'drivers' => [
-            '' => [
+            'default' => [
                 'name' => MySQL::class,
                 # CREATE SCHEMA `homestead` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
                 'config' => [
@@ -61,11 +61,6 @@ class Dao extends Component
             ],
         ],
     ];
-
-    protected function __construct(string $connect = '')
-    {
-        parent::__construct($connect);
-    }
 
     /**
      * @param string $index

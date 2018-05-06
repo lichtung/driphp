@@ -119,7 +119,7 @@ class Logger extends Component
         'format' => 'Ymd',
         'level' => self::ALL,
         'drivers' => [
-            '' => [
+            'default' => [
                 'name' => FileHandler::class,
                 'config' => [],
             ],

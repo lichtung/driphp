@@ -44,6 +44,7 @@ namespace {
     define('SR_PATH_ROOT', dirname(__DIR__) . '/'); # the parent directory of project and framework
     const SR_PATH_FRAMEWORK = __DIR__ . '/';    # framework directory
     const SR_PATH_PROJECT = SR_PATH_ROOT . SR_PROJECT_NAME . '/'; # project directory
+    const SR_PATH_CONFIG = SR_PATH_PROJECT . 'config/'; # project directory
     const SR_PATH_DATA = SR_PATH_PROJECT . 'data/'; # data directory to store dynamic config or file-based data
     const SR_PATH_VENDOR = SR_PATH_PROJECT . 'vendor/'; # vendor directory for project
     const SR_PATH_RUNTIME = SR_PATH_PROJECT . 'runtime/'; # to store temporary, cache file
@@ -224,7 +225,7 @@ namespace sharin {
          * 外部无法实例化组件
          * @param string $connect 驱动名称
          */
-        protected function __construct(string $connect = '')
+        protected function __construct(string $connect = 'default')
         {
             $className = static::class;
             $this->config = array_merge($this->config, Kernel::getInstance()->config($className));
@@ -240,7 +241,7 @@ namespace sharin {
          * @param string $index
          * @return Component
          */
-        public static function getInstance(string $index = '')
+        public static function getInstance(string $index = 'default')
         {
             static $_instances = [];
             $className = static::class;
@@ -406,15 +407,44 @@ namespace sharin {
         }
 
         /**
-         * 获取组件配置
+         * 获取/设置组件的项目配置
+         *
+         * 每个组件都有一个默认的配置数组，存在于组件类的config属性中，姑且可以称之为"约定"
+         * 而项目配置会逐项覆盖组件的约定项目，使得开发者可以自行定义项目需要的配置
+         *
+         *
+         * 1、当需要对组件进行配置时，将参数而设置为配置数组，就可以按项覆盖预设的项目配置
+         * ```
+         * Kernel::getInstance()->>config( MySQL::class, [...] );
+         * ```
+         * 2、获取组件配置
+         * ```
+         * Kernel::getInstance()->>config( MySQL::class);
+         * ```
+         * @example
+         *
+         * @version 1.0
          * @param string $component 组件名称
          * @param array|null $config 组件配置
          * @return array
          */
         public function config(string $component, array $config = null): array
         {
-            if (isset($config)) return $this->config[$component] = $config;
-            return $this->config[$component] ?? [];
+            if (isset($config)) {
+                if (!empty($this->config[$component])) {
+                    $config = array_merge($this->config[$component], $config);
+                }
+                $this->config[$component] = $config;
+            } else {
+                if (!isset($this->config[$component])) {
+                    if (is_file($extra = SR_PATH_CONFIG . str_replace('\\', '.', $component) . '.php')) {
+                        $this->config[$component] = include $extra;
+                    } else {
+                        $this->config[$component] = [];
+                    }
+                }
+            }
+            return $this->config[$component];
         }
 
         ######################################### 静态方法区 #############################################################

@@ -1,0 +1,42 @@
+<?php
+/**
+ * User: linzhv@qq.com
+ * Date: 05/05/2018
+ * Time: 14:12
+ */
+declare(strict_types=1);
+
+namespace {
+
+
+    use PhpAmqpLib\Message\AMQPMessage;
+    use sharin\service\rabbit\OnReceiveInterface;
+    use sharin\service\RabbitMQ;
+    use sharin\SharinException;
+
+    require __DIR__ . '/../../boot.php';
+
+    class TestConsumer implements OnReceiveInterface
+    {
+        public function acknowledge(): bool
+        {
+            return true;
+        }
+
+        public function message(AMQPMessage $message, RabbitMQ $context): void
+        {
+            echo $message->body . PHP_EOL;
+        }
+
+        public function error(AMQPMessage $message, RabbitMQ $context): void
+        {
+            echo $message->body . PHP_EOL;
+        }
+    }
+
+    try {
+        RabbitMQ::getInstance()->queue('asder', true)->receive(new TestConsumer());
+    } catch (SharinException $e) {
+        echo $e->getMessage();
+    }
+}

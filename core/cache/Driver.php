@@ -11,6 +11,7 @@ namespace sharin\core\cache;
 
 
 use sharin\throws\core\cache\RedisException;
+
 /**
  * 缓存驱动
  * @author zhonghuanglin
@@ -18,10 +19,11 @@ use sharin\throws\core\cache\RedisException;
 abstract class Driver
 {
     protected $config = [];
-	/**
- 	* 构造函数 
- 	* @param array $config
- 	*/
+
+    /**
+     * 构造函数
+     * @param array $config
+     */
     public function __construct(array $config = [])
     {
         $config and $this->config = array_merge($this->config, $config);
@@ -35,7 +37,7 @@ abstract class Driver
      * @return void
      * @throws RedisException This exception will be thrown if set item failed
      */
-    abstract public function set(string $key, $value, int $ttl = 3600): void;
+    abstract public function set(string $key, $value, int $ttl = 3600);
 
     /**
      * get value from cache by key
@@ -52,13 +54,13 @@ abstract class Driver
      * @return void
      * @throws RedisException
      */
-    abstract public function delete(string $key): void;
+    abstract public function delete(string $key);
 
     /**
      * delete all key-value pair (dangerous action)
      * @return void
      * @throws RedisException
      */
-    abstract public function clean(): void;
+    abstract public function clean();
 
 }

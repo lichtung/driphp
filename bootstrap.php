@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace {
 
     use sharin\Kernel;
-    const SR_VERSION = 'Asura'; # 首字母A-Z
+    const SR_VERSION = '0.0';
 
     define('SR_MICROTIME', ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)));
     define('SR_MEMORY', memory_get_usage());# byte
@@ -449,7 +449,10 @@ namespace sharin {
 
         ######################################### 静态方法区 #############################################################
 
-        public static function getInstance()
+        /**
+         * @return Kernel
+         */
+        public static function getInstance(): Kernel
         {
             static $_instance = null;
             if (null === $_instance) {

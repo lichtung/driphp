@@ -11,7 +11,7 @@ namespace sharin\core\cache;
 
 
 use sharin\core\cache\redis\Lists;
-use sharin\SharinException;
+use sharin\throws\core\cache\RedisConnectException;
 use sharin\throws\core\cache\RedisException;
 
 class Redis extends Driver
@@ -36,7 +36,6 @@ class Redis extends Driver
      * Redis constructor.
      * @param array $config
      * @throws RedisException
-     * @throws SharinException
      */
     public function __construct(array $config = [])
     {
@@ -47,23 +46,22 @@ class Redis extends Driver
 
     /**
      * @return Redis
+     * @throws RedisException
      */
     public static function getInstance(): Redis
     {
         static $instance = null;
-        $instance or $instance = new self();
+        $instance or $instance = new static();
         return $instance;
     }
 
     /**
      * @return \Redis
      * @throws RedisException
-     * @throws SharinException
      */
     public function handler(): \Redis
     {
         if (!$this->handler) {
-            if (!extension_loaded('redis')) throw new SharinException('php-redis is required');
             $this->handler = new \Redis();
             $host = $this->config['host'];
             $port = $this->config['port'];
@@ -80,7 +78,7 @@ class Redis extends Driver
                 $error = "Database[{$host}:{$port}/$database] connect failed ";
             }
 
-            if ($error) throw new RedisException($error);
+            if ($error) throw new RedisConnectException($error);
         }
         return $this->handler;
     }
@@ -92,7 +90,7 @@ class Redis extends Driver
      * @return void
      * @throws RedisException
      */
-    public function set(string $key, $value, int $ttl = 3600): void
+    public function set(string $key, $value, int $ttl = 3600)
     {
         $data = serialize($value);
         if ($ttl ? $this->handler->setex($key, $ttl, $data) : $this->handler->set($key, $data)) {
@@ -120,12 +118,12 @@ class Redis extends Driver
         return false !== $this->handler->get($key);
     }
 
-    public function delete(string $key): void
+    public function delete(string $key)
     {
         $this->handler->delete($key); # Number of keys deleted.
     }
 
-    public function clean(): void
+    public function clean()
     {
         $this->handler->flushDB(); # Always return TRUE.
     }

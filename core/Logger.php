@@ -9,11 +9,9 @@ declare(strict_types=1);
 
 namespace sharin\core;
 
-
 use sharin\Component;
 use sharin\core\logger\FileHandler;
 use sharin\core\logger\LoggerInterface;
-use sharin\DriverInterface;
 use sharin\throws\core\BadLoggerLevelException;
 use sharin\throws\core\logger\MessageEmptyException;
 

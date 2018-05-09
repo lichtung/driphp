@@ -179,6 +179,11 @@ class Route extends Component
         self::$vhost2controller[$host] = $controller;
     }
 
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed|null
+     */
     public static function __callStatic(string $name, array $arguments)
     {
         if (in_array($name, ['get', 'post', 'delete', 'put', 'any'])) {

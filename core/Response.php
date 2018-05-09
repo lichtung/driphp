@@ -6,34 +6,12 @@
  */
 declare(strict_types=1);
 
-
 namespace sharin\core;
 
 
 /**
- * Class Response
- *
- * 跨域资源共享(Cross-Origin Resource Sharing)是指当前域（domain）的资源(web service)被其他域请求的机制，基于同域安全策略的浏览器会
- * 禁止这种跨域操作（注意是客户端检测返回的头部作出的限制）
- *
- *
- *
- * set 'Access-Control-Allow-Origin' to realize cross-domain
- * Chrome will present message like below when using ajax to get data from other website:
- * XMLHttpRequest cannot load http://server.runoob.com/server.php. No 'Access-Control-Allow-Origin'
- * header is present on the requested resource.Origin 'http://client.runoob.com' is therefore not
- * allowed access.
- *
- * - 允许单个域名访问 :   header('Access-Control-Allow-Origin:http://client.runoob.com');
- * - 允许所有域名访问:    header('Access-Control-Allow-Origin:*');
- * - 允许多个域名访问 :
- *      $origin =$_SERVER['HTTP_ORIGIN'] ?? '';
- *      $allow_origin = [ 'http://client1.runoob.com', 'http://client2.runoob.com' ];
- *      if(in_array($origin, $allow_origin))  if(in_array($origin, $allow_origin)){
- *
- *
+ * Class Response 响应类
  * @see https://en.wikipedia.org/wiki/Same-origin_policy
- *
  * @package sharin\core
  */
 class Response
@@ -91,35 +69,18 @@ class Response
         505 => 'HTTP Version Not Supported',
         509 => 'Bandwidth Limit Exceeded',
     ];
-    protected $config = [
-        'cors_all' => false, # 允许全域访问
-        'cors_list' => [],
-    ];
-    /**
-     * @var array 头部列表
-     */
+    /** @var array 头部列表 */
     private $headers = [];
-    /**
-     * @var array 跨域域名列表
-     */
+    /** @var array 跨域域名列表 */
     private $accessControlAllowOrigins = [];
-    /**
-     * @var int  状态码
-     */
+    /** @var int 响应状态码 */
     private $code = 200;
-    /**
-     * @var string 输出内容
-     */
+    /** @var string 输出内容 */
     protected $output = '';
-    /**
-     * @var bool
-     */
+    /** @var bool 设置不缓存头部 */
     protected $flagNoCache = false;
-
-    public function getHeaders(): array
-    {
-        return $this->headers;
-    }
+    /** @var bool 是否不限制跨域访问 */
+    protected $flagCorsAll = false;
 
     /**
      * @param string $key
@@ -129,21 +90,11 @@ class Response
     public function setHeader(string $key, string $value): Response
     {
         if (strtolower($key) === 'access-control-allow-origin') {
+            # 设置同源策略
             $this->accessControlAllowOrigins[] = $value;
         } else {
             $this->headers[$key] = $value;
         }
-        return $this;
-    }
-
-    /**
-     * 设置同源策略
-     * @param string $origin 访问域名，如 http://www.example.com http://www.example.com:80(视浏览器实现而定)
-     * @return $this
-     */
-    public function setAllowOrigin(string $origin = '*'): Response
-    {
-        $this->setHeader('Access-Control-Allow-Origin', $origin);
         return $this;
     }
 
@@ -235,7 +186,7 @@ class Response
                 header('Pragma: no-cache');
             }
             # 设置跨域
-            if ($this->config['cors_all']) {
+            if ($this->flagCorsAll) {
                 header('Access-Control-Allow-Origin:*');
             } else {
                 if (in_array($origin = $_SERVER['HTTP_ORIGIN'] ?? '', $this->accessControlAllowOrigins))

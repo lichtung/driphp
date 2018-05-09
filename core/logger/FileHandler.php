@@ -73,17 +73,16 @@ class FileHandler implements DriverInterface, LoggerInterface
 
     /**
      * record text message to log
-     * @param string|array $message message to log
+     * @param array|string $message 需要记录的信息
      * @param int $level
      * @param string $tag
-     * @param boolean $storeImmediately It will store the logs to file immediately instead of waiting script shutdown if set to true
+     * @param bool $storeImmediately 立即保存日志到文件中(命令行中自动保存) It will store the logs to file immediately instead of waiting script shutdown if set to true
      * @return bool
      */
     public function record($message, int $level = Logger::INFO, string $tag = 'default', bool $storeImmediately = false): bool
     {
         if ($level & $this->context->getAllowLevel()) {
             //无论是静态调用还是实例化调用，都会得到index为2的位置
-
             # 获取调用的位置
             if ($location = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT)[2] ?? false) {
                 $file = $location['file'] ?? '';

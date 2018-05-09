@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace sharin {
 
-    use sharin\core\Response;
-
     class TracePage
     {
         public function __toString()
@@ -17,7 +15,7 @@ namespace sharin {
 
             if (SR_IS_CLI) return false;
             $status = Kernel::status();
-//吞吐率  1秒/单次执行时间
+            //吞吐率  1秒/单次执行时间
             if (count($status) > 1) {
                 $last = end($status);
                 $first = reset($status);            //注意先end后reset
@@ -30,7 +28,7 @@ namespace sharin {
             }
             $requestPerSecond = empty($stat[0]) ? 'Unknown' : 1000 * number_format(1 / $stat[0], 8) . ' req/s';
 
-//包含的文件数组
+            //包含的文件数组
             $files = get_included_files();
             $info = [];
             $len = strlen(SR_PATH_ROOT);
@@ -167,13 +165,6 @@ endline;
     }
 
     if (!SR_IS_AJAX) {
-//        $headers = Response::getInstance()->getHeaders();
-//        foreach ($headers as $key => $val) {
-//            if ('content-type' === strtolower($key)) {
-//                if (strpos($val, 'html')) {
-//                    echo new TracePage();
-//                }
-//            }
-//        }
+        echo new TracePage();
     }
 }

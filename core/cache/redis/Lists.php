@@ -21,6 +21,11 @@ class Lists
     private $redis;
     private $listName = '';
 
+    /**
+     * Lists constructor.
+     * @param string $listName
+     * @param Redis $redis
+     */
     public function __construct(string $listName, Redis $redis)
     {
         $this->listName = $listName;

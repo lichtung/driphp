@@ -19,5 +19,9 @@ use sharin\Component;
  */
 class Cache extends Component
 {
+    protected function initialize()
+    {
+        // TODO: Implement initialize() method.
+    }
 
 }

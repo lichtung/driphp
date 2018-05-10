@@ -66,6 +66,11 @@ class Logger extends Component
      */
     const CRITICAL = 0b100000;
 
+    protected function initialize()
+    {
+        // TODO: Implement initialize() method.
+    }
+
     /**
      * Action must be taken immediately
      *

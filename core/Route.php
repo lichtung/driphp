@@ -33,17 +33,16 @@ class Route extends Component
         'default_modules' => '',
         'default_controller' => 'index',
         'default_action' => 'index',
-
     ];
-    /**
-     * @var array
-     */
+    /** @var array 虚拟主机与控制器的绑定 */
     private static $vhost2controller = [];
 
-    /**
-     * @var Request
-     */
+    /** @var Request $request 请求实例 */
     private $request = null;
+
+    protected function initialize()
+    {
+    }
 
     /**
      * @param Request $request

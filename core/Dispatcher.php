@@ -30,7 +30,9 @@ use sharin\throws\core\dispatch\ModulesNotFoundException;
  */
 class Dispatcher extends Component
 {
-
+    protected function initialize()
+    {
+    }
 
     /**
      * @param $route

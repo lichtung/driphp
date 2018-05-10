@@ -68,15 +68,10 @@ class Request extends Component
     private $headers = [];
 
     /**
-     * Request constructor.
-     *
-     * @see @see https://stackoverflow.com/questions/5483851/manually-parse-raw-multipart-form-data-data-with-php
-     *
-     * @param string $connect
+     * @see https://stackoverflow.com/questions/5483851/manually-parse-raw-multipart-form-data-data-with-php
      */
-    protected function __construct(string $connect = '')
+    protected function initialize()
     {
-        parent::__construct($connect);
         # Gets options from the command line argument list
         SR_IS_CLI and $this->commandArguments = getopt('p:');
         switch (SR_REQUEST_METHOD) {
@@ -94,7 +89,6 @@ class Request extends Component
                     $_request_data and $_REQUEST = array_merge($_REQUEST, $_request_data);
                 }
                 break;
-
         }
     }
 

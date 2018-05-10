@@ -31,6 +31,28 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class Database extends Component
 {
+    /**
+     * @return $this|void
+     * @throws GeneralException
+     * @throws \sharin\throws\core\ClassNotFoundException
+     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \sharin\throws\core\database\ConnectException
+     */
+    protected function initialize()
+    {
+        $this->configuration = Setup::createAnnotationMetadataConfiguration($this->config['paths'], SR_DEBUG_ON);
+        try {
+            $this->connection = DriverManager::getConnection([
+                'pdo' => Dao::getInstance($this->index)->drive()
+            ], $this->configuration, new EventManager());
+            $this->entityManager = EntityManager::create($this->connection, $this->configuration);
+        } catch (DBALException $e) {
+            throw new GeneralException($e->getMessage());
+        } catch (ORMException $e) {
+            throw new GeneralException($e->getMessage());
+        }
+    }
+
     protected $config = [
         'paths' => [
             SR_PATH_PROJECT . 'entity/',
@@ -50,30 +72,6 @@ class Database extends Component
      */
     private $entityManager = null;
 
-
-    /**
-     * Database constructor.
-     * @param string $connect
-     * @throws GeneralException
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException 驱动未定义异常
-     * @throws \sharin\throws\core\database\ConnectException 数据库连接异常
-     */
-    protected function __construct($connect = '')
-    {
-        parent::__construct($connect);
-        $this->configuration = Setup::createAnnotationMetadataConfiguration($this->config['paths'], SR_DEBUG_ON);
-        try {
-            $this->connection = DriverManager::getConnection([
-                'pdo' => Dao::getInstance($this->index)->drive()
-            ], $this->configuration, new EventManager());
-            $this->entityManager = EntityManager::create($this->connection, $this->configuration);
-        } catch (DBALException $e) {
-            throw new GeneralException($e->getMessage());
-        } catch (ORMException $e) {
-            throw new GeneralException($e->getMessage());
-        }
-    }
 
     /**
      * @return Connection

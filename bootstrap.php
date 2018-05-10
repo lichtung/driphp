@@ -141,7 +141,7 @@ namespace sharin {
                 $traces = debug_backtrace();
             }
             ob_get_level() and ob_clean();
-            Logger::getInstance('throwable')->critical($information = [
+            Logger::getLogger('throwable')->critical($information = [
                 'message' => $message,
                 'file' => $file,
                 'line' => $line,
@@ -164,19 +164,6 @@ namespace sharin {
     }
 
     /**
-     * Interface InvokeInterface 直线调用
-     * @package sharin
-     */
-    interface InvokeInterface
-    {
-        /**
-         * @return mixed
-         */
-        public function invoke();
-
-    }
-
-    /**
      * Interface DriverInterface 驱动器器接口
      * @package sharin
      */
@@ -188,31 +175,33 @@ namespace sharin {
          * @param Component $context 驱动依附的组件类作为其上下文环境
          */
         public function __construct(array $config, Component $context);
-
     }
 
     /**
      * Class Component 组件类
+     * 特性：
+     *  - 自动从项目配置中加载组件配置
+     *  - 驱动模式设计
+     *  - 魔术配置
      * @package sharin
      */
     abstract class Component
     {
         /** @var array $config 组件实例配置 */
         protected $config = [];
-
         /** @var string $index 默认驱动索引 */
         protected $index = '';
-
+        /** @var string 驱动类名称 */
         protected $driverName = '';
+        /** @var array 驱动类配置 */
         protected $driverConfig = [];
-
         /** @var array $driverConfig 可用驱动列表 */
         protected $driverPool = [];
-
         /** @var DriverInterface $driver 驱动实例 */
         protected $driver = null;
 
         /**
+         * 获取实例
          * @param array $config
          * @return Component
          */
@@ -271,7 +260,7 @@ namespace sharin {
          * @throws DriverNotDefinedException 适配器未定义
          * @throws ClassNotFoundException  适配器类不存在
          */
-        public function drive(string $index = 'default')
+        public function drive(string $index = 'default'): DriverInterface
         {
             $this->index = $index;
             if (!isset($this->driver)) {
@@ -325,13 +314,11 @@ namespace sharin {
          * @param string $name
          * @param array $arguments
          * @return mixed
-         * @throws ClassNotFoundException
          */
         public static function __callStatic(string $name, array $arguments)
         {
             return call_user_func_array([static::getInstance(), $name], $arguments);
         }
-
     }
 
     final class Kernel
@@ -340,7 +327,6 @@ namespace sharin {
          * @var array 保存所有组件类的配置
          */
         private $config = [
-
             'timezone_zone' => 'Asia/Shanghai',
             'shutdown_handler' => null,
             'exception_handler' => null,
@@ -348,7 +334,6 @@ namespace sharin {
             'session.save_path' => SR_PATH_RUNTIME,# tcp://127.0.0.1:6379
             'session.gc_maxlifetime' => 3600,
             'session.cache_expire' => 3600,
-
         ];
 
         /**

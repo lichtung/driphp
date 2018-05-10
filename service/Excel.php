@@ -9,10 +9,9 @@
 namespace sharin\service;
 
 
-use sharin\Component;
-
 use PHPExcel;
 use PHPExcel_IOFactory;
+use sharin\core\Service;
 use sharin\throws\service\ExcelException;
 
 /**
@@ -20,7 +19,7 @@ use sharin\throws\service\ExcelException;
  * @method Excel getInstance(array $config = []) static
  * @package sharin\service
  */
-class Excel extends Component
+class Excel extends Service
 {
     protected function initialize()
     {

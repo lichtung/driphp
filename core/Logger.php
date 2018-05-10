@@ -168,7 +168,7 @@ class Logger extends Component
      * @param string $loggerName
      * @return Logger|LoggerInterface
      */
-    public static function getInstance(string $loggerName = 'default')
+    public static function getLogger(string $loggerName = 'default')
     {
         /** @var Logger $instance */
         $instance = parent::getInstance();
@@ -184,7 +184,7 @@ class Logger extends Component
      */
     public static function __callStatic(string $level, array $arguments)
     {
-        return call_user_func_array([static::getInstance(), $level], [
+        return call_user_func_array([static::getLogger(), $level], [
             $arguments[0],
             $arguments[1] ?? false
         ]);

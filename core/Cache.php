@@ -12,6 +12,11 @@ namespace sharin\core;
 
 use sharin\Component;
 
+/**
+ * Class Cache
+ * @method Cache getInstance(array $config = []) static
+ * @package sharin\core
+ */
 class Cache extends Component
 {
 

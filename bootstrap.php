@@ -187,7 +187,7 @@ namespace sharin {
          * @param array $config 初始化配置
          * @param Component $context 驱动依附的组件类作为其上下文环境
          */
-        public function __construct(array $config, $context);
+        public function __construct(array $config, Component $context);
 
     }
 
@@ -213,71 +213,67 @@ namespace sharin {
         protected $driver = null;
 
         /**
-         * 获取驱动索引
-         * @return string
+         * @param array $config
+         * @return Component
          */
-        public function getIndex(): string
+        final public static function getInstance(array $config = []): Component
         {
-            return $this->index;
+            $className = static::class;
+            $_config = Kernel::getInstance()->config($className);
+            if ($config) $_config = array_merge($_config, $config);
+            try {
+                /** @var Component $component */
+                $component = Kernel::factory($className, $_config);
+            } catch (ClassNotFoundException $throwable) {
+                # 不会发生
+            }
+            return $component;
         }
 
         /**
-         * 外部无法实例化组件
-         * @param string $connect 驱动名称
+         * Component constructor.
+         * @param array $config
          */
-        protected function __construct(string $connect = 'default')
+        final public function __construct(array $config = [])
         {
-            $className = static::class;
-            $this->config = array_merge($this->config, Kernel::getInstance()->config($className));
+            $this->config = array_merge($this->config, $config);
             if (isset($this->config['drivers'])) {
                 $this->driverPool = $this->config['drivers'];
                 unset($this->config['drivers']);
             }
-            $connect and $this->index = $connect;
+            $this->initialize();
         }
 
         /**
-         * 组件单例子
-         * @param string $index
-         * @return Component
+         * 初始化
+         * @return $this
          */
-        public static function getInstance(string $index = 'default')
-        {
-            static $_instances = [];
-            $className = static::class;
-            if (!isset($_instances[$key = $index . $className])) {
-                /** @var Component $instance */
-                $instance = new $className($index);# 因为构造函数私有的缘故不能使用反射
-                $_instances[$key] = $instance;
-            }
-            return $_instances[$key];
-        }
+        abstract protected function initialize();
 
         /**
-         * @return string
-         */
-        public function getDriverName(): string
-        {
-            return $this->driverName;
-        }
-
-        /**
+         * 获取驱动索引
          * @return array
          */
-        public function getDriverConfig(): array
+        public function driveInfo(): array
         {
-            return $this->driverConfig;
+            return [
+                $this->index,
+                $this->driverName,
+                $this->driverConfig,
+            ];
         }
 
 
         /**
          * 加载驱动
+         * @param string $index
          * @return Driver |object 返回驱动实例
          * @throws DriverNotDefinedException 适配器未定义
          * @throws ClassNotFoundException  适配器类不存在
          */
-        public function drive()
+        public function drive(string $index = 'default')
         {
+            $this->index = $index;
             if (!isset($this->driver)) {
                 if (isset($this->driverPool[$this->index])) {
                     $this->driverName = $this->driverPool[$this->index]['name'];
@@ -329,6 +325,7 @@ namespace sharin {
          * @param string $name
          * @param array $arguments
          * @return mixed
+         * @throws ClassNotFoundException
          */
         public static function __callStatic(string $name, array $arguments)
         {

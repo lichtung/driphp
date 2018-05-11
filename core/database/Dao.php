@@ -14,13 +14,13 @@ use PDOStatement;
 use PDOException;
 use sharin\Component;
 use sharin\core\database\driver\MySQL;
-use sharin\Kernel;
 use sharin\throws\core\ClassNotFoundException;
 use sharin\throws\core\database\ConnectException;
 use sharin\throws\core\database\ExecuteException;
 use sharin\throws\core\database\GeneralException;
 use sharin\throws\core\database\QueryException;
 use sharin\throws\core\DriverNotDefinedException;
+use sharin\core\database\driver\Driver;
 
 /**
  * Class Dao  数据库访问对象(Database Access Object)
@@ -38,6 +38,8 @@ use sharin\throws\core\DriverNotDefinedException;
  *
  *
  * @method int lastInsertId($name = null) get auto-inc id of last insert record
+ * @method Dao getInstance(array $config = []) static
+ * @method Driver drive(string $index = 'default')
  * @package sharin\core
  */
 class Dao extends Component
@@ -50,9 +52,9 @@ class Dao extends Component
                 'name' => MySQL::class,
                 # CREATE SCHEMA `homestead` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
                 'config' => [
-                    'name' => 'homestead',
-                    'user' => 'root',
-                    'passwd' => 'asdqwe123_ZXC',
+                    'name' => '',
+                    'user' => '',
+                    'passwd' => '',
                     'host' => '127.0.0.1',
                     'port' => 3306,
                     'charset' => 'UTF8',
@@ -62,37 +64,8 @@ class Dao extends Component
         ],
     ];
 
-    /**
-     * @param string $index
-     * @return Dao
-     */
-    public static function getInstance(string $index = '')
+    protected function initialize()
     {
-        /** @var Dao $instance */
-        $instance = parent::getInstance($index);
-        return $instance;
-    }
-
-    /**
-     * @return object|driver\Driver
-     * @throws ClassNotFoundException
-     * @throws DriverNotDefinedException
-     * @throws ConnectException
-     */
-    public function drive()
-    {
-        if (!isset($this->driver)) {
-            if (isset($this->driverPool[$this->index])) {
-                $this->driverName = $this->driverPool[$this->index]['name'];
-                $this->driverConfig = $this->driverPool[$this->index]['config'] ?? [];
-                $this->driver = Kernel::factory($this->driverName, [
-                    $this->driverConfig, $this
-                ]);
-            } else {
-                throw new DriverNotDefinedException($this->index);
-            }
-        }
-        return $this->driver;
     }
 
 

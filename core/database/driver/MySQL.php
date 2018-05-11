@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace sharin\core\database\driver;
 
 use PDO;
+use sharin\Component;
 use sharin\core\database\Dao;
 use sharin\throws\core\database\ConnectException;
 
@@ -26,7 +27,7 @@ class MySQL extends Driver
     const ERROR_FIELD_NOT_FOUND = 1054;# 字段不存在
 
     protected $config = [
-        'name' => 'drip',
+        'name' => '',
         'user' => 'root',
         'passwd' => '123456',
         'host' => '127.0.0.1',
@@ -44,10 +45,10 @@ class MySQL extends Driver
     /**
      * MySQL constructor.
      * @param array $config
-     * @param Dao $context
+     * @param Component|Dao $context
      * @throws ConnectException
      */
-    public function __construct(array $config, $context)
+    public function __construct(array $config, Component $context)
     {
         parent::__construct($config, $context);
         $this->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);# 如果设置为0，需要主动提交

@@ -8,11 +8,13 @@
 
 namespace sharin\service\excel;
 
+use stdClass;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_Exception;
+use sharin\service\Excel;
 use sharin\throws\service\ExcelException;
 
-class Import
+class Reader
 {
     /**
      * 导入的文件路径
@@ -27,7 +29,7 @@ class Import
 
     public function __construct($filename)
     {
-        require_once __DIR__ . '/../../../vendor/autoload.php';
+        require_once __DIR__ . '/../../vendor/autoload.php';
         $this->filename = $filename;
     }
 
@@ -37,15 +39,15 @@ class Import
      *```php
      * [
      *  'id' => [
-     *      'colnm' => 'A',
+     *      'column' => 'A',
      *      'text' => 'ID',
      *  ],
      *  'phone' => [
-     *      'colnm' => 'B',
+     *      'column' => 'B',
      *      'text' => '帐号',
      *  ],
      *  'role' => [
-     *      'colnm' => 'C',
+     *      'column' => 'C',
      *      'text' => '角色',
      *  ],
      * ]
@@ -61,11 +63,11 @@ class Import
 
     /**
      * @param callable|null $callback 值回调,参数一是单元格名称(A,B,C...),参数二是单元格的值,参数三是列序号(excel中实际的列)
-     * @param int $datastartline 数据开始的行，默认为2
+     * @param int $dataStartLine 数据开始的行，默认为2
      * @return array
      * @throws ExcelException
      */
-    public function fetch(callable $callback = null, $datastartline = 2)
+    public function fetch(callable $callback = null, $dataStartLine = 2)
     {
         try {
             $data = [];
@@ -79,7 +81,6 @@ class Import
                     break;
                 default:
                     throw new ExcelException("文件'{$this->filename}'无法导入");
-
             }
             $objReader = PHPExcel_IOFactory::createReader($type);
             $engine = $objReader->load($this->filename/*, 'utf-8'*/);//获取第0张sheet对象
@@ -87,8 +88,8 @@ class Import
             $highestRow = $sheet->getHighestRow();
             $activeSheet = $engine->getActiveSheet();
             $sheetData = $sheet->toArray(null, true, true, true);//获取表头数组 表头所在行默认为数据域开始行的前一行,且无法修改
-            $headlineno = $datastartline - 1;
-            if ($headlineno < 0) {
+            $headLineNo = $dataStartLine - 1;
+            if ($headLineNo < 0) {
                 throw new ExcelException('The cause due to lacking of headline! ');
             }
             /**
@@ -99,30 +100,42 @@ class Import
              *      'C' => '手机',
              * )
              */
-            $headlines = $sheetData[$headlineno];
-            for ($i = $datastartline; $i <= $highestRow; $i++) {
+            $headlines = $sheetData[$headLineNo];
+            for ($i = $dataStartLine; $i <= $highestRow; $i++) {
                 //仅第一次验证headline
-                if ($i == $datastartline) {
-                    foreach ($this->map as $key => $val) {
-                        $colnm = isset($val['colnm']) ? $val['colnm'] : $val[0];
-                        $coltitlenm = isset($val['text']) ? $val['text'] : $val[1];
-                        //不想要验证这一行，可能是无关紧要的数据
-                        if (isset($coltitlenm)) {
-                            if (trim($headlines[$colnm]) != trim($coltitlenm)) {
-                                throw new ExcelException('The headline ' . $colnm . ' is not ' . $coltitlenm . '! ');
-                            }
-                        }
-                    }
-                }
+//                if ($i == $dataStartLine) {
+//                    foreach ($this->map as $key => $val) {
+//                        $column = isset($val['column']) ? $val['column'] : $val[0];
+//                        $columnTitle = isset($val['text']) ? $val['text'] : $val[1];
+//                        //不想要验证这一行，可能是无关紧要的数据
+//                        if (isset($columnTitle)) {
+//                            if (trim($headlines[$column]) != trim($columnTitle)) {
+//                                throw new ExcelException('The headline ' . $column . ' is not ' . $columnTitle . '! ');
+//                            }
+//                        }
+//                    }
+//                }
                 //获取数据域
-                $row = array();
+                $row = [];
                 foreach ($this->map as $key => $val) {
-                    $colnm = isset($val['colnm']) ? $val['colnm'] : $val[0];
-                    $cellval = $activeSheet->getCell($colnm . '' . $i)->getValue();
-                    if (isset($callback) && is_callable($callback)) {
-                        $cellval = $callback($colnm, $cellval, $i);
+                    $column = is_array($val) ? $val[0] : $val;
+                    $cellVal = $activeSheet->getCell($column . '' . $i)->getValue();
+                    if (isset($callback)) {
+                        $cellVal = $callback($column, $cellVal, $i);
                     }
-                    $row[$key] = $cellval;
+                    if (preg_match('/=([A-Z]+)\d+/', $cellVal, $match)) {
+                        # 遇到"=A4"的情况 当前单元格的值使用另一个单元格的值(通常再同一个行,不同行GG)
+                        $object = new stdClass();
+                        $object->celNo = Excel::ord($match[1]);
+                        $cellVal = $object;
+                    }
+                    $row[$key] = $cellVal;
+                }
+                foreach ($row as &$item) {
+                    if ($item instanceof stdClass) {
+                        $keys = array_keys($row);
+                        $item = $row[$keys[$item->celNo - 1]] ?? '';
+                    }
                 }
                 $data[] = $row;
             }

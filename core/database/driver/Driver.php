@@ -47,10 +47,10 @@ abstract class Driver extends PDO implements DriverInterface
     /**
      * Driver constructor.
      * @param array $config
-     * @param Dao $context
+     * @param Component|Dao $context
      * @throws ConnectException
      */
-    public function __construct(array $config, $context)
+    public function __construct(array $config, Component $context)
     {
         $this->dao = $context;
         $config and $this->config = array_merge($this->config, $config);

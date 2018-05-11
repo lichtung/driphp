@@ -195,8 +195,6 @@ namespace sharin {
         protected $driverName = '';
         /** @var array 驱动类配置 */
         protected $driverConfig = [];
-        /** @var array $driverConfig 可用驱动列表 */
-        protected $driverPool = [];
         /** @var DriverInterface $driver 驱动实例 */
         protected $driver = null;
 
@@ -209,7 +207,9 @@ namespace sharin {
         {
             $className = static::class;
             $_config = Kernel::getInstance()->config($className);
+
             if ($config) $_config = array_merge($_config, $config);
+
             try {
                 /** @var Component $component */
                 $component = Kernel::factory($className, $_config);
@@ -226,10 +226,6 @@ namespace sharin {
         final public function __construct(array $config = [])
         {
             $this->config = array_merge($this->config, $config);
-            if (isset($this->config['drivers'])) {
-                $this->driverPool = $this->config['drivers'];
-                unset($this->config['drivers']);
-            }
             $this->initialize();
         }
 
@@ -264,9 +260,9 @@ namespace sharin {
         {
             $this->index = $index;
             if (!isset($this->driver)) {
-                if (isset($this->driverPool[$this->index])) {
-                    $this->driverName = $this->driverPool[$this->index]['name'];
-                    $this->driverConfig = $this->driverPool[$this->index]['config'] ?? [];
+                if (isset($this->config['drivers'][$this->index])) {
+                    $this->driverName = $this->config['drivers'][$this->index]['name'];
+                    $this->driverConfig = $this->config['drivers'][$this->index]['config'] ?? [];
                     $this->driver = Kernel::factory($this->driverName, [
                         $this->driverConfig, $this
                     ]);
@@ -275,6 +271,37 @@ namespace sharin {
                 }
             }
             return $this->driver;
+        }
+
+        /**
+         * 获取和设置配置项
+         * @param string $key 配置项,多级配置项以点号分隔
+         * @param mixed|null $value 为null时表示获取配置值,否则标识获取配置值
+         * @return mixed|null
+         * @throws SharinException 访问的config不存在时抛出
+         */
+        public function config(string $key, $value = null)
+        {
+            if (isset($value)) {
+                if (strpos($key, '.') !== false) {
+                    $config = &$this->config;
+                    foreach (explode('.', $key) as $k) {
+                        if ($k) {
+//                            if (!isset($config[$k])) $config[$k] = [];
+                            $config = &$config[$k];
+                        } else {
+                            throw new SharinException("Bad config key [$key]");
+                        }
+                    }
+                    $config = $value;
+                } else {
+                    $this->config[$key] = $value;
+                }
+            } else {
+                # 设置配置项
+                $value = $this->config[$key] ?? null;
+            }
+            return $value;
         }
 
         /**

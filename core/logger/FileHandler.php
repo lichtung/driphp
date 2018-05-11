@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace sharin\core\logger;
 
 
+use sharin\Component;
 use sharin\DriverInterface;
 use sharin\core\Logger;
 use sharin\core\Request;
@@ -37,9 +38,9 @@ class FileHandler implements DriverInterface, LoggerInterface
     /**
      * FileHandler constructor.
      * @param array $config
-     * @param Logger $context
+     * @param Component|Logger $context
      */
-    public function __construct(array $config, $context)
+    public function __construct(array $config, Component $context)
     {
         # web模式下脚本结束自动保存
         if (!SR_IS_CLI) register_shutdown_function([$this, 'store']);

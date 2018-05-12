@@ -10,9 +10,8 @@ declare(strict_types=1);
 namespace sharin\throws\core\cache;
 
 
-use sharin\SharinException;
 
-class RedisException extends SharinException
+class RedisException extends CacheException
 {
 
 }

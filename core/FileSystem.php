@@ -29,6 +29,10 @@ class FileSystem extends Component
     const READ_ACCESS = 1;
     const WRITE_ACCESS = 2;
 
+    protected function initialize()
+    {
+    }
+
     /**
      * It will cover the former content if destination file exist
      * @param string $source
@@ -112,11 +116,11 @@ class FileSystem extends Component
                 switch (gettype($result)) {
                     case 'boolean': # filter some files if return an bool value ,ignore whether is true or false
                         continue;
-                    case DRIP_TYPE_ARRAY:
+                    case SR_TYPE_ARRAY:
                         $index = $result[0];
                         $path = $result[1];
                         break;
-                    case DRIP_TYPE_STR:
+                    case SR_TYPE_STR:
                         $index = $result;
                         break;
                 }
@@ -140,7 +144,7 @@ class FileSystem extends Component
      * @throws FileNotFoundException
      * @throws FileReadException
      */
-    public static function read($filePath, $file_encoding = DRIP_CHARSET_UTF8, $readout_encoding = DRIP_CHARSET_UTF8, $maxLength = 4094304): string
+    public static function read($filePath, $file_encoding = SR_CHARSET_UTF8, $readout_encoding = SR_CHARSET_UTF8, $maxLength = 4094304): string
     {
         if (!is_file($filePath)) throw new FileNotFoundException($filePath);
         if (!is_readable($filePath)) throw new FileReadException($filePath);
@@ -279,7 +283,8 @@ class FileSystem extends Component
         if (!self::makeParentDir($filePath)) {
             return false;
         }
-        return touch($filePath, isset($mtime) ? $mtime : DRIP_NOW, isset($accessTime) ? $accessTime : DRIP_NOW);
+        $now = time();
+        return touch($filePath, $mtime ?? $now, $accessTime ?? $now);
     }
 
     /**
@@ -306,7 +311,7 @@ class FileSystem extends Component
      * @param string $text_encode encode of content,it will be 'UTF-8' while scruipt file is encode with 'UTF-8',but sometime it's not expect
      * @return bool
      */
-    public static function write($filePath, $content, $write_encode = DRIP_CHARSET_UTF8, $text_encode = DRIP_CHARSET_UTF8)
+    public static function write($filePath, $content, $write_encode = SR_CHARSET_UTF8, $text_encode = SR_CHARSET_UTF8)
     {
         self::makeParentDir($filePath);
         $write_encode !== $text_encode and $content = iconv($text_encode, "{$write_encode}//IGNORE", $content);
@@ -322,7 +327,7 @@ class FileSystem extends Component
      * @param string $text_encode 文本本身的编码格式,默认使用UTF-8的编码格式
      * @return bool 文件打开或者关闭失败也会返回false
      */
-    public static function append($filePath, $content, $write_encode = DRIP_CHARSET_UTF8, $text_encode = DRIP_CHARSET_UTF8)
+    public static function append($filePath, $content, $write_encode = SR_CHARSET_UTF8, $text_encode = SR_CHARSET_UTF8)
     {
         //编码处理
         $write_encode !== $text_encode and $content = iconv($text_encode, "{$write_encode}//IGNORE", $content);
@@ -372,7 +377,7 @@ class FileSystem extends Component
                     closedir($dir_handle);
                     return false;
                 }
-                $file = "{$dir}/{$file}";//$dir = DRIP_IS_WIN?str_replace('\\','/',"{$dir}/{$file}"):"{$dir}/{$file}"; //windows
+                $file = "{$dir}/{$file}";//$dir = SR_IS_WIN?str_replace('\\','/',"{$dir}/{$file}"):"{$dir}/{$file}"; //windows
 
                 if (is_file($file)) {
                     if (false === unlink($file)) return false;

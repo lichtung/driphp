@@ -54,6 +54,7 @@ class MySQL extends Driver
         $this->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);# 如果设置为0，需要主动提交
     }
 
+
     /**
      * 根据配置创建DSN
      * @param array $config 数据库连接配置

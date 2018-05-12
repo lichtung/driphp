@@ -28,11 +28,15 @@ class Route extends Component
 {
     /** @var array 默认配置 */
     protected $config = [
-
         #  默认模块、控制器、操作
         'default_modules' => '',
         'default_controller' => 'index',
         'default_action' => 'index',
+
+        'api_mode_on' => false,
+        'api_modules_variable' => 'm',
+        'api_controller_variable' => 'c',
+        'api_action_variable' => 'a',
     ];
     /** @var array 虚拟主机与控制器的绑定 */
     private static $vhost2controller = [];
@@ -46,11 +50,35 @@ class Route extends Component
 
     /**
      * @param Request $request
-     * @return bool|mixed|object
+     * @return null|array
      */
     public function parse(Request $request)
     {
         $this->request = $request;
+
+        if ($this->config['api_mode_on'] ?? false) {
+
+            $result = [];
+            # API mode that with simple query parameter to determine the module, controller , action
+            $m = $this->config['api_modules_variable'];
+            $c = $this->config['api_controller_variable'];
+            $a = $this->config['api_action_variable'];
+
+            # module , controller, action , parameters
+            isset($_GET[$m]) and $result['m'] = $_GET[$m];
+            isset($_GET[$c]) and $result['c'] = $_GET[$c];
+            isset($_GET[$a]) and $result['a'] = $_GET[$a];
+            unset($_GET[$m], $_GET[$c], $_GET[$a]);
+            $result['p'] = $_GET;
+            if ($m = $_GET['m'] ?? false) {
+                $c = ucfirst($_GET['c'] ?? '');
+                return ["controller\\{$m}\\$c", $_GET['a'] ?? 'invoke'];
+            } else {
+                return ['controller\\' . $_GET['c']];
+            }
+        }
+
+
         $pathInfo = $request->getPathInfo();
 
         if (!empty(self::$vhost2controller)) {

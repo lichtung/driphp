@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace sharin\service\websocket;
 
 
-use sharin\service\WebSocketManager;
-
 interface ValidatorInterface
 {
 }

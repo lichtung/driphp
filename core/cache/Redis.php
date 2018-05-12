@@ -10,7 +10,9 @@ declare(strict_types=1);
 namespace sharin\core\cache;
 
 
+use sharin\core\cache\redis\Hash;
 use sharin\core\cache\redis\Lists;
+use sharin\core\cache\redis\Set;
 use sharin\throws\core\cache\RedisConnectException;
 use sharin\throws\core\cache\RedisException;
 
@@ -164,13 +166,13 @@ class Redis extends Driver
 
     static $_instances = [];
 
-//    public function getHash(string $name): Hash
-//    {
-//        if (!isset(self::$_instances[$name])) {
-//            self::$_instances[$name] = new Hash($name, $this->handler);
-//        }
-//        return self::$_instances[$name];
-//    }
+    public function getHash(string $name): Hash
+    {
+        if (!isset(self::$_instances[$name])) {
+            self::$_instances[$name] = new Hash($name, $this->handler);
+        }
+        return self::$_instances[$name];
+    }
 
     /**
      * Redis List
@@ -185,11 +187,11 @@ class Redis extends Driver
         return self::$_instances[$name];
     }
 
-//    public function getSet(string $name): Set
-//    {
-//        if (!isset(self::$_instances[$name])) {
-//            self::$_instances[$name] = new Set($name, $this->handler);
-//        }
-//        return self::$_instances[$name];
-//    }
+    public function getSet(string $name): Set
+    {
+        if (!isset(self::$_instances[$name])) {
+            self::$_instances[$name] = new Set($name, $this->handler);
+        }
+        return self::$_instances[$name];
+    }
 }

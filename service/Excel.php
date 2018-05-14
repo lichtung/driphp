@@ -66,12 +66,21 @@ class Excel extends Service
      * @param string $fileName
      * @param PHPExcel $excel
      * @return void
-     * @throws \PHPExcel_Reader_Exception
+     * @throws ExcelException
+     * @throws PHPExcel_Reader_Exception
      * @throws \PHPExcel_Writer_Exception
      */
     public function save(string $fileName, PHPExcel $excel = null)
     {
-        $objWriter = PHPExcel_IOFactory::createWriter($excel ?? $this->phpExcel, 'Excel5');
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        if ('xls' === $ext) {
+            $writerType = 'Excel5';
+        } elseif ('xlsx' === $ext) {
+            $writerType = 'Excel2007';
+        } else {
+            throw new ExcelException("错误的文件后缀'$ext'!");
+        }
+        $objWriter = PHPExcel_IOFactory::createWriter($excel ?? $this->phpExcel, $writerType);
         $objWriter->save($fileName);
     }
 
@@ -274,8 +283,8 @@ class Excel extends Service
                 'size' => 16
             ],
             'alignment' => [
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                'horizontal' => self::ALI_CENTER,
+                'vertical' => self::ALI_CENTER
             ],
         ],
         'title_style' => [
@@ -285,8 +294,8 @@ class Excel extends Service
                 'size' => 10
             ],
             'alignment' => [
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                'horizontal' => self::ALI_CENTER,
+                'vertical' => self::ALI_CENTER
             ],
         ],
         'body_style' => [
@@ -296,7 +305,7 @@ class Excel extends Service
                 'size' => 10
             ],
             'alignment' => [
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER
+                'vertical' => self::ALI_CENTER
             ],
         ],
     ];
@@ -304,6 +313,7 @@ class Excel extends Service
 
     protected function initialize()
     {
+        require_once __DIR__ . '/../vendor/autoload.php';
         $this->phpExcel = new PHPExcel();
         //由于vendor基于的import使用了内部缓存，可以多次导入一个类,当使用了PHPExcel相关类时必须先调用该函数
     }
@@ -394,16 +404,16 @@ class Excel extends Service
         for ($i = 0; $i < $dataNum; $i++) {
             $row = $bodies[$i];
             for ($j = 0; $j < $cellNum; $j++) {
-                if (!isset($keys[$j]) or !isset($row[$keys[$j]])) {
-                    continue;
-                }
+//                if (!isset($keys[$j]) or !isset($row[$keys[$j]])) {
+//                    continue;
+//                }
                 $currentCellName = Excel::CELLS[$j] . ($i + $startLine);
                 //应用对齐设置
                 $alignObj = $activeSheet->getStyle($currentCellName)->getAlignment();
                 $alignObj->setHorizontal($titleAlign[$j] ?? PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
                 //值与风格设置
                 $valueObj = $this->phpExcel->setActiveSheetIndex(0);
-                $valueObj->setCellValueExplicit($currentCellName, $row[$keys[$j]], $titleType[$j] ?? PHPExcel_Cell_DataType::TYPE_STRING);
+                $valueObj->setCellValueExplicit($currentCellName, $row[$keys[$j] ?? ''] ?? '', $titleType[$j] ?? PHPExcel_Cell_DataType::TYPE_STRING);
                 $activeSheet->getStyle($currentCellName)->applyFromArray($this->config['body_style']);
             }
         }

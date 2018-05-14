@@ -14,7 +14,7 @@ namespace sharin\service;
  *
  *
  *
- * @package dripex\service
+ * @package sharin\service
  */
 class Monitor
 {

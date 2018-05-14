@@ -104,15 +104,13 @@ class RabbitMQ extends Component
 
     /**
      * RabbitMQ constructor.
-     * @param string $connect
      * @throws RabbitMQException It will be thrown if connect failed. Error message like "stream_socket_client(): unable to connect to tcp://111.0.0.0:5672 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond."
      */
-    protected function __construct(string $connect = 'default')
+    protected function initialize()
     {
-        parent::__construct($connect);
         try {
             $parameters = [];
-            $config = &$this->driverPool[$this->index];
+            $config = &$this->config['drivers'][$this->index];
             foreach (['host', 'port', 'user', 'password', 'vhost', 'insist', 'login_method', 'login_response', 'locale',
                          'connection_timeout', 'read_write_timeout', 'context', 'keepalive', 'heartbeat', 'basic_qos'] as $item) {
                 $parameters[$item] = $config[$item];

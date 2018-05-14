@@ -98,6 +98,7 @@ namespace sharin {
     use sharin\core\response\JSON;
     use sharin\core\Route;
     use sharin\throws\core\DriverNotDefinedException;
+    use sharin\throws\io\FileWriteException;
     use Throwable;
     use sharin\throws\core\ClassNotFoundException;
 
@@ -175,6 +176,20 @@ namespace sharin {
          * @param Component $context 驱动依附的组件类作为其上下文环境
          */
         public function __construct(array $config, Component $context);
+    }
+
+    /**
+     * Interface ErrorHandlerInterface 错误处理函数接口
+     * @package sharin
+     */
+    interface ErrorHandlerInterface
+    {
+        public function handle(int $code, string $message, string $file, int $line): void;
+    }
+
+    interface ExceptionHandlerInterface
+    {
+        public function handle(Throwable $e): void;
     }
 
     /**
@@ -485,6 +500,30 @@ namespace sharin {
                 ],
             ];
             return isset($tag) ? ($_status[$tag] = [microtime(true), memory_get_usage()]) : $_status;
+        }
+
+        /**
+         * @param string $path
+         * @param array $data [optional] It will write to that file if data is not empty, or read and parse file if is default to null
+         * @return array
+         * @throws SharinException What the parsed config file is invalid
+         * @throws FileWriteException Write data to file failed
+         */
+        public static function configuration(string $path, array $data = null): array
+        {
+            if (null === $data) {
+                if (!is_array($result = is_file($path) ? include($path) : [])) {
+                    throw new SharinException("file $path must return array");
+                };
+                return $result;
+            } else {
+                $parentDirectory = dirname($path);
+                is_dir($parentDirectory) or mkdir($parentDirectory, 0777, true);
+                if (!file_put_contents($path, '<?php defined(\'SR_VERSION\') or die(\'No Permission\'); return ' . var_export($data, true) . ';')) {
+                    throw new FileWriteException($path);
+                }
+                return [];
+            }
         }
 
         /**

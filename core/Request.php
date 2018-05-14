@@ -67,6 +67,16 @@ class Request extends Component
     protected $commandArguments = [];
     private $headers = [];
 
+    # browser language
+    const LANG_ZH = 'zh';
+    const LANG_ZH_CN = 'zh_CN';
+    const LANG_ZH_TW = 'zh_TW';
+    const LANG_ZH_HK = 'zh_HK';
+    const LANG_ZH_SG = 'zh_SG';# 新加坡
+    const LANG_ZH_MO = 'zh_MO';# 澳门
+    const LANG_EN = 'en';
+    const LANG_EN_US = 'en_US';
+
     /**
      * @see https://stackoverflow.com/questions/5483851/manually-parse-raw-multipart-form-data-data-with-php
      */
@@ -90,6 +100,46 @@ class Request extends Component
                 }
                 break;
         }
+    }
+
+    /**
+     * get language from client
+     * @param string $default
+     * @param bool $justKeepTopCategory It will only return the top category if set to TRUE (e.g. en_US => en,en_GB => en zh_CN => zh ) .
+     *                  But zh_TW/zh_HK is exception ( It's quit different from Simplified Chinese), it will be convert to zh_TW means traditional Chinese
+     * @return string
+     */
+    public static function language($default = 'en', bool $justKeepTopCategory = false)
+    {
+        static $_lang = null;
+        if (null === $_lang and !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            if (preg_match('/^([a-z\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches) and !empty($matches[1])) {
+                $_lang = str_replace('-', '_', $matches[1]);
+                if ($justKeepTopCategory) {
+                    $topCategory = substr($_lang, 0, 2);
+                    switch ($topCategory) {
+                        # 中文简体以外统一繁体(台湾,香港)
+                        case self::LANG_ZH:
+                            if ($_lang === self::LANG_ZH_CN) {
+                                $_lang = self::LANG_ZH; # 大陆简体
+                            } elseif ($_lang === self::LANG_ZH_SG) {
+                                $_lang = self::LANG_ZH; # 新加坡简体
+                            } else {
+                                $_lang = self::LANG_ZH_TW;# TW,HK和MO默认为TW
+                            }
+                            break;
+                        case self::LANG_EN:
+                        default:
+                            $_lang = $topCategory;
+                            break;
+                    }
+                }
+                return $_lang;
+            } else {
+                return $default;
+            }
+        }
+        return $_lang;
     }
 
     /**

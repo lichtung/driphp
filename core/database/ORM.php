@@ -9,13 +9,18 @@ declare(strict_types=1);
 
 namespace sharin\core\database;
 
+use sharin\Kernel;
+use sharin\throws\core\database\ExecuteException;
+use sharin\throws\core\database\RecordNotFoundException;
+use sharin\throws\core\database\RecordNotUniqueException;
+
 
 /**
  * Class ORM  对象关系映射(Object Relational Mapping)
  *
  * 优点：程序中的数据对象自动地转化为关系型数据库中对应的表和列，避免直接接触SQL
  *
- * @package dripex\database
+ * @package sharin\core\database
  */
 abstract class ORM extends Model
 {
@@ -34,21 +39,20 @@ abstract class ORM extends Model
     private $_flag_modified = false;
 
     /**
-     * @param $primaryKey
-     * @param Dao $dao
-     * @return ORM
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
+     * @param int $primaryKey
+     * @param Dao|null $dao
+     * @return mixed
+     * @throws \sharin\throws\core\ClassNotFoundException
+     * @throws \sharin\throws\core\DriverNotDefinedException
      */
-    public static function getInstance($primaryKey = 0, Dao $dao = null)
+    public static function instance($primaryKey = 0, Dao $dao = null)
     {
         static $_instances = [];
         if ($primaryKey) {
-            $key = (is_array($primaryKey) ? serialize($primaryKey) : $primaryKey) . $dao->getDriver()->getDSN();
+            $key = (is_array($primaryKey) ? serialize($primaryKey) : $primaryKey) . $dao->drive()->getDSN();
             if (!isset($_instances[$key])) {
                 /** @var ORM $object */
-                $_instances[$key] = FooBar::factory(static::class, [$primaryKey, $dao]);
+                $_instances[$key] = Kernel::factory(static::class, [$primaryKey, $dao]);
             }
             return $_instances[$key];
         } else {
@@ -93,14 +97,13 @@ abstract class ORM extends Model
      * 添加记录
      * @param bool $autoReload 添加完成后自动刷新数据（适合有主键的情况下）
      * @return bool
-     * @throws DatabaseException
+     * @throws ExecuteException
      * @throws RecordNotFoundException
      * @throws RecordNotUniqueException
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\ExecuteException
-     * @throws \dripex\throwable\database\QueryException
+     * @throws \sharin\throws\core\ClassNotFoundException
+     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \sharin\throws\core\database\ConnectException
+     * @throws \sharin\throws\core\database\QueryException
      */
     public function insert(bool $autoReload = true): bool
     {
@@ -129,18 +132,17 @@ abstract class ORM extends Model
             }
             return $result;
         } else {
-            throw new DatabaseException("No data to insert");
+            throw new ExecuteException("No data to insert");
         }
     }
 
     /**
      * @param array $data
      * @return bool
-     * @throws DatabaseException
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\ExecuteException
+     * @throws ExecuteException
+     * @throws \sharin\throws\core\ClassNotFoundException
+     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \sharin\throws\core\database\ConnectException
      */
     public function update(array $data = []): bool
     {
@@ -161,7 +163,7 @@ abstract class ORM extends Model
             return $dao->exec("UPDATE `{$this->_table}` SET {$fields} WHERE {$where} LIMIT 1;",
                     $bind) === 1;
         } else {
-            throw new DatabaseException("No data to update");
+            throw new ExecuteException("No data to update");
         }
     }
 
@@ -171,10 +173,10 @@ abstract class ORM extends Model
      * @return $this
      * @throws RecordNotFoundException 记录不存在时抛出
      * @throws RecordNotUniqueException 记录不唯一时抛出
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\QueryException
+     * @throws \sharin\throws\core\ClassNotFoundException
+     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \sharin\throws\core\database\ConnectException
+     * @throws \sharin\throws\core\database\QueryException
      */
     public function find(bool $force = false)
     {
@@ -203,10 +205,10 @@ abstract class ORM extends Model
 
     /**
      * @return bool
-     * @throws \dripex\throwable\core\ClassNotFoundException
-     * @throws \dripex\throwable\core\DriverException
-     * @throws \dripex\throwable\database\ConnectException
-     * @throws \dripex\throwable\database\ExecuteException
+     * @throws \sharin\throws\core\ClassNotFoundException
+     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \sharin\throws\core\database\ConnectException
+     * @throws \sharin\throws\core\database\ExecuteException
      */
     public function delete(): bool
     {
@@ -256,7 +258,6 @@ abstract class ORM extends Model
      * @param string $name 方法名称
      * @param array $args 方法参数
      * @return mixed
-     * @throws \dripex\throwable\core\ClassNotFoundException
      */
     public function __call($name, $args)
     {

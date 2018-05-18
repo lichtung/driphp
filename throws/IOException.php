@@ -12,6 +12,10 @@ namespace sharin\throws;
 
 use sharin\SharinException;
 
+/**
+ * Class IOException IO异常
+ * @package sharin\throws
+ */
 class IOException extends SharinException
 {
 

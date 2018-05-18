@@ -12,6 +12,10 @@ namespace sharin\throws;
 
 use sharin\SharinException;
 
+/**
+ * Class DeprecatedException 调用弃用代码
+ * @package sharin\throws
+ */
 class DeprecatedException extends SharinException
 {
 

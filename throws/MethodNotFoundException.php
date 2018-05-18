@@ -12,6 +12,10 @@ namespace sharin\throws;
 
 use sharin\SharinException;
 
+/**
+ * Class MethodNotFoundException 方法不存在异常
+ * @package sharin\throws
+ */
 class MethodNotFoundException extends SharinException
 {
 

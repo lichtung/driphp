@@ -12,6 +12,10 @@ namespace sharin\throws\service;
 
 use sharin\SharinException;
 
+/**
+ * Class EmailException 邮件异常
+ * @package sharin\throws\service
+ */
 class EmailException extends SharinException
 {
 

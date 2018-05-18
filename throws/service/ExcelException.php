@@ -11,6 +11,10 @@ namespace sharin\throws\service;
 
 use sharin\SharinException;
 
+/**
+ * Class ExcelException Excel异常
+ * @package sharin\throws\service
+ */
 class ExcelException extends SharinException
 {
 

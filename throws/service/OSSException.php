@@ -12,6 +12,10 @@ namespace sharin\throws\service;
 
 use sharin\SharinException;
 
+/**
+ * Class OSSException OSS异常
+ * @package sharin\throws\service
+ */
 class OSSException extends SharinException
 {
 

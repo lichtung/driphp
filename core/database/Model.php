@@ -79,6 +79,8 @@ abstract class Model
     /**
      * @param Dao|null $dao
      * @return mixed
+     * @throws \sharin\throws\core\ClassNotFoundException
+     * @throws \sharin\throws\core\DriverNotDefinedException
      */
     public static function getInstance(Dao $dao = null)
     {

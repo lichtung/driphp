@@ -402,7 +402,7 @@ class Request extends Component
 
     # browser type
     const AGENT_IE = 'ie';
-    const AGENT_FIRFOX = 'firefox';
+    const AGENT_FIREFOX = 'firefox';
     const AGENT_EDGE = 'edge';
     const AGENT_CHROME = 'chrome';
     const AGENT_OPERA = 'opera';
@@ -424,7 +424,7 @@ class Request extends Component
             elseif (strpos($agent, 'edge') !== false)
                 return self::AGENT_EDGE;
             elseif (strpos($agent, 'firefox') !== false)
-                return self::AGENT_FIRFOX;
+                return self::AGENT_FIREFOX;
             elseif (strpos($agent, 'chrome') !== false)
                 return self::AGENT_CHROME;
             elseif (strpos($agent, 'opera') !== false)

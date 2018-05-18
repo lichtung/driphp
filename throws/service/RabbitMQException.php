@@ -12,6 +12,10 @@ namespace sharin\throws\service;
 
 use sharin\SharinException;
 
+/**
+ * Class RabbitMQException RabbitMQ异常
+ * @package sharin\throws\service
+ */
 class RabbitMQException extends SharinException
 {
 

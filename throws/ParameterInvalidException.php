@@ -12,6 +12,10 @@ namespace sharin\throws;
 
 use sharin\SharinException;
 
+/**
+ * Class ParameterInvalidException 非法参数
+ * @package sharin\throws
+ */
 class ParameterInvalidException extends SharinException
 {
 

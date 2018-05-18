@@ -65,7 +65,7 @@ class Cache extends Component
 {
     protected $config = [
         'drivers' => [
-            [
+            'default' => [
                 'name' => Redis::class,
                 'config' => [
                     'host' => '127.0.0.1',

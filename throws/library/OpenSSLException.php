@@ -10,6 +10,10 @@ namespace sharin\throws\library;
 
 use sharin\SharinException;
 
+/**
+ * Class OpenSSLException OpenSSL异常
+ * @package sharin\throws\library
+ */
 class OpenSSLException extends SharinException
 {
 

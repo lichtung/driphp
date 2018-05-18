@@ -12,6 +12,10 @@ namespace sharin\throws\io;
 
 use sharin\throws\IOException;
 
+/**
+ * Class NetworkException 网络异常
+ * @package sharin\throws\io
+ */
 class NetworkException extends IOException
 {
 

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace sharin\core\database;
 
 use PDO;
+use sharin\core\database\driver\SQLiteModel;
 use sharin\throws\core\database\SqliteException;
 use sharin\throws\io\FileWriteException;
 
@@ -161,11 +162,11 @@ class SQLite
 
     /**
      * @param string $className 类名称
-     * @return LiteModel
+     * @return SQLiteModel
      */
     public function createLiteModel(string $className)
     {
-        /** @var LiteModel $instance */
+        /** @var SQLiteModel $instance */
         $instance = new $className($this->dbFile);
         return $instance;
     }

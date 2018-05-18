@@ -119,6 +119,15 @@ namespace sharin {
         }
 
         /**
+         * @throws \ReflectionException
+         */
+        public static function throwing()
+        {
+            $instance = (new \ReflectionClass(static::class))->newInstanceArgs(func_get_args());
+            throw new $instance;
+        }
+
+        /**
          * Dispose an throwable and quit
          * @param Throwable|null $throwable
          * @param int $code
@@ -266,7 +275,7 @@ namespace sharin {
 
         /**
          * 加载驱动
-         * @param string $index
+         * @param string $index 驱动器角标
          * @return Driver |object 返回驱动实例
          * @throws DriverNotDefinedException 适配器未定义
          * @throws ClassNotFoundException  适配器类不存在
@@ -320,9 +329,9 @@ namespace sharin {
         }
 
         /**
-         * Set config value
-         * @param string $name
-         * @param mixed $value
+         * 设置配置项
+         * @param string $name 配置项名称
+         * @param mixed $value 配置值
          * @return void
          */
         public function __set(string $name, $value)
@@ -331,9 +340,9 @@ namespace sharin {
         }
 
         /**
-         * get config value
-         * @param string $name
-         * @return mixed|null
+         * 获取配置项
+         * @param string $name 配置项名称
+         * @return mixed 返回配置值,配置项不存在返回null
          */
         public function __get(string $name)
         {

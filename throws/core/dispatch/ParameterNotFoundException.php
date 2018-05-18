@@ -11,6 +11,10 @@ namespace sharin\throws\core\dispatch;
 
 use sharin\throws\core\DispatchException;
 
+/**
+ * Class ParameterNotFoundException 操作参数不存在异常
+ * @package sharin\throws\core\dispatch
+ */
 class ParameterNotFoundException extends DispatchException
 {
     public function __construct(string $message, int $code = -1)

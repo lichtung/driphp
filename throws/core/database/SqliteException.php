@@ -12,6 +12,10 @@ namespace sharin\throws\core\database;
 
 use sharin\throws\core\DatabaseException;
 
+/**
+ * Class SqliteException SQLite异常
+ * @package sharin\throws\core\database
+ */
 class SqliteException extends DatabaseException
 {
 

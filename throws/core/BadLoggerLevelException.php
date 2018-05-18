@@ -12,6 +12,10 @@ namespace sharin\throws\core;
 
 use sharin\SharinException;
 
+/**
+ * Class BadLoggerLevelException 错误的日志记录级别
+ * @package sharin\throws\core
+ */
 class BadLoggerLevelException extends SharinException
 {
 

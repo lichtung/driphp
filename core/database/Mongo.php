@@ -7,13 +7,14 @@
 declare(strict_types=1);
 
 
-namespace dripex\database;
+namespace sharin\core\database;
 
 use MongoClient;
 use MongoDB;
 use MongoCollection;
 use MongoCursor;
 use MongoException;
+use MongoConnectionException;
 use MongoCursorException;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
@@ -33,7 +34,6 @@ use sharin\throws\core\database\mongo\UpdateException;
  * Class Mongo
  *
  * php5 和 php7 使用不同的接口
- *
  *
  * PHPv7 @see http://php.net/manual/zh/book.mongodb.php
  * PHPv5 @see http://php.net/manual/zh/mongo.core.php
@@ -80,6 +80,10 @@ class Mongo extends Component
      */
     protected $_adapter = null;
 
+    /**
+     * @return Component|void
+     * @throws MongoConnectionException
+     */
     protected function initialize()
     {
         $this->isv7 = version_compare(PHP_VERSION, '7.0', '>=');

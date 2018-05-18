@@ -13,7 +13,7 @@ namespace sharin\throws\core;
 use sharin\SharinException;
 
 /**
- * Class ClassNotFoundException 类找不到异常
+ * Class ClassNotFoundException 类不存在异常
  * @package sharin\throws\core
  */
 class ClassNotFoundException extends SharinException

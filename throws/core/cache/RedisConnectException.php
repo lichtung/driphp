@@ -8,7 +8,10 @@
 
 namespace sharin\throws\core\cache;
 
-
+/**
+ * Class RedisConnectException Redis连接异常
+ * @package sharin\throws\core\cache
+ */
 class RedisConnectException extends RedisException
 {
 

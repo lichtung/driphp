@@ -11,6 +11,10 @@ namespace sharin\throws\core\dispatch;
 
 use sharin\throws\core\DispatchException;
 
+/**
+ * Class ModulesNotFoundException 模块不存在异常
+ * @package sharin\throws\core\dispatch
+ */
 class ModulesNotFoundException extends DispatchException
 {
 

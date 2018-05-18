@@ -59,7 +59,7 @@ namespace {
     const SR_CHARSET_GBK = 'GBK';
     const SR_CHARSET_ASCII = 'ASCII';
     const SR_CHARSET_GB2312 = 'GB2312';
-    const SR_CHARSET_LATIN1 = 'ISO-8859-1';# Latin1 is the alia of ISO-8859-1
+    const SR_CHARSET_LATIN1 = 'ISO-8859-1';# Latin1 is the alia of ISO-8859-1  欧洲部分国家使用(西欧语言)
 
     const SR_TYPE_BOOL = 'boolean';
     const SR_TYPE_INT = 'integer';
@@ -184,12 +184,12 @@ namespace sharin {
      */
     interface ErrorHandlerInterface
     {
-        public function handle(int $code, string $message, string $file, int $line): void;
+        public function handle(int $code, string $message, string $file, int $line);
     }
 
     interface ExceptionHandlerInterface
     {
-        public function handle(Throwable $e): void;
+        public function handle(Throwable $e);
     }
 
     /**
@@ -503,28 +503,38 @@ namespace sharin {
         }
 
         /**
+         * 读取配置
+         * @version 1.0
          * @param string $path
-         * @param array $data [optional] It will write to that file if data is not empty, or read and parse file if is default to null
-         * @return array
-         * @throws SharinException What the parsed config file is invalid
-         * @throws FileWriteException Write data to file failed
+         * @param array|mixed $replace
+         * @return array|mixed
+         * @throws SharinException
          */
-        public static function configuration(string $path, array $data = null): array
+        public static function readConfig(string $path, $replace = [])
         {
-            if (null === $data) {
-                if (!is_array($result = is_file($path) ? include($path) : [])) {
-                    throw new SharinException("file $path must return array");
-                };
-                return $result;
-            } else {
-                $parentDirectory = dirname($path);
-                is_dir($parentDirectory) or mkdir($parentDirectory, 0777, true);
-                if (!file_put_contents($path, '<?php defined(\'SR_VERSION\') or die(\'No Permission\'); return ' . var_export($data, true) . ';')) {
-                    throw new FileWriteException($path);
-                }
-                return [];
+            if (!is_array($result = is_file($path) ? include($path) : $replace)) {
+                throw new SharinException("file $path must return array");
+            };
+            return $result;
+        }
+
+        /**
+         * 写入配置
+         * @version 1.0
+         * @param string $path
+         * @param array $config
+         * @throws FileWriteException
+         */
+        public static function writeConfig(string $path, array $config): void
+        {
+            $parentDirectory = dirname($path);
+            is_dir($parentDirectory) or mkdir($parentDirectory, 0777, true);
+            if (!file_put_contents($path, '<?php defined(\'SR_VERSION\') or die(\'No Permission\'); return ' .
+                var_export($config, true) . ';')) {
+                throw new FileWriteException($path);
             }
         }
+
 
         /**
          * 计算参数哈希值

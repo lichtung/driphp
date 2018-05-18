@@ -11,7 +11,10 @@ namespace sharin\throws\core\dispatch;
 
 use sharin\throws\core\DispatchException;
 
-
+/**
+ * Class ActionAccessException 操作无法范围异常
+ * @package sharin\throws\core\dispatch
+ */
 class ActionAccessException extends DispatchException
 {
 

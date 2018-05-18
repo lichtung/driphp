@@ -102,44 +102,53 @@ class Request extends Component
         }
     }
 
+    /** @var string */
+    private $_language = null;
+
+
+    public function setLanguage(string $language)
+    {
+        $this->_language = $language;
+    }
+
     /**
      * get language from client
-     * @param string $default
-     * @param bool $justKeepTopCategory It will only return the top category if set to TRUE (e.g. en_US => en,en_GB => en zh_CN => zh ) .
+     * @param bool $useCommon It will only return the top category if set to TRUE (e.g. en_US => en,en_GB => en zh_CN => zh ) .
      *                  But zh_TW/zh_HK is exception ( It's quit different from Simplified Chinese), it will be convert to zh_TW means traditional Chinese
      * @return string
      */
-    public static function language($default = 'en', bool $justKeepTopCategory = false)
+    public function language(bool $useCommon = false)
     {
-        static $_lang = null;
-        if (null === $_lang and !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            if (preg_match('/^([a-z\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches) and !empty($matches[1])) {
-                $_lang = str_replace('-', '_', $matches[1]);
-                if ($justKeepTopCategory) {
-                    $topCategory = substr($_lang, 0, 2);
-                    switch ($topCategory) {
-                        # 中文简体以外统一繁体(台湾,香港)
-                        case self::LANG_ZH:
-                            if ($_lang === self::LANG_ZH_CN) {
-                                $_lang = self::LANG_ZH; # 大陆简体
-                            } elseif ($_lang === self::LANG_ZH_SG) {
-                                $_lang = self::LANG_ZH; # 新加坡简体
-                            } else {
-                                $_lang = self::LANG_ZH_TW;# TW,HK和MO默认为TW
-                            }
-                            break;
-                        case self::LANG_EN:
-                        default:
-                            $_lang = $topCategory;
-                            break;
+        if ($this->_language === null) {
+            if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+                if (preg_match('/^([a-z\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches) and !empty($matches[1])) {
+                    $_lang = str_replace('-', '_', $matches[1]);
+                    if ($useCommon) {
+                        $topCategory = substr($_lang, 0, 2);
+                        switch ($topCategory) {
+                            # 中文简体以外统一繁体(台湾,香港)
+                            case self::LANG_ZH:
+                                if ($_lang === self::LANG_ZH_CN) {
+                                    $_lang = self::LANG_ZH; # 大陆简体
+                                } elseif ($_lang === self::LANG_ZH_SG) {
+                                    $_lang = self::LANG_ZH; # 新加坡简体
+                                } else {
+                                    $_lang = self::LANG_ZH_TW;# TW,HK和MO默认为TW
+                                }
+                                break;
+                            case self::LANG_EN:
+                            default:
+                                $_lang = $topCategory;
+                                break;
+                        }
                     }
+                    $this->_language = $_lang;
                 }
-                return $_lang;
             } else {
-                return $default;
+                $this->_language = 'en';
             }
         }
-        return $_lang;
+        return $this->_language;
     }
 
     /**

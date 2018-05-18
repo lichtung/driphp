@@ -12,6 +12,10 @@ namespace sharin\throws\core\dispatch;
 
 use sharin\throws\core\DispatchException;
 
+/**
+ * Class RouteInvalidException 非法路由异常
+ * @package sharin\throws\core\dispatch
+ */
 class RouteInvalidException extends DispatchException
 {
 

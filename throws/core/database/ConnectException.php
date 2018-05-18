@@ -12,6 +12,10 @@ namespace sharin\throws\core\database;
 
 use sharin\throws\core\DatabaseException;
 
+/**
+ * Class ConnectException 数据库连接异常
+ * @package sharin\throws\core\database
+ */
 class ConnectException extends DatabaseException
 {
 

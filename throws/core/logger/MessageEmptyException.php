@@ -12,6 +12,10 @@ namespace sharin\throws\core\logger;
 
 use sharin\SharinException;
 
+/**.
+ * Class MessageEmptyException 日志消息未空异常
+ * @package sharin\throws\core\logger
+ */
 class MessageEmptyException extends SharinException
 {
 

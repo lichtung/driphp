@@ -13,6 +13,10 @@ namespace sharin\throws\core;
 use sharin\core\Logger;
 use sharin\SharinException;
 
+/**
+ * Class DatabaseException 数据库异常
+ * @package sharin\throws\core
+ */
 abstract class DatabaseException extends SharinException
 {
     public function __construct($message, int $code = -1)

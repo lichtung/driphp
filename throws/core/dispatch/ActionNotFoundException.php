@@ -11,6 +11,10 @@ namespace sharin\throws\core\dispatch;
 
 use sharin\throws\core\DispatchException;
 
+/**
+ * Class ActionNotFoundException 操作不存在异常
+ * @package sharin\throws\core\dispatch
+ */
 class ActionNotFoundException extends DispatchException
 {
 

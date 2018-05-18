@@ -29,33 +29,26 @@ use sharin\Kernel;
  */
 class I18n extends Component
 {
-
-    /**
-     * @var string 实例代表的语言
-     */
-    private $lang = '';
-
-
     protected $config = [
         'default_lang' => 'en'
     ];
 
+    private $lang = '';
     /**
-     * @return $this|void
+     * @var array
+     */
+    private $cache = [];
+
+    /**
+     * @return Component|void
      * @throws \sharin\SharinException
      * @throws \sharin\throws\io\FileWriteException
      */
     protected function initialize()
     {
-        $this->lang = Request::getInstance()->language() ?? $this->config['default_lang'];
-        $this->load(false);
+        $this->lang = $this->config['default_lang'] ?? 'en';
+        $this->cache = $this->load();
     }
-
-
-    /**
-     * @var array
-     */
-    private $cache = [];
 
     /**
      * get all language map stored in map
@@ -88,31 +81,25 @@ class I18n extends Component
         return call_user_func_array('sprintf', $args);
     }
 
+
     /**
-     * @param bool $rebuild
      * @return array
      * @throws \sharin\SharinException
-     * @throws \sharin\throws\io\FileWriteException
      */
-    public function load(bool $rebuild = false): array
+    public function load(): array
     {
-        $relativePath = "i18n/{$this->lang}.php";
-        $cacheFile = SR_PATH_RUNTIME . $relativePath;
-        # It will rebuild cache if force to do or cache file not exist or cache expired
-        if ($rebuild or !is_file($cacheFile) or (time() > filemtime($cacheFile) + 60)) {
-            # load framework language pack
-            $this->cache = is_file($innerPath = SR_PATH_FRAMEWORK . $relativePath) ? Kernel::configuration($innerPath) : [];
-            # load project language pack
+        static $_languages = [];
+        if (!isset($_languages[$this->lang])) {
+            $relativePath = "i18n/{$this->lang}.php";
+            $innerLang = Kernel::readConfig(SR_PATH_FRAMEWORK . $relativePath);
             if (is_file($outerPath = SR_PATH_PROJECT . $relativePath)) {
-                $outer = include($outerPath);
-                $outer and $this->cache = array_merge($this->cache, $outer);
+                $outerLang = include($outerPath);
+                $_languages[$this->lang] = array_merge($innerLang, $outerLang);
+            } else {
+                $_languages[$this->lang] = $innerLang;
             }
-            Kernel::configuration(SR_PATH_RUNTIME . $relativePath, $this->cache);
-        } else {
-            $this->cache = Kernel::configuration($cacheFile);
         }
-
-        return $this->cache;
+        return $_languages[$this->lang];
     }
 
 }

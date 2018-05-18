@@ -10,7 +10,10 @@ declare(strict_types=1);
 namespace sharin\throws\core\cache;
 
 
-
+/**+
+ * Class RedisException Redis异常
+ * @package sharin\throws\core\cache
+ */
 class RedisException extends CacheException
 {
 

@@ -12,6 +12,10 @@ namespace sharin\throws\core\database;
 
 use sharin\throws\core\DatabaseException;
 
+/**
+ * Class ExecuteException SQL执行异常
+ * @package sharin\throws\core\database
+ */
 class ExecuteException extends DatabaseException
 {
 

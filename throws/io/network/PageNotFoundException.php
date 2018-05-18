@@ -12,6 +12,10 @@ namespace sharin\throws\io\network;
 
 use sharin\throws\io\NetworkException;
 
+/**
+ * Class PageNotFoundException 404异常
+ * @package sharin\throws\io\network
+ */
 class PageNotFoundException extends NetworkException
 {
 

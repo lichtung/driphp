@@ -12,6 +12,10 @@ namespace sharin\throws\io;
 
 use sharin\throws\IOException;
 
+/**
+ * Class FileNotFoundException 文件不存在异常
+ * @package sharin\throws\io
+ */
 class FileNotFoundException extends IOException
 {
 

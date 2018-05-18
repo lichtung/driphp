@@ -11,6 +11,10 @@ namespace sharin\throws\core\dispatch;
 
 use sharin\throws\core\DispatchException;
 
+/**
+ * Class ControllerNotFoundException 控制器不存在异常
+ * @package sharin\throws\core\dispatch
+ */
 class ControllerNotFoundException extends DispatchException
 {
 

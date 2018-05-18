@@ -11,6 +11,10 @@ namespace sharin\throws\io;
 
 use sharin\throws\IOException;
 
+/**
+ * Class FileReadException 文件读取失败异常
+ * @package sharin\throws\io
+ */
 class FileReadException extends IOException
 {
 

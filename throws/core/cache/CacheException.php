@@ -12,6 +12,10 @@ namespace sharin\throws\core\cache;
 
 use sharin\SharinException;
 
+/**
+ * Class CacheException 缓存异常
+ * @package sharin\throws\core\cache
+ */
 class CacheException extends SharinException
 {
 

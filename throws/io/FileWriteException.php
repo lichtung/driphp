@@ -12,6 +12,10 @@ namespace sharin\throws\io;
 
 use sharin\throws\IOException;
 
+/**
+ * Class FileWriteException 文件写入异常
+ * @package sharin\throws\io
+ */
 class FileWriteException extends IOException
 {
 

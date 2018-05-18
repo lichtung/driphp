@@ -12,6 +12,10 @@ namespace sharin\throws\core\database\mongo;
 
 use sharin\throws\core\database\MongoException;
 
+/**
+ * Class CollectionNotSelectException 集合为选择
+ * @package sharin\throws\core\database\mongo
+ */
 class CollectionNotSelectException extends MongoException
 {
 

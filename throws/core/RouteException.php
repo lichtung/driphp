@@ -13,6 +13,10 @@ namespace sharin\throws\core;
 use sharin\SharinException;
 use Throwable;
 
+/**
+ * Class RouteException 路由异常
+ * @package sharin\throws\core
+ */
 class RouteException extends SharinException
 {
 }

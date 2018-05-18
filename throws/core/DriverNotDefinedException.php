@@ -12,6 +12,10 @@ namespace sharin\throws\core;
 
 use sharin\SharinException;
 
+/**
+ * Class DriverNotDefinedException 驱动未定义
+ * @package sharin\throws\core
+ */
 class DriverNotDefinedException extends SharinException
 {
     /**

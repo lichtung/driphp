@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <parser>
+        <!-- the target location where to store the structure.xml, also used as source location for the transformer. -->
+        <target>_/parser</target>
+        <!-- optional element which defines the file encoding to use. -->
+        <!--<encoding>utf8</encoding>-->
+        <markers>
+            <!-- contains a listing of prefixes used in single line comments to mark a segment of code using a single word -->
+            <item>TODO</item>
+            <item>FIXME</item>
+        </markers>
+        <extensions>
+            <!-- only parse file with the extension of php -->
+            <extension>php</extension>
+        </extensions>
+    </parser>
+    <transformer>
+        <!-- the target location where to store the generated documentation files. -->
+        <target>_/document</target>
+    </transformer>
+    <files>
+        <directory>./core/</directory>
+        <directory>./library/</directory>
+        <directory>./service/</directory>
+        <directory>./throws/</directory>
+        <file>./bootstrap.php</file>
+    </files>
+</phpdoc>

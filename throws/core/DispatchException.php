@@ -12,6 +12,10 @@ namespace sharin\throws\core;
 
 use sharin\SharinException;
 
+/**
+ * Class DispatchException 调度异常
+ * @package sharin\throws\core
+ */
 abstract class DispatchException extends SharinException
 {
 

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# 当前脚本所在目录
+HOME_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
+ACTION=${1}
+
+ENV=${HOME_DIR}/env.yaml
+ENV_SAMPLE=${HOME_DIR}/tests/env.sample.yaml
+PHPUNIT=${HOME_DIR}/vendor/bin/phpunit
+PHPDOC=${HOME_DIR}/vendor/bin/phpdoc
+
+
+
+# 检查环境配置文件是否存在
+if [ ! -f ${ENV} ]; then
+    cp ${ENV_SAMPLE} ${ENV}
+fi
+
+
+case ${ACTION} in
+    "test") # 测试文件/文件夹/全部
+        FILE=${2}
+        ${PHPUNIT} ${FILE}
+    ;;
+    "testsuite") # 测试套件
+        SUIT_NAME=${2}
+        ${PHPUNIT} --testsuite ${SUIT_NAME}
+    ;;
+    "doc") # 输出文档
+        echo -e "TODO"
+#        SOURCE_DIRECTORY=${1}
+#        TARGET_DIRECTORY=${2}
+#        if [ -n  ${SOURCE_DIRECTORY} ]; then
+#            SOURCE_DIRECTORY=${HOME_DIR}/
+#        fi
+#        if [ -n  ${TARGET_DIRECTORY} ]; then
+#            TARGET_DIRECTORY=${HOME_DIR}/output
+#        fi
+
+        php ${PHPDOC} run # -d ${SOURCE_DIRECTORY} -t ${TARGET_DIRECTORY}
+        ;;
+esac

@@ -12,6 +12,10 @@ namespace sharin\throws\core\database;
 
 use sharin\throws\core\DatabaseException;
 
+/**
+ * Class MongoException Mongo数据库异常
+ * @package sharin\throws\core\database
+ */
 class MongoException extends DatabaseException
 {
     public function __construct($message = '', int $code = -1)

@@ -10,13 +10,15 @@ declare(strict_types=1);
 namespace sharin\core\cache;
 
 
+use sharin\Component;
 use sharin\core\cache\redis\Hash;
 use sharin\core\cache\redis\Lists;
 use sharin\core\cache\redis\Set;
+use sharin\DriverInterface;
 use sharin\throws\core\cache\RedisConnectException;
 use sharin\throws\core\cache\RedisException;
 
-class Redis extends Driver
+class Redis extends Driver implements DriverInterface
 {
 
     /**
@@ -37,9 +39,10 @@ class Redis extends Driver
     /**
      * Redis constructor.
      * @param array $config
+     * @param Component $context
      * @throws RedisException
      */
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], Component $context)
     {
         parent::__construct($config);
         $this->secret = sha1($this->config['secret']);

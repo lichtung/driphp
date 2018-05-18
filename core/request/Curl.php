@@ -25,10 +25,8 @@ class Curl
      * @param array $rq_header
      * @param bool $jsonReturn
      * @return mixed|string
-     * @throws NetworkException
-     * @throws PageNotFoundException
      */
-    public function get(string $url, $cookie = '', $header = false, array $opts = [], array $rq_header = [], bool $jsonReturn = false)
+    public static function get(string $url, $cookie = '', $header = false, array $opts = [], array $rq_header = [], bool $jsonReturn = false)
     {
         $ch = curl_init($url);
         if (stripos($url, 'https://') !== false) {
@@ -54,26 +52,11 @@ class Curl
             curl_setopt($ch, $k, $v);
         }
 
-        $content = curl_exec($ch);
-        $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $content = (string)curl_exec($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($httpCode === 404) {
-            throw new PageNotFoundException($url);
-        }
-        if (false === $content) {
-            throw new NetworkException($url);
-        }
-        if ($jsonReturn) {
-            $result = json_decode($content, true);
-            if (!$result) {
-                throw new NetworkException(var_export($content, true));
-            } else {
-                return $result;
-            }
-        } else {
-            return (string)$content;
-        }
+        return [$code, $content];
     }
 
 

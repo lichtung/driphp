@@ -31,5 +31,11 @@
     "psr-0": {
       "": "src/"
     }
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
   }
 }

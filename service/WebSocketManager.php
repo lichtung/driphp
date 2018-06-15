@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
-use sharin\Component;
-use sharin\core\Logger;
-use sharin\service\websocket\AccountManager;
-use sharin\throws\MethodNotFoundException;
+use driphp\Component;
+use driphp\core\Logger;
+use driphp\service\websocket\AccountManager;
+use driphp\throws\MethodNotFoundException;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\WebSocket\Frame;
@@ -40,7 +40,7 @@ use Swoole\WebSocket\Server;
  * @method WebSocketManager  onManagerStop(callable $callback)
  *
  * @method WebSocketManager getInstance() static
- * @package sharin\service
+ * @package driphp\service
  */
 class WebSocketManager extends Component
 {

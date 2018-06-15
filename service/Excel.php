@@ -6,7 +6,7 @@
  * Time: 20:10
  */
 
-namespace sharin\service;
+namespace driphp\service;
 
 use stdClass;
 use PHPExcel;
@@ -15,13 +15,13 @@ use PHPExcel_IOFactory;
 use PHPExcel_Exception;
 use PHPExcel_Style_Alignment;
 use PHPExcel_Cell_DataType;
-use sharin\core\Service;
-use sharin\throws\service\ExcelException;
+use driphp\core\Service;
+use driphp\throws\service\ExcelException;
 
 /**
  * Class Excel
  * @method Excel getInstance(array $config = []) static
- * @package sharin\service
+ * @package driphp\service
  */
 class Excel extends Service
 {

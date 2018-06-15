@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\ss;
+namespace driphp\service\ss;
 
 
 class ShadowSocks

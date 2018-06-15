@@ -11,7 +11,7 @@ namespace tests\core;
 
 
 use PHPUnit\Framework\TestCase;
-use sharin\core\Request;
+use driphp\core\Request;
 
 class RequestTest extends TestCase
 {

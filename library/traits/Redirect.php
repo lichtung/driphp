@@ -7,13 +7,15 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\traits;
+namespace driphp\library\traits;
 
 
-use sharin\core\Response;
-use sharin\FooBar;
-use sharin\Kernel;
+use driphp\Kernel;
 
+/**
+ * Trait Redirect
+ * @package driphp\library\traits
+ */
 trait Redirect
 {
     /**
@@ -54,7 +56,7 @@ trait Redirect
                 'javascript:window.close();';
             Kernel::template('redirect', $vars);
         } else {
-            $redirect = new \sharin\core\response\Redirect($jumpBackOrUrl);
+            $redirect = new \driphp\core\response\Redirect($jumpBackOrUrl);
             $redirect->nocache();
             exit($redirect);
         }

@@ -7,7 +7,7 @@
  */
 
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use sharin\core\Database;
+use driphp\core\Database;
 
 require __DIR__ . '/public/index.php';
 return ConsoleRunner::createHelperSet(Database::getInstance()->getEntityManager());

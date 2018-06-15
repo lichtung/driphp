@@ -11,7 +11,7 @@ namespace tests\core;
 
 
 use PHPUnit\Framework\TestCase;
-use sharin\core\Route;
+use driphp\core\Route;
 
 class RouteTest extends TestCase
 {

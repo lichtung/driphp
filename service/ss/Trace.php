@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\ss;
+namespace driphp\service\ss;
 
 
 /**
  * 输出控制
  * @author Corz
  * Class Trace
- * @package sharin\service\ss
+ * @package driphp\service\ss
  */
 class Trace
 {

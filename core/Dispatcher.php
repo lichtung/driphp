@@ -7,26 +7,26 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
-use sharin\Component;
-use sharin\core\response\Redirect;
-use sharin\throws\core\dispatch\ActionAccessException;
-use sharin\throws\core\ClassNotFoundException;
-use sharin\throws\core\dispatch\ParameterNotFoundException;
-use sharin\throws\core\dispatch\RouteInvalidException;
 use Throwable;
 use Closure;
 use ReflectionClass;
-use sharin\Kernel;
-use sharin\throws\core\dispatch\ActionNotFoundException;
-use sharin\throws\core\dispatch\ControllerNotFoundException;
-use sharin\throws\core\dispatch\ModulesNotFoundException;
+use driphp\Component;
+use driphp\core\response\Redirect;
+use driphp\throws\core\dispatch\ActionAccessException;
+use driphp\throws\core\ClassNotFoundException;
+use driphp\throws\core\dispatch\ParameterNotFoundException;
+use driphp\throws\core\dispatch\RouteInvalidException;
+use driphp\Kernel;
+use driphp\throws\core\dispatch\ActionNotFoundException;
+use driphp\throws\core\dispatch\ControllerNotFoundException;
+use driphp\throws\core\dispatch\ModulesNotFoundException;
 
 /**
  * Class Dispatcher
  * @method Dispatcher getInstance(string $index = '') static
- * @package sharin\core
+ * @package driphp\core
  */
 class Dispatcher extends Component
 {

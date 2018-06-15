@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-use sharin\library\Trace;
+use driphp\library\Trace;
 # php版本需要
 const SR_RELY_PHP_VERSION = 7.0;
 

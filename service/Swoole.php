@@ -7,10 +7,10 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 
-use sharin\Component;
+use driphp\Component;
 use Swoole\Server;
 
 /**
@@ -43,7 +43,7 @@ use Swoole\Server;
  * @property int $heartbeat_check_interval  每隔多少秒检测一次，单位秒，Swoole会轮询所有TCP连接，将超过心跳时间的连接关闭掉
  * @property int $heartbeat_idle_time       TCP连接的最大闲置时间，单位s , 如果某fd最后一次发包距离现在的时间超过这个时间，会把这个连接关闭。
  *
- * @package sharin\service
+ * @package driphp\service
  */
 final class Swoole extends Component
 {

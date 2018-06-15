@@ -6,15 +6,15 @@
  */
 declare(strict_types=1);
 
-namespace sharin\throws\library;
+namespace driphp\throws\library;
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class OpenSSLException OpenSSL异常
- * @package sharin\throws\library
+ * @package driphp\throws\library
  */
-class OpenSSLException extends SharinException
+class OpenSSLException extends DriException
 {
 
 }

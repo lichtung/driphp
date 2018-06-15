@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core;
+namespace driphp\throws\core;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class BadLoggerLevelException 错误的日志记录级别
- * @package sharin\throws\core
+ * @package driphp\throws\core
  */
-class BadLoggerLevelException extends SharinException
+class BadLoggerLevelException extends DriException
 {
 
 }

@@ -7,6 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\dispatcher;
+namespace driphp\core\dispatcher;
 
-use sharin\core\Request;
+/**
+ * Interface InvokeInterface
+ * @deprecated
+ * @package driphp\core\dispatcher
+ */
+interface InvokeInterface
+{
+}

@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache;
+namespace driphp\core\cache;
 
 
-use sharin\Component;
-use sharin\core\cache\redis\Hash;
-use sharin\core\cache\redis\Lists;
-use sharin\core\cache\redis\Set;
-use sharin\DriverInterface;
-use sharin\throws\core\cache\RedisConnectException;
-use sharin\throws\core\cache\RedisException;
+use driphp\Component;
+use driphp\core\cache\redis\Hash;
+use driphp\core\cache\redis\Lists;
+use driphp\core\cache\redis\Set;
+use driphp\DriverInterface;
+use driphp\throws\core\cache\RedisConnectException;
+use driphp\throws\core\cache\RedisException;
 
 class Redis extends Driver implements DriverInterface
 {
@@ -42,7 +42,7 @@ class Redis extends Driver implements DriverInterface
      * @param Component $context
      * @throws RedisException
      */
-    public function __construct(array $config = [], Component $context)
+    public function __construct(array $config = [], Component $context = null)
     {
         parent::__construct($config);
         $this->secret = sha1($this->config['secret']);

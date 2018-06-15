@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
 
-use sharin\Component;
-use sharin\throws\io\FileNotFoundException;
-use sharin\throws\io\FileReadException;
+use driphp\Component;
+use driphp\throws\io\FileNotFoundException;
+use driphp\throws\io\FileReadException;
 
 /**
  * Class FileSystem
- * @package sharin\core
+ * @package driphp\core
  */
 class FileSystem extends Component
 {

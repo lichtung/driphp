@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws;
+namespace driphp\throws;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class IOException IO异常
- * @package sharin\throws
+ * @package driphp\throws
  */
-class IOException extends SharinException
+class IOException extends DriException
 {
 
 }

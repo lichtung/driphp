@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core\logger;
+namespace driphp\throws\core\logger;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**.
  * Class MessageEmptyException 日志消息未空异常
- * @package sharin\throws\core\logger
+ * @package driphp\throws\core\logger
  */
-class MessageEmptyException extends SharinException
+class MessageEmptyException extends DriException
 {
 
 }

@@ -7,10 +7,10 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\traits;
+namespace driphp\library\traits;
 /**
  * Trait Multiton 多例模式
- * @package sharin\library\traits
+ * @package driphp\library\traits
  */
 trait Multiton
 {
@@ -20,8 +20,9 @@ trait Multiton
     protected static $_multiple_instances = [];
 
     /**
-     * @param array ...$arguments
+     * @param mixed ...$arguments
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function getInstanceBy(...$arguments)
     {
@@ -37,8 +38,7 @@ trait Multiton
 
         if (!isset(self::$_multiple_instances[$static][$index])) {
             self::$_multiple_instances[$static][$index] = $arguments ?
-                (new \ReflectionClass($static))->newInstanceArgs($arguments) :
-                new $static();
+                (new \ReflectionClass($static))->newInstanceArgs($arguments) : new $static();
         }
         return self::$_multiple_instances[$static][$index];
     }

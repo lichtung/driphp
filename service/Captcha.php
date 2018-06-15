@@ -7,10 +7,10 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 
-use sharin\core\Service;
+use driphp\core\Service;
 use Gregwar\Captcha\CaptchaBuilder;
 
 /**
@@ -21,7 +21,7 @@ use Gregwar\Captcha\CaptchaBuilder;
  *
  * @method Captcha getInstance(string $index = '') static
  *
- * @package sharin\service
+ * @package driphp\service
  */
 class Captcha extends Service
 {

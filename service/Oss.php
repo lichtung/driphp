@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
-use sharin\core\Service;
+use driphp\core\Service;
 use OSS\Model\BucketInfo;
 use OSS\OssClient;
 use OSS\Core\OssException;
-use sharin\throws\service\OSSException as AliyunOssException;
+use driphp\throws\service\OSSException as AliyunOssException;
 
 /**
  * Class OSS

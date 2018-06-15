@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
-use sharin\Component;
+use driphp\Component;
 
 /**
  * Class Route
@@ -22,7 +22,7 @@ use sharin\Component;
  * @method mixed delete(string $url, $rule) static
  * @method mixed any(string $url, $rule) static
  *
- * @package sharin\core
+ * @package driphp\core
  */
 class Route extends Component
 {
@@ -197,7 +197,7 @@ class Route extends Component
     }
 
     /**
-     * @param string $host 虚拟主机名称，如'blog.sharin.online'
+     * @param string $host 虚拟主机名称，如'blog.driphp.online'
      * @param string $controller 控制器名称，如 \controller\Blog::class | 'controller\Blog' | "controller\Blog"
      * @return void
      */

@@ -7,17 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core;
+namespace driphp\throws\core;
 
 
-use sharin\core\Logger;
-use sharin\SharinException;
+use driphp\core\Logger;
+use driphp\DriException;
 
 /**
  * Class DatabaseException 数据库异常
- * @package sharin\throws\core
+ * @package driphp\throws\core
  */
-abstract class DatabaseException extends SharinException
+abstract class DatabaseException extends DriException
 {
     public function __construct($message, int $code = -1)
     {

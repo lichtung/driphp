@@ -6,14 +6,14 @@
  * Time: 15:14
  */
 
-namespace sharin\throws\io;
+namespace driphp\throws\io;
 
 
-use sharin\throws\IOException;
+use driphp\throws\IOException;
 
 /**
  * Class FileReadException 文件读取失败异常
- * @package sharin\throws\io
+ * @package driphp\throws\io
  */
 class FileReadException extends IOException
 {

@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 
-use sharin\core\Service;
+use driphp\core\Service;
 
 /**
  * Class Walkor The author of Workerman
- * @package sharin\service
+ * @package driphp\service
  */
 class Walkor extends Service
 {

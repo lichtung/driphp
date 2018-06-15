@@ -5,14 +5,14 @@
  * Date: 5/31/17 5:11 PM
  */
 
-namespace sharin\library\queue;
+namespace driphp\library\queue;
 
-use sharin\core\cache\Redis;
+use driphp\core\cache\Redis;
 
 
 /**
  * Class RedisQueue Queue的redis实现
- * @package sharin\library\quene
+ * @package driphp\library\quene
  */
 class RedisQueue implements QueueInterface
 {
@@ -40,7 +40,7 @@ class RedisQueue implements QueueInterface
      * RedisQueue constructor.
      * @param string $key
      * @param int $dbIndex
-     * @throws \sharin\throws\core\cache\RedisException
+     * @throws \driphp\throws\core\cache\RedisException
      */
     public function __construct(string $key, int $dbIndex = 0531)
     {

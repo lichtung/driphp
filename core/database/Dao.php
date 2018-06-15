@@ -7,20 +7,20 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database;
+namespace driphp\core\database;
 
 use PDO;
 use PDOStatement;
 use PDOException;
-use sharin\Component;
-use sharin\core\database\driver\MySQL;
-use sharin\throws\core\ClassNotFoundException;
-use sharin\throws\core\database\ConnectException;
-use sharin\throws\core\database\ExecuteException;
-use sharin\throws\core\database\GeneralException;
-use sharin\throws\core\database\QueryException;
-use sharin\throws\core\DriverNotDefinedException;
-use sharin\core\database\driver\Driver;
+use driphp\Component;
+use driphp\core\database\driver\MySQL;
+use driphp\throws\core\ClassNotFoundException;
+use driphp\throws\core\database\ConnectException;
+use driphp\throws\core\database\ExecuteException;
+use driphp\throws\core\database\GeneralException;
+use driphp\throws\core\database\QueryException;
+use driphp\throws\core\DriverNotDefinedException;
+use driphp\core\database\driver\Driver;
 
 /**
  * Class Dao  数据库访问对象(Database Access Object)
@@ -40,7 +40,7 @@ use sharin\core\database\driver\Driver;
  * @method int lastInsertId($name = null) get auto-inc id of last insert record
  * @method Dao getInstance(array $config = []) static
  * @method Driver drive(string $index = 'default')
- * @package sharin\core
+ * @package driphp\core
  */
 class Dao extends Component
 {

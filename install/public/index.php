@@ -6,10 +6,10 @@
  * Time: 11:51
  */
 
-use sharin\Kernel;
-use sharin\core\Route;
+use driphp\Kernel;
+use driphp\core\Route;
 const SR_PROJECT_NAME = 'demo';
-require __DIR__ . '/../../sharin/bootstrap.php';
+require __DIR__ . '/../../driphp/bootstrap.php';
 $kernel = Kernel::getInstance()->init([
 ]);
 Route::group('test', function () {

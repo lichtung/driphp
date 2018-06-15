@@ -6,15 +6,15 @@
  */
 declare(strict_types=1);
 
-namespace sharin\service;
+namespace driphp\service;
 
-use sharin\Component;
-use sharin\Kernel;
-use sharin\service\rabbit\OnReceiveInterface;
-use sharin\SharinException;
-use sharin\throws\core\ClassNotFoundException;
-use sharin\throws\service\FatalException;
-use sharin\throws\service\RabbitMQException;
+use driphp\Component;
+use driphp\Kernel;
+use driphp\service\rabbit\OnReceiveInterface;
+use driphp\DriException;
+use driphp\throws\core\ClassNotFoundException;
+use driphp\throws\service\FatalException;
+use driphp\throws\service\RabbitMQException;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -52,7 +52,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  *
  * @method RabbitMQ getInstance(string $index = '') static
- * @package sharin\service
+ * @package driphp\service
  */
 class RabbitMQ extends Component
 {
@@ -119,7 +119,7 @@ class RabbitMQ extends Component
             $this->channel = $this->connection->channel();
             $this->channel->basic_qos(null, $config['prefetch_count'] ?? 1, null);
         } catch (ClassNotFoundException $exception) {
-            SharinException::dispose($exception);
+            DriException::dispose($exception);
         } catch (\Throwable $throwable) {
             throw new RabbitMQException($throwable->getMessage());
         }
@@ -167,11 +167,11 @@ class RabbitMQ extends Component
      * Our code will block while our $channel has callbacks. Whenever we receive a message our $callback function will be passed the received message.
      * @param OnReceiveInterface $handler
      * @return void
-     * @throws SharinException
+     * @throws DriException
      */
     public function receive(OnReceiveInterface $handler)
     {
-        if (!SR_IS_CLI) throw new SharinException('cli-mode is required');
+        if (!SR_IS_CLI) throw new DriException('cli-mode is required');
         $this->channel->basic_consume($this->queueName, '', false, !$handler->acknowledge(), false, false,
             function (AMQPMessage $message) use ($handler) {
                 try {
@@ -189,7 +189,7 @@ class RabbitMQ extends Component
                         if ($t instanceof FatalException) {
                             throw $t;
                         } else {
-                            SharinException::dispose($t);
+                            DriException::dispose($t);
                         }
                     }
                 }

@@ -7,23 +7,21 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
 
-use sharin\Component;
+use driphp\Component;
 
 /**
  * Class Midware 中间件
  *
  * 任何请求在执行前都需要经过中间件（包括执行调度的地方）
  *
- * @package sharin\core
+ * @package driphp\core
  */
 class Midware extends Component
 {
     protected function initialize()
     {
     }
-
-
 }

@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\symfony;
+namespace driphp\service\symfony;
 
 use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml as Y;
-use sharin\core\Service;
-use sharin\throws\io\FileNotFoundException;
+use driphp\core\Service;
+use driphp\throws\io\FileNotFoundException;
 
 /**
  * Class Yaml
@@ -88,7 +88,7 @@ use sharin\throws\io\FileNotFoundException;
  * @method Yaml getInstance(string $index = '') static
  *
  *
- * @package sharin\service\symfony
+ * @package driphp\service\symfony
  */
 class Yaml extends Service
 {

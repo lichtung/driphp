@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\encrypt;
+namespace driphp\library\encrypt;
 
 /**
  * Class Encipher 密文书写器
- * @package sharin\library\encrypt
+ * @package driphp\library\encrypt
  */
 class Encipher
 {

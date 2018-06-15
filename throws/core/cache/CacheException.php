@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core\cache;
+namespace driphp\throws\core\cache;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class CacheException 缓存异常
- * @package sharin\throws\core\cache
+ * @package driphp\throws\core\cache
  */
-class CacheException extends SharinException
+class CacheException extends DriException
 {
 
 }

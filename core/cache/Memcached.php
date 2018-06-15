@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache;
+namespace driphp\core\cache;
 
 
-use sharin\SharinException;
-use sharin\throws\core\cache\CacheException;
+use driphp\DriException;
+use driphp\throws\core\cache\CacheException;
 
 class Memcached extends Driver
 {
@@ -34,7 +34,7 @@ class Memcached extends Driver
     /**
      * Memcached constructor.
      * @param array $config
-     * @throws SharinException
+     * @throws DriException
      */
     public function __construct(array $config)
     {
@@ -42,7 +42,7 @@ class Memcached extends Driver
 
         $this->handler = new \Memcached();
         if (empty($servers = $this->_config['servers'])) {
-            throw new SharinException('require servers at least one');
+            throw new DriException('require servers at least one');
         }
         $this->handler->setOption(\Memcached::OPT_CONNECT_TIMEOUT, $this->_config['timeout']);
 

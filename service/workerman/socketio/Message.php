@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace sharin\service\workerman\socketio;
+namespace driphp\service\workerman\socketio;
 /**
  * Class Message 代表通信过程中的消息体部
  *

@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\io;
+namespace driphp\throws\io;
 
 
-use sharin\throws\IOException;
+use driphp\throws\IOException;
 
 /**
  * Class FileNotFoundException 文件不存在异常
- * @package sharin\throws\io
+ * @package driphp\throws\io
  */
 class FileNotFoundException extends IOException
 {

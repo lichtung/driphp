@@ -6,11 +6,11 @@
  * Time: 16:22
  */
 
-namespace sharin\library;
+namespace driphp\library;
 
 /**
  * Class Backtrace
- * @package sharin\library
+ * @package driphp\library
  * @deprecated
  */
 class Backtrace
@@ -18,11 +18,12 @@ class Backtrace
     /**
      * 调用位置
      */
-    const PLACE_BACKWORD = 0; //表示调用者自身的位置
+    const PLACE_BACKWARD = 0; //表示调用者自身的位置
     const PLACE_SELF = 1;// 表示调用调用者的位置
     const PLACE_FORWARD = 2;
     const PLACE_FURTHER_FORWARD = 3;
     /**
+     * backwork
      * 信息组成
      */
     const ELEMENT_FUNCTION = 1;

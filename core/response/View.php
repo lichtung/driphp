@@ -7,17 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\response;
+namespace driphp\core\response;
 
-use sharin\core\Request;
-use sharin\core\Response;
+use driphp\core\Request;
+use driphp\core\Response;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class View
- * @package sharin\core\response
+ * @package driphp\core\response
  */
 class View extends Response
 {
@@ -72,7 +72,7 @@ class View extends Response
 //            }
             $this->output = $twig->render($template . '.twig', $vars);
         } catch (\Throwable $e) {
-            SharinException::dispose($e);
+            DriException::dispose($e);
         }
     }
 

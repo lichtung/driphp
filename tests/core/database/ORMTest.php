@@ -7,30 +7,30 @@
 declare(strict_types=1);
 
 
-namespace sharin\test\database;
+namespace driphp\test\database;
 
 
-use sharin\core\database\Dao;
-use sharin\tests\UniTest;
-use sharin\throws\core\database\RecordNotFoundException;
-use sharin\throws\core\DatabaseException;
+use driphp\core\database\Dao;
+use driphp\tests\UniTest;
+use driphp\throws\core\database\RecordNotFoundException;
+use driphp\throws\core\DatabaseException;
 
 /**
  * Class ORMTest
  *
  * TODO
  *
- * @package sharin\test\database
+ * @package driphp\test\database
  */
 class ORMTest extends UniTest
 {
     /**
      * @return UserORM
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\ExecuteException
-     * @throws \sharin\throws\core\database\QueryException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\ExecuteException
+     * @throws \driphp\throws\core\database\QueryException
      */
     public function testGetInstanceAndInstall()
     {
@@ -113,12 +113,12 @@ class ORMTest extends UniTest
      * @param UserORM $user
      * @return UserORM
      * @throws RecordNotFoundException
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\ExecuteException
-     * @throws \sharin\throws\core\database\QueryException
-     * @throws \sharin\throws\core\database\RecordNotUniqueException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\ExecuteException
+     * @throws \driphp\throws\core\database\QueryException
+     * @throws \driphp\throws\core\database\RecordNotUniqueException
      */
     public function testUpdate(UserORM $user)
     {

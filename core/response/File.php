@@ -6,10 +6,10 @@
  * Time: 15:55
  */
 
-namespace sharin\core\response;
+namespace driphp\core\response;
 
 
-use sharin\core\Response;
+use driphp\core\Response;
 
 class File extends Response
 {

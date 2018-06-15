@@ -7,13 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\request;
+namespace driphp\core\request;
 
 
-use sharin\core\FileSystem;
-use sharin\throws\io\network\PageNotFoundException;
-use sharin\throws\io\NetworkException;
+use driphp\core\FileSystem;
+use driphp\throws\io\network\PageNotFoundException;
+use driphp\throws\io\NetworkException;
 
+/**
+ * Class Curl
+ * @package driphp\core\request
+ */
 class Curl
 {
 

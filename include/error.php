@@ -7,7 +7,7 @@
  */
 declare(strict_types=1);
 
-namespace sharin {
+namespace driphp {
 
     /**
      * @param array $traces

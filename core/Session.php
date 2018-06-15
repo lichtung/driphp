@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
 use SessionHandlerInterface;
-use sharin\Component;
-use sharin\throws\ParameterInvalidException;
+use driphp\Component;
+use driphp\throws\ParameterInvalidException;
 
 /**
  * Class Session 会话
@@ -30,7 +30,7 @@ use sharin\throws\ParameterInvalidException;
  * ②session_register
  * ③session_unregister
  *
- * @package sharin\core
+ * @package driphp\core
  */
 class Session extends Component
 {

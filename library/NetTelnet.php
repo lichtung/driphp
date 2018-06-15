@@ -6,7 +6,7 @@
  * Time: 18:25
  */
 
-namespace sharin\library;
+namespace driphp\library;
 
 use Exception;
 

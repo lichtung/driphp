@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\websocket;
+namespace driphp\service\websocket;
 
 
 interface ValidatorInterface

@@ -9,14 +9,14 @@ declare(strict_types=1);
 
 namespace tests\core\database;
 
-use sharin\throws\core\database\GeneralException;
-use sharin\throws\core\database\QueryException;
-use sharin\core\database\Dao;
-use sharin\core\database\driver\MySQL;
-use sharin\tests\UniTest;
-use sharin\throws\core\database\ConnectException;
-use sharin\throws\core\database\ExecuteException;
-use sharin\throws\core\DriverNotDefinedException;
+use driphp\throws\core\database\GeneralException;
+use driphp\throws\core\database\QueryException;
+use driphp\core\database\Dao;
+use driphp\core\database\driver\MySQL;
+use driphp\tests\UniTest;
+use driphp\throws\core\database\ConnectException;
+use driphp\throws\core\database\ExecuteException;
+use driphp\throws\core\DriverNotDefinedException;
 
 class DaoTest extends UniTest
 {

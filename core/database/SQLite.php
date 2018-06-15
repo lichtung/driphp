@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database;
+namespace driphp\core\database;
 
 use PDO;
-use sharin\core\database\driver\SQLiteModel;
-use sharin\throws\core\database\SqliteException;
-use sharin\throws\io\FileWriteException;
+use driphp\core\database\driver\SQLiteModel;
+use driphp\throws\core\database\SqliteException;
+use driphp\throws\io\FileWriteException;
 
 class SQLite
 {

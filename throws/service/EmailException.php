@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\service;
+namespace driphp\throws\service;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class EmailException 邮件异常
- * @package sharin\throws\service
+ * @package driphp\throws\service
  */
-class EmailException extends SharinException
+class EmailException extends DriException
 {
 
 }

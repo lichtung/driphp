@@ -6,16 +6,16 @@
  * Time: 15:52
  */
 
-namespace sharin\core\database\driver;
+namespace driphp\core\database\driver;
 
 use PDO;
-use sharin\throws\core\database\QueryException;
-use sharin\throws\io\FileWriteException;
+use driphp\throws\core\database\QueryException;
+use driphp\throws\io\FileWriteException;
 
 /**
  * Class MySQL2
  * @deprecated
- * @package sharin\core\database\driver
+ * @package driphp\core\database\driver
  */
 class MySQL2 extends PDO
 {

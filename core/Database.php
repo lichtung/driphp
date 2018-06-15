@@ -6,7 +6,7 @@
  * Time: 10:53
  */
 
-namespace sharin\core;
+namespace driphp\core;
 
 
 use Doctrine\Common\EventManager;
@@ -18,25 +18,25 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Setup;
-use sharin\Component;
-use sharin\core\database\Dao;
-use sharin\throws\core\database\GeneralException;
+use driphp\Component;
+use driphp\core\database\Dao;
+use driphp\throws\core\database\GeneralException;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class Database
  * @method Database getInstance() static
- * @package sharin\core
+ * @package driphp\core
  */
 class Database extends Component
 {
     /**
      * @return $this|void
      * @throws GeneralException
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
      */
     protected function initialize()
     {

@@ -5,7 +5,7 @@
  * Date: 5/31/17 4:57 PM
  */
 
-namespace sharin\library;
+namespace driphp\library;
 
 
 /**
@@ -25,7 +25,7 @@ class Queue
 {
     /**
      * 队列驱动
-     * @var \sharin\library\queue\QueueInterface
+     * @var \driphp\library\queue\QueueInterface
      */
     private $adapter = null;
     /**

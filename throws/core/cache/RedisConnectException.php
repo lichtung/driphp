@@ -6,11 +6,11 @@
  * Time: 18:23
  */
 
-namespace sharin\throws\core\cache;
+namespace driphp\throws\core\cache;
 
 /**
  * Class RedisConnectException Redis连接异常
- * @package sharin\throws\core\cache
+ * @package driphp\throws\core\cache
  */
 class RedisConnectException extends RedisException
 {

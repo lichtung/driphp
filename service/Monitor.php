@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 /**
  * Class Monitor Server Runtime Environment Monitor
  *
  *
  *
- * @package sharin\service
+ * @package driphp\service
  */
 class Monitor
 {

@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database\driver;
+namespace driphp\core\database\driver;
 
 use PDO;
-use sharin\Component;
-use sharin\core\database\Dao;
-use sharin\throws\core\database\ConnectException;
+use driphp\Component;
+use driphp\core\database\Dao;
+use driphp\throws\core\database\ConnectException;
 
 /**
  * Class MySQL
- * @package sharin\core\database\driver
+ * @package driphp\core\database\driver
  */
 class MySQL extends Driver
 {

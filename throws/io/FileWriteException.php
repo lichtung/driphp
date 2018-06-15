@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\io;
+namespace driphp\throws\io;
 
 
-use sharin\throws\IOException;
+use driphp\throws\IOException;
 
 /**
  * Class FileWriteException 文件写入异常
- * @package sharin\throws\io
+ * @package driphp\throws\io
  */
 class FileWriteException extends IOException
 {

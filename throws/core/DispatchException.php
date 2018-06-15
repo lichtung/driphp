@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core;
+namespace driphp\throws\core;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class DispatchException 调度异常
- * @package sharin\throws\core
+ * @package driphp\throws\core
  */
-abstract class DispatchException extends SharinException
+abstract class DispatchException extends DriException
 {
 
 }

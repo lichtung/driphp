@@ -6,13 +6,13 @@
  * Time: 17:33
  */
 
-namespace sharin\service\crawler;
+namespace driphp\service\crawler;
 
-use sharin\Component;
+use driphp\Component;
 
 /**
  * Class ProxyCrawler 代理爬虫
- * @package sharin\service\crawler
+ * @package driphp\service\crawler
  */
 abstract class ProxyCrawler extends Component
 {

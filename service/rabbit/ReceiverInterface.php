@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\rabbit;
+namespace driphp\service\rabbit;
 
 
 use PhpAmqpLib\Message\AMQPMessage;

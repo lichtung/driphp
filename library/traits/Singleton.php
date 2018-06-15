@@ -7,18 +7,19 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\traits;
+namespace driphp\library\traits;
 
 /**
  * Trait Singleton 单例模式
- * @package sharin\library\traits
+ * @package driphp\library\traits
  */
 trait Singleton
 {
 
     /**
-     * @param array ...$params
+     * @param mixed ...$params
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function getInstance(...$params)
     {

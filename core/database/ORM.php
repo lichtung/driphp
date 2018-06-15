@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database;
+namespace driphp\core\database;
 
-use sharin\Kernel;
-use sharin\throws\core\database\ExecuteException;
-use sharin\throws\core\database\RecordNotFoundException;
-use sharin\throws\core\database\RecordNotUniqueException;
+use driphp\Kernel;
+use driphp\throws\core\database\ExecuteException;
+use driphp\throws\core\database\RecordNotFoundException;
+use driphp\throws\core\database\RecordNotUniqueException;
 
 
 /**
@@ -20,7 +20,7 @@ use sharin\throws\core\database\RecordNotUniqueException;
  *
  * 优点：程序中的数据对象自动地转化为关系型数据库中对应的表和列，避免直接接触SQL
  *
- * @package sharin\core\database
+ * @package driphp\core\database
  */
 abstract class ORM extends Model
 {
@@ -42,8 +42,8 @@ abstract class ORM extends Model
      * @param int $primaryKey
      * @param Dao|null $dao
      * @return mixed
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
      */
     public static function instance($primaryKey = 0, Dao $dao = null)
     {
@@ -100,10 +100,10 @@ abstract class ORM extends Model
      * @throws ExecuteException
      * @throws RecordNotFoundException
      * @throws RecordNotUniqueException
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\QueryException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\QueryException
      */
     public function insert(bool $autoReload = true): bool
     {
@@ -140,9 +140,9 @@ abstract class ORM extends Model
      * @param array $data
      * @return bool
      * @throws ExecuteException
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
      */
     public function update(array $data = []): bool
     {
@@ -173,10 +173,10 @@ abstract class ORM extends Model
      * @return $this
      * @throws RecordNotFoundException 记录不存在时抛出
      * @throws RecordNotUniqueException 记录不唯一时抛出
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\QueryException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\QueryException
      */
     public function find(bool $force = false)
     {
@@ -205,10 +205,10 @@ abstract class ORM extends Model
 
     /**
      * @return bool
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\ExecuteException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\ExecuteException
      */
     public function delete(): bool
     {

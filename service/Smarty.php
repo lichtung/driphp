@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 /**
  * Class Smarty
  * @deprecated
- * @package sharin\service
+ * @package driphp\service
  */
 class Smarty
 {

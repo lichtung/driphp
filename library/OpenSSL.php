@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
-use sharin\throws\library\OpenSSLException as Exception;
+use driphp\throws\library\OpenSSLException as Exception;
 
 /**
  * Class OpenSSL
@@ -44,7 +44,7 @@ use sharin\throws\library\OpenSSLException as Exception;
  * but in general the resulting encoded string will be about a 33% bigger (for 128 bytes bout 170 bytes and for 256 bytes about
  * 340 bytes).
  *
- * @package sharin\library
+ * @package driphp\library
  */
 class OpenSSL
 {
@@ -109,28 +109,6 @@ class OpenSSL
             if (false === $this->privateKeyResource) throw new Exception('invalid private key');
         }
         return $this->privateKeyResource;
-    }
-
-    /**
-     * 生成公私钥
-     * @param string $outputDir 输出目录
-     * @return string
-     */
-    public static function generate(string $outputDir = ''): string
-    {
-        $outputDir or $outputDir = SR_PATH_FRAMEWORK . 'runtime/';
-        if (!is_dir($outputDir)) mkdir($outputDir, 0777, true);
-        $rsa_private_key = $outputDir . '/rsa_private_key.pem';
-        $private_key = $outputDir . '/private_key.pem';
-        $rsa_public_key = $outputDir . '/rsa_public_key.pem';
-        $result = [];
-        # rsa私钥生成
-        exec("openssl genrsa -out $rsa_private_key 1024", $result);
-        # rsa公钥生成
-        exec("openssl pkcs8 -topk8 -inform PEM -in $rsa_private_key -outform PEM -nocrypt -out $private_key", $result);
-        # 私钥格式转换成pkcs8格式
-        exec("openssl rsa -in $rsa_private_key -pubout -out $rsa_public_key", $result);
-        return implode("\n", $result);
     }
 
     /**

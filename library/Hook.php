@@ -6,11 +6,11 @@
  * Time: 16:24
  */
 
-namespace sharin\library;
+namespace driphp\library;
 
 /**
  * Class Hook
- * @package sharin\library
+ * @package driphp\library
  * @deprecated
  */
 class Hook

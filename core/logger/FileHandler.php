@@ -7,18 +7,18 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\logger;
+namespace driphp\core\logger;
 
 
-use sharin\Component;
-use sharin\DriverInterface;
-use sharin\core\Logger;
-use sharin\core\Request;
+use driphp\Component;
+use driphp\DriverInterface;
+use driphp\core\Logger;
+use driphp\core\Request;
 
 /**
  * Class FileHandler
  *
- * @package sharin\core\logger
+ * @package driphp\core\logger
  */
 class FileHandler implements DriverInterface, LoggerInterface
 {

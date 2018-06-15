@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database\driver;
+namespace driphp\core\database\driver;
 
 
 class SQLServer extends Driver

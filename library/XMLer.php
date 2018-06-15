@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
 
 class XMLer

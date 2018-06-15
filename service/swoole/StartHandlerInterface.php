@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\swoole;
+namespace driphp\service\swoole;
 
 use Swoole\Server;
 
@@ -15,7 +15,7 @@ use Swoole\Server;
  * Interface ServerEventsHandlerInterface Server事件处理器
  *
  *
- * @package sharin\service\swoole
+ * @package driphp\service\swoole
  */
 interface ServerEventsHandlerInterface
 {

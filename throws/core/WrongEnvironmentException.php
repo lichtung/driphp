@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core;
+namespace driphp\throws\core;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class WrongEnvironmentException web模式下或者cli模式下不可用
- * @package sharin\throws\core
+ * @package driphp\throws\core
  */
-class WrongEnvironmentException extends SharinException
+class WrongEnvironmentException extends DriException
 {
 
 }

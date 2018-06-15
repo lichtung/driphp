@@ -7,12 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\response;
+namespace driphp\core\response;
 
 
-use sharin\core\Request;
-use sharin\core\Response;
+use driphp\core\Request;
+use driphp\core\Response;
 
+/**
+ * Class Redirect
+ * @package driphp\core\response
+ */
 class Redirect extends Response
 {
 

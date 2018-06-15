@@ -7,13 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\view;
+namespace driphp\core\view;
 
+use driphp\core\Request;
+use driphp\DriException;
+use driphp\throws\io\FileNotFoundException;
 
-use sharin\core\Request;
-use sharin\SharinException;
-use sharin\throws\io\FileNotFoundException;
-
+/**
+ * Trait Render
+ * @package driphp\core\view
+ */
 trait Render
 {
 
@@ -105,7 +108,7 @@ trait Render
             include $compile_view;
             echo ob_get_clean();
         } catch (\Throwable $throwable) {
-            SharinException::dispose($throwable);
+            DriException::dispose($throwable);
         }
     }
 

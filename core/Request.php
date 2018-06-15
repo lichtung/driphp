@@ -7,18 +7,18 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
 
-use sharin\Component;
+use driphp\Component;
 use tests\core\RequestTest;
 
 /**
  * Class Request
  *
- * http://localhost/php-projes/sharin.online/public/index/index?hello=world
+ * http://localhost/php-projes/driphp.online/public/index/index?hello=world
  * 'HTTP_HOST' => 'localhost',
- * 'SCRIPT_FILENAME' => '/Users/zhonghuanglin/workspace/php-projes/sharin.online/public/index.php',
+ * 'SCRIPT_FILENAME' => '/Users/zhonghuanglin/workspace/php-projes/driphp.online/public/index.php',
  * 'REDIRECT_QUERY_STRING' => 'hello=world',
  * 'QUERY_STRING' => 'hello=world',
  * 'REQUEST_URI' => '/php-projes/sharin.online/public/index/index?hello=world',
@@ -55,7 +55,7 @@ use tests\core\RequestTest;
  * 'PATH_INFO' => '/index/index',
  * 'PHP_SELF' => '/index.php/index/index',
  * @method Request getInstance(...$params) static
- * @package sharin\core
+ * @package driphp\core
  */
 class Request extends Component
 {

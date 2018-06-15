@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\service;
+namespace driphp\throws\service;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class OSSException OSS异常
- * @package sharin\throws\service
+ * @package driphp\throws\service
  */
-class OSSException extends SharinException
+class OSSException extends DriException
 {
 
 }

@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core\cache;
+namespace driphp\throws\core\cache;
 
 
 /**+
  * Class RedisException Redis异常
- * @package sharin\throws\core\cache
+ * @package driphp\throws\core\cache
  */
 class RedisException extends CacheException
 {

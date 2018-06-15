@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
-use sharin\Component;
-use sharin\core\logger\FileHandler;
-use sharin\core\logger\LoggerInterface;
-use sharin\throws\core\BadLoggerLevelException;
-use sharin\throws\core\logger\MessageEmptyException;
+use driphp\Component;
+use driphp\core\logger\FileHandler;
+use driphp\core\logger\LoggerInterface;
+use driphp\throws\core\BadLoggerLevelException;
+use driphp\throws\core\logger\MessageEmptyException;
 
 /**
  * Class Logger 日志记录器
@@ -29,7 +29,7 @@ use sharin\throws\core\logger\MessageEmptyException;
  *
  * @method LoggerInterface drive()
  *
- * @package sharin\core
+ * @package driphp\core
  */
 class Logger extends Component
 {

@@ -26,9 +26,9 @@ namespace {
     const ADDRTYPE_HOST = 3;
 }
 
-namespace sharin\service\workerman {
+namespace driphp\service\workerman {
 
-    use sharin\library\Encryptor;
+    use driphp\library\Encryptor;
     use Workerman\Connection\AsyncTcpConnection;
     use Workerman\Connection\TcpConnection;
     use Workerman\Worker;

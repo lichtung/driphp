@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\tests;
+namespace driphp\tests;
 
 
 use PHPUnit\Framework\TestCase;
-use sharin\Kernel;
-use sharin\service\symfony\Yaml;
+use driphp\Kernel;
+use driphp\service\symfony\Yaml;
 
 class UniTest extends TestCase
 {

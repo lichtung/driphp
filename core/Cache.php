@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
 use Closure;
-use sharin\Component;
-use sharin\core\cache\Redis;
+use driphp\Component;
+use driphp\core\cache\Redis;
 
 /**
  * Class Cache 高速缓存（台湾译**快取**）
@@ -59,7 +59,7 @@ use sharin\core\cache\Redis;
  * @method void  clean()
  *
  * @method Cache getInstance(array $config = []) static
- * @package sharin\core
+ * @package driphp\core
  */
 class Cache extends Component
 {
@@ -89,8 +89,8 @@ class Cache extends Component
      * @param Closure|mixed $replace 如果是一个闭包，则值不存在时获取并设置缓存
      * @param int $expire Closure返回值的缓存期
      * @return mixed
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
      */
     public function get(string $name, $replace = null, $expire = 3600)
     {

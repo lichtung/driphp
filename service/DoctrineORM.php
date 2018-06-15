@@ -7,17 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 
-use sharin\core\Service;
+use driphp\core\Service;
 
 /**
  * Class DoctrineORM
  *
  * @see http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html
  *
- * @package sharin\service
+ * @package driphp\service
  */
 class DoctrineORM extends Service
 {

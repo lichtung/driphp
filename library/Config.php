@@ -6,12 +6,14 @@
  * Time: 16:23
  */
 
-namespace sharin\library;
+namespace driphp\library;
 
+use driphp\core\response\XML;
+use driphp\DriException;
 
 /**
  * Class Config
- * @package sharin\library
+ * @package driphp\library
  * @deprecated
  */
 class Config
@@ -34,7 +36,7 @@ class Config
      * @param array $data
      * @param string $type
      * @return bool
-     * @throws SharinException 配置出错时抛出
+     * @throws DriException 配置出错时抛出
      */
     public static function store(string $path, array $data, string $type = self::TYPE_PHP): bool
     {
@@ -53,7 +55,7 @@ class Config
                 $res = yaml_emit_file($path, $data, YAML_UTF8_ENCODING);
                 break;
             case self::TYPE_XML:
-                $res = file_put_contents($path, Xml::arrayToXml($data));
+                $res = file_put_contents($path, XML::arrayToXml($data));
                 break;
             case self::TYPE_JSON:
                 $res = file_put_contents($path, json_encode($data));
@@ -62,7 +64,7 @@ class Config
                 $res = file_put_contents($path, serialize($data));
                 break;
             default :
-                throw new SharinException("bad config type '$type'");
+                throw new DriException("bad config type '$type'");
         }
         return $res !== false;
     }
@@ -73,7 +75,7 @@ class Config
      * @param string|null $type 配置文件的类型,参数为null时根据文件名称后缀自动获取
      * @param callable $parser 配置解析方法 有些格式需要用户自己解析
      * @return array
-     * @throws SharinException 配置出错时抛出
+     * @throws DriException 配置出错时抛出
      */
     public static function parse($path, $type = '', callable $parser = null)
     {
@@ -104,7 +106,7 @@ class Config
                 if ($parser) {
                     $result = $parser($path);
                 } else {
-                    throw new SharinException("bad config type '$type'");
+                    throw new DriException("bad config type '$type'");
                 }
         }
         return is_array($result) ? $result : [];

@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database;
+namespace driphp\core\database;
 
 use MongoClient;
 use MongoDB;
@@ -24,11 +24,11 @@ use MongoDB\Driver\WriteResult;
 use MongoDB\Driver\WriteError;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Cursor as Cursor7;
-use sharin\Component;
-use sharin\throws\core\database\mongo\CollectionNotSelectException;
-use sharin\throws\core\database\mongo\DatabaseNotSelectException;
-use sharin\throws\core\database\mongo\PersistException;
-use sharin\throws\core\database\mongo\UpdateException;
+use driphp\Component;
+use driphp\throws\core\database\mongo\CollectionNotSelectException;
+use driphp\throws\core\database\mongo\DatabaseNotSelectException;
+use driphp\throws\core\database\mongo\PersistException;
+use driphp\throws\core\database\mongo\UpdateException;
 
 /**
  * Class Mongo

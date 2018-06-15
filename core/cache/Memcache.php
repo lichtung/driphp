@@ -7,10 +7,10 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache;
+namespace driphp\core\cache;
 
 use Memcache as M;
-use sharin\throws\core\cache\CacheException;
+use driphp\throws\core\cache\CacheException;
 
 class Memcache extends Driver
 {

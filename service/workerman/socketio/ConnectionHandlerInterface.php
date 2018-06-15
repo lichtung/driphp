@@ -5,10 +5,10 @@
  * Time: 17:40
  */
 
-namespace sharin\service\workerman\socketio;
+namespace driphp\service\workerman\socketio;
 
 use PHPSocketIO\Socket;
-use sharin\service\workerman\SocketIO;
+use driphp\service\workerman\SocketIO;
 use Workerman\Connection\TcpConnection;
 
 interface ConnectionHandlerInterface

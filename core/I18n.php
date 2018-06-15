@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
 
-use sharin\Component;
-use sharin\Kernel;
+use driphp\Component;
+use driphp\Kernel;
 
 /**
  * Class I18n
@@ -25,7 +25,7 @@ use sharin\Kernel;
  *
  * @method I18n getInstance(array $config = []) static
  *
- * @package sharin\core
+ * @package driphp\core
  */
 class I18n extends Component
 {
@@ -41,8 +41,7 @@ class I18n extends Component
 
     /**
      * @return Component|void
-     * @throws \sharin\SharinException
-     * @throws \sharin\throws\io\FileWriteException
+     * @throws \driphp\DriException
      */
     protected function initialize()
     {
@@ -84,7 +83,7 @@ class I18n extends Component
 
     /**
      * @return array
-     * @throws \sharin\SharinException
+     * @throws \driphp\DriException
      */
     public function load(): array
     {

@@ -7,17 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
 
-use sharin\Component;
+use driphp\Component;
 
 /**
  * Class Cookie
  *
  * @method Cookie getInstance(string $index = '') static
  *
- * @package sharin\library
+ * @package driphp\library
  */
 class Cookie extends Component
 {

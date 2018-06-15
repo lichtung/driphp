@@ -6,11 +6,11 @@
  * Time: 16:04
  */
 
-namespace sharin\tests\service\symfony;
+namespace driphp\tests\service\symfony;
 
 
-use sharin\service\symfony\Yaml;
-use sharin\tests\UniTest;
+use driphp\service\symfony\Yaml;
+use driphp\tests\UniTest;
 
 class YamlTest extends UniTest
 {

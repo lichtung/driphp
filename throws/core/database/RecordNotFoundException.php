@@ -6,14 +6,14 @@
  * Time: 16:10
  */
 
-namespace sharin\throws\core\database;
+namespace driphp\throws\core\database;
 
 
-use sharin\throws\core\DatabaseException;
+use driphp\throws\core\DatabaseException;
 
 /**
  * Class RecordNotFoundException
- * @package sharin\throws\core\database
+ * @package driphp\throws\core\database
  */
 class RecordNotFoundException extends DatabaseException
 {

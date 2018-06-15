@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\email;
+namespace driphp\service\email;
 
 
 class Email

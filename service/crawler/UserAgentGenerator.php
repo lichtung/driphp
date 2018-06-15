@@ -6,13 +6,13 @@
  * Time: 18:19
  */
 
-namespace sharin\service\crawler;
-use sharin\Component;
+namespace driphp\service\crawler;
+use driphp\Component;
 
 /**
  * Class UserAgentGenerator 浏览器标识生成器
  * @method UserAgentGenerator getInstance() static
- * @package sharin\service\crawler
+ * @package driphp\service\crawler
  */
 class UserAgentGenerator extends Component
 {

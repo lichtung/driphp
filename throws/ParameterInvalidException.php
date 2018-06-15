@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws;
+namespace driphp\throws;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class ParameterInvalidException 非法参数
- * @package sharin\throws
+ * @package driphp\throws
  */
-class ParameterInvalidException extends SharinException
+class ParameterInvalidException extends DriException
 {
 
 }

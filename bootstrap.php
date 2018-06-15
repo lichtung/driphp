@@ -17,13 +17,13 @@
  *  ┗━━┓      ┏━┛    ┃      ┃    ┗━━┓      ┏━┛
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Description: Sharing the sharin framework for web developers of beginner.
+ * Description: Sharing the driphp framework for web developers of beginner.
  */
 declare(strict_types=1);
 
 namespace {
 
-    use sharin\Kernel;
+    use driphp\Kernel;
     const SR_VERSION = '0.0';
 
     define('SR_MICROTIME', ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)));
@@ -31,7 +31,7 @@ namespace {
 
     defined('SR_DEBUG_ON') or define('SR_DEBUG_ON', true); #  debug模式默认开启
     defined('SR_LOAN_BALANCE_ON') or define('SR_LOAN_BALANCE_ON', false);# 负载均衡模式默认关闭（开启时候需要手动设置HOST名称）
-    defined('SR_PROJECT_NAME') or define('SR_PROJECT_NAME', '');# 项目名称（项目所在目录的名称，如 idea.sharin.com/ ）
+    defined('SR_PROJECT_NAME') or define('SR_PROJECT_NAME', '');# 项目名称（项目所在目录的名称，如 idea.driphp.com/ ）
 
     # environment constant
     const SR_IS_CLI = PHP_SAPI === 'cli'; # is client environment?
@@ -76,7 +76,7 @@ namespace {
         SR_IS_CLI or register_shutdown_function(function () {
 //            if (class_exists(Response::class)) echo Response::getInstance();
             Kernel::status('shutdown');
-            require(__DIR__ . '/include/trace.php');
+            isset($_GET['show_trace']) and require(__DIR__ . '/include/trace.php');
         });
     } else {
         function dumpon(...$a)
@@ -89,27 +89,27 @@ namespace {
     }
 }
 
-namespace sharin {
+namespace driphp {
 
-    use sharin\core\database\driver\Driver;
-    use sharin\core\Dispatcher;
-    use sharin\core\Logger;
-    use sharin\core\Request;
-    use sharin\core\response\JSON;
-    use sharin\core\Route;
-    use sharin\throws\core\DriverNotDefinedException;
-    use sharin\throws\io\FileWriteException;
+    use driphp\core\database\driver\Driver;
+    use driphp\core\Dispatcher;
+    use driphp\core\Logger;
+    use driphp\core\Request;
+    use driphp\core\response\JSON;
+    use driphp\core\Route;
+    use driphp\throws\core\DriverNotDefinedException;
+    use driphp\throws\io\FileWriteException;
     use Throwable;
-    use sharin\throws\core\ClassNotFoundException;
+    use driphp\throws\core\ClassNotFoundException;
 
     /**
-     * Class SharinException 内置异常
-     * @package sharin
+     * Class DriException 内置异常
+     * @package driphp
      */
-    class SharinException extends \Exception
+    class DriException extends \Exception
     {
         /**
-         * SharinException constructor.
+         * DriException constructor.
          * @param string $message
          * @param int $code
          */
@@ -175,7 +175,7 @@ namespace sharin {
 
     /**
      * Interface DriverInterface 驱动器器接口
-     * @package sharin
+     * @package driphp
      */
     interface DriverInterface
     {
@@ -189,7 +189,7 @@ namespace sharin {
 
     /**
      * Interface ErrorHandlerInterface 错误处理函数接口
-     * @package sharin
+     * @package driphp
      */
     interface ErrorHandlerInterface
     {
@@ -207,7 +207,7 @@ namespace sharin {
      *  - 自动从项目配置中加载组件配置
      *  - 驱动模式设计
      *  - 魔术配置
-     * @package sharin
+     * @package driphp
      */
     abstract class Component
     {
@@ -236,7 +236,7 @@ namespace sharin {
 
             try {
                 /** @var Component $component */
-                $component = Kernel::factory($className, $_config);
+                $component = Kernel::factory($className, [$_config]);
             } catch (ClassNotFoundException $throwable) {
                 # 不会发生
             }
@@ -302,7 +302,7 @@ namespace sharin {
          * @param string $key 配置项,多级配置项以点号分隔
          * @param mixed|null $value 为null时表示获取配置值,否则标识获取配置值
          * @return mixed|null
-         * @throws SharinException 访问的config不存在时抛出
+         * @throws DriException 访问的config不存在时抛出
          */
         public function config(string $key, $value = null)
         {
@@ -314,7 +314,7 @@ namespace sharin {
 //                            if (!isset($config[$k])) $config[$k] = [];
                             $config = &$config[$k];
                         } else {
-                            throw new SharinException("Bad config key [$key]");
+                            throw new DriException("Bad config key [$key]");
                         }
                     }
                     $config = $value;
@@ -397,7 +397,7 @@ namespace sharin {
 
             # 类自动装载函数
             spl_autoload_register(function (string $className) {
-                $path = (strpos($className, 'sharin\\') === 0) ? SR_PATH_ROOT : SR_PATH_PROJECT;
+                $path = (strpos($className, 'driphp\\') === 0) ? SR_PATH_ROOT : SR_PATH_PROJECT;
                 $path .= str_replace('\\', '/', $className) . '.php';
                 if (is_file($path)) require($path);
             }, false, true) or die('register class loader failed');
@@ -413,10 +413,10 @@ namespace sharin {
             false === ini_set('session.cache_expire', (string)$this->config['session.cache_expire']) and die('set session.cache_expire failed');
 
             set_error_handler(function (int $code, string $message, string $file, int $line) {
-                SharinException::dispose(null, $code, $message, $file, $line);
+                DriException::dispose(null, $code, $message, $file, $line);
             });
             set_exception_handler(function (Throwable $e) {
-                SharinException::dispose($e);
+                DriException::dispose($e);
             });
 
             Kernel::status('init_end');
@@ -517,12 +517,12 @@ namespace sharin {
          * @param string $path
          * @param array|mixed $replace
          * @return array|mixed
-         * @throws SharinException
+         * @throws DriException
          */
         public static function readConfig(string $path, $replace = [])
         {
             if (!is_array($result = is_file($path) ? include($path) : $replace)) {
-                throw new SharinException("file $path must return array");
+                throw new DriException("file $path must return array");
             };
             return $result;
         }

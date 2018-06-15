@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\response;
+namespace driphp\core\response;
 
 
-use sharin\core\Response;
+use driphp\core\Response;
 
 /**
  * Class JSONP (JSON with Padding)
  *
  *
- * @package sharin\core\response
+ * @package driphp\core\response
  */
 class JSONP extends Response
 {

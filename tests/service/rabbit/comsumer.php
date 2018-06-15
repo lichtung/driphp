@@ -10,9 +10,9 @@ namespace {
 
 
     use PhpAmqpLib\Message\AMQPMessage;
-    use sharin\service\rabbit\OnReceiveInterface;
-    use sharin\service\RabbitMQ;
-    use sharin\SharinException;
+    use driphp\service\rabbit\OnReceiveInterface;
+    use driphp\service\RabbitMQ;
+    use driphp\DriException;
 
     require __DIR__ . '/../../boot.php';
 
@@ -36,7 +36,7 @@ namespace {
 
     try {
         RabbitMQ::getInstance()->queue('asder', true)->receive(new TestConsumer());
-    } catch (SharinException $e) {
+    } catch (DriException $e) {
         echo $e->getMessage();
     }
 }

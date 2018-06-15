@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\ss;
+namespace driphp\service\ss;
 
 use swoole_client;
 use swoole_server;
 use SplQueue;
-use sharin\library\Encryptor;
+use driphp\library\Encryptor;
 
 class Client
 {

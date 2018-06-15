@@ -6,11 +6,11 @@
  * Time: 11:18
  */
 
-namespace sharin\tests\service\monitor;
+namespace driphp\tests\service\monitor;
 
 
-use sharin\core\UnitTest;
-use sharin\service\monitor\IOStatistics;
+use driphp\core\UnitTest;
+use driphp\service\monitor\IOStatistics;
 
 class IOStatTest extends UnitTest
 {

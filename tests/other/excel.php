@@ -8,9 +8,9 @@
 
 namespace {
 
-    use sharin\core\database\Dao;
-    use sharin\service\Excel;
-    use sharin\SharinException;
+    use driphp\core\database\Dao;
+    use driphp\service\Excel;
+    use driphp\DriException;
 
     require __DIR__ . '/../boot.php';
 
@@ -159,6 +159,6 @@ where
 
 
     } catch (Throwable $throwable) {
-        SharinException::dispose($throwable);
+        DriException::dispose($throwable);
     }
 }

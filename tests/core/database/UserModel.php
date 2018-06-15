@@ -7,10 +7,10 @@
 declare(strict_types=1);
 
 
-namespace sharin\test\database;
+namespace driphp\test\database;
 
-use sharin\core\database\Dao;
-use sharin\core\database\Model;
+use driphp\core\database\Dao;
+use driphp\core\database\Model;
 
 /**
  * Class UserModel

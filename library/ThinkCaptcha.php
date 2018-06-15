@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
-use sharin\Component;
-use sharin\core\Cache;
-use sharin\SharinException;
+use driphp\Component;
+use driphp\core\Cache;
+use driphp\DriException;
 
 class ThinkCaptcha extends Component
 {
@@ -45,8 +45,8 @@ class ThinkCaptcha extends Component
      * @param string $id 标识
      * @param string $code 用户验证码
      * @return bool 用户验证码是否正确
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
      */
     public function check($id, $code)
     {
@@ -70,7 +70,7 @@ class ThinkCaptcha extends Component
      * @access public
      * @param string $id 标识
      * @return void
-     * @throws SharinException
+     * @throws DriException
      */
     public function entry($id)
     {
@@ -122,7 +122,7 @@ class ThinkCaptcha extends Component
         $code = array(); // 验证码
         $codeNX = 0; // 验证码第N个字符的左边距
         if (!function_exists('imagettftext')) {
-            throw new SharinException('gd2/freetype is required');
+            throw new DriException('gd2/freetype is required');
         }
         if ($config['useZh']) { // 中文验证码
             for ($i = 0; $i < $config['length']; $i++) {

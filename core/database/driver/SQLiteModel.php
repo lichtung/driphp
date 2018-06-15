@@ -7,15 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database\driver;
+namespace driphp\core\database\driver;
 
 
 use PDO;
-use sharin\throws\core\database\SqliteException;
+use driphp\throws\core\database\SqliteException;
 
 /**
  * Class SQLiteModel SQLite表模型
- * @package sharin\core\database\driver
+ * @deprecated
+ * @package driphp\core\database\driver
  */
 class SQLiteModel extends Driver
 {
@@ -41,16 +42,19 @@ class SQLiteModel extends Driver
      */
     protected $data = [];
 
-    /**
-     * LiteModel constructor.
-     * @param string $dbfile sqlite数据库路径
-     */
-    public function __construct($dbfile)
+    public function __construct(array $config, $context)
     {
-        parent::__construct('sqlite:' . $dbfile);
-        $this->tableName = $this->getTableName();
-        $this->pk = $this->getPrimaryKey();
-        $this->fields = $this->getPrimaryKey();
+        parent::__construct($config, $context);
+
+//        /**
+//         * LiteModel constructor.
+//         * @param string $dbfile sqlite数据库路径
+//         */
+//        parent::__construct('sqlite:' . $dbfile);
+//        $this->tableName = $this->getTableName();
+//        $this->pk = $this->getPrimaryKey();
+//        $this->fields = $this->getPrimaryKey();
+
     }
 
     /**

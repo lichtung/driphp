@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\service;
+namespace driphp\throws\service;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class FatalException
- * @package sharin\throws\service
+ * @package driphp\throws\service
  */
-class FatalException extends SharinException
+class FatalException extends DriException
 {
 
 

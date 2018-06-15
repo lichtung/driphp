@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 yum install git -y
+#apt-get install git -y
 useradd git
 mkdir -p /srv/webroot
 chown -R git.git /srv/webroot
@@ -11,7 +12,6 @@ su git
 cd /home/git
 
 ssh-keygen -t rsa -C 784855684@qq.com
-
 git config --global user.name lich4ung
 git config --global user.email 784855684@qq.com
 touch /home/git/.ssh/authorized_keys

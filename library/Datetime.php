@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
 /**
  * Class Datetime 日期时间助手
- * @package sharin\library
+ * @package driphp\library
  */
 final class Datetime
 {

@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core\dispatch;
+namespace driphp\throws\core\dispatch;
 
-use sharin\throws\core\DispatchException;
+use driphp\throws\core\DispatchException;
 
 /**
  * Class ParameterNotFoundException 操作参数不存在异常
- * @package sharin\throws\core\dispatch
+ * @package driphp\throws\core\dispatch
  */
 class ParameterNotFoundException extends DispatchException
 {

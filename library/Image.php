@@ -6,7 +6,7 @@
  * Time: 15:54
  */
 
-namespace sharin\library;
+namespace driphp\library;
 
 
 class Image

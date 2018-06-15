@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\workerman;
+namespace driphp\service\workerman;
 
-use sharin\service\workerman\socketio\Message;
-use sharin\service\workerman\socketio\Passport;
+use driphp\service\workerman\socketio\Message;
+use driphp\service\workerman\socketio\Passport;
 use PHPSocketIO\SocketIO as SIO;
-use sharin\service\workerman\socketio\_Socket;
-use sharin\service\workerman\socketio\ConnectionHandlerInterface;
+use driphp\service\workerman\socketio\_Socket;
+use driphp\service\workerman\socketio\ConnectionHandlerInterface;
 use Workerman\Connection\TcpConnection;
 use Workerman\Worker;
 

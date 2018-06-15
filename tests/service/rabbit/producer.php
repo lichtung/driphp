@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace {
 
 
-    use sharin\service\RabbitMQ;
+    use driphp\service\RabbitMQ;
 
     require __DIR__ . '/../../boot.php';
 

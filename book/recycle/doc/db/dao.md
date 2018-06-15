@@ -8,9 +8,9 @@
 ### 一、获取DAO对象
 连接数据库的第一步是获取数据库连接
 ```php
-use sharin\db\Dao;
-use sharin\db\adapter\MySQL;
-use sharin\throws\db\ConnectException;
+use driphp\db\Dao;
+use driphp\db\adapter\MySQL;
+use driphp\throws\db\ConnectException;
 try {
     $dao = Dao::connect(MySQL::class, [
         'dbname' => 'dbname',
@@ -46,9 +46,9 @@ PDO执行SQL可以通过PDO/PDOStatement的两个方法 **PDO::exec()** 和 **PD
 > PDOStatement::rowCount() returns the number of rows affected by the last DELETE, INSERT, or UPDATE statement executed by the corresponding PDOStatement object.
 
 ```php
-use sharin\db\Dao;
-use sharin\db\adapter\MySQL;
-use sharin\throws\db\ExecuteException;
+use driphp\db\Dao;
+use driphp\db\adapter\MySQL;
+use driphp\throws\db\ExecuteException;
 // 获取 Dao 实例 $dao
 
 try {
@@ -79,9 +79,9 @@ $pdo = $dao->gerPdo();
 DAO另外封装了query方法用于查询：
 ```php
 
-use sharin\db\Dao;
-use sharin\db\adapter\MySQL;
-use sharin\throws\db\QueryException;
+use driphp\db\Dao;
+use driphp\db\adapter\MySQL;
+use driphp\throws\db\QueryException;
 
 // 获取 Dao 实例 $dao
 
@@ -105,7 +105,7 @@ try {
 ### 四、异常
 现注意到无论是连接数据库，查询和执行SQL语句都会抛出异常，他们分别是 连接异常（ConnectException）、查询异常（QueryException）、执行异常（ExecuteException），这些异常都继承数据库异常（DatabaseException），所以你嫌弃不想区分可以使用下面的形式统一捕获
 ```php
-use sharin\throws\DatabaseException;
+use driphp\throws\DatabaseException;
 try{
     // 下面是连接数据库的代码，可能抛出连接连接异常 ConnectionException
     

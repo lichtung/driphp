@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\swoole;
+namespace driphp\service\swoole;
 
 
 interface WorkerEventHandlerInterface

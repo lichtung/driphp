@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\traits;
+namespace driphp\library\traits;
 
-use sharin\throwable\core\MethodNotFoundException;
+use driphp\throwable\core\MethodNotFoundException;
 use Closure;
 
 /**
@@ -60,7 +60,7 @@ use Closure;
  *  $hello->sayHi();
  *  Hello::sayHi();
  *
- * @package sharin\library
+ * @package driphp\library
  */
 trait Macroable
 {

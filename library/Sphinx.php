@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
 /**
  * Class Sphinx
@@ -34,7 +34,7 @@ namespace sharin\library;
  * stop:
  * /usr/local/sphinx/bin/searchd --stop
  *
- * @package sharin\library
+ * @package driphp\library
  */
 class Sphinx
 {

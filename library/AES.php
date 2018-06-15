@@ -7,11 +7,15 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
-use sharin\library\encrypt\Encipher;
-use sharin\library\encrypt\Decipher;
+use driphp\library\encrypt\Encipher;
+use driphp\library\encrypt\Decipher;
 
+/**
+ * Class AES
+ * @package driphp\library
+ */
 class AES
 {
     /**

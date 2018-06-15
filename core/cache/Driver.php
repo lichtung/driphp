@@ -7,10 +7,10 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache;
+namespace driphp\core\cache;
 
 
-use sharin\throws\core\cache\RedisException;
+use driphp\throws\core\cache\RedisException;
 
 /**
  * 缓存驱动

@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws;
+namespace driphp\throws;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class DeprecatedException 调用弃用代码
- * @package sharin\throws
+ * @package driphp\throws
  */
-class DeprecatedException extends SharinException
+class DeprecatedException extends DriException
 {
 
     public function __construct()

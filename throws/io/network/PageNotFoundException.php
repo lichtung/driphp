@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\io\network;
+namespace driphp\throws\io\network;
 
 
-use sharin\throws\io\NetworkException;
+use driphp\throws\io\NetworkException;
 
 /**
  * Class PageNotFoundException 404异常
- * @package sharin\throws\io\network
+ * @package driphp\throws\io\network
  */
 class PageNotFoundException extends NetworkException
 {

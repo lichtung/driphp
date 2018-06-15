@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache;
+namespace driphp\core\cache;
 
-use sharin\core\FileSystem;
-use sharin\throws\core\cache\CacheException;
+use driphp\core\FileSystem;
+use driphp\throws\core\cache\CacheException;
 
 /**
  * Class File 文件缓存驱动
- * @package sharin\core\cache
+ * @package driphp\core\cache
  */
 class File extends Driver
 {
@@ -52,8 +52,8 @@ class File extends Driver
      * @param string $key
      * @param null $replace
      * @return mixed|null
-     * @throws \sharin\throws\io\FileNotFoundException
-     * @throws \sharin\throws\io\FileReadException
+     * @throws \driphp\throws\io\FileNotFoundException
+     * @throws \driphp\throws\io\FileReadException
      */
     public function get(string $key, $replace = null)
     {

@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core;
+namespace driphp\throws\core;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class DriverNotDefinedException 驱动未定义
- * @package sharin\throws\core
+ * @package driphp\throws\core
  */
-class DriverNotDefinedException extends SharinException
+class DriverNotDefinedException extends DriException
 {
     /**
      * DriverNotDefinedException constructor.

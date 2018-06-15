@@ -7,11 +7,15 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache\redis;
+namespace driphp\core\cache\redis;
 
 use Redis;
-use sharin\throws\core\cache\RedisException;
+use driphp\throws\core\cache\RedisException;
 
+/**
+ * Class Lists
+ * @package driphp\core\cache\redis
+ */
 class Lists
 {
 

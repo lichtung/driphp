@@ -7,17 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\workerman;
+namespace driphp\service\workerman;
 
 
-use sharin\service\Workerman;
+use driphp\service\Workerman;
 use Workerman\Connection\TcpConnection;
 use Workerman\Worker;
 
 /**
  * Class Vmstat
  * @method Vmstat getInstance(string $index = '') static
- * @package sharin\service\workerman
+ * @package driphp\service\workerman
  */
 class Vmstat extends Workerman
 {

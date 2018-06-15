@@ -6,16 +6,16 @@
  * Time: 20:16
  */
 
-namespace sharin\throws\service;
+namespace driphp\throws\service;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 
 /**
  * Class ExcelException Excel异常
- * @package sharin\throws\service
+ * @package driphp\throws\service
  */
-class ExcelException extends SharinException
+class ExcelException extends DriException
 {
 
 }

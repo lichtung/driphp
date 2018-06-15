@@ -8,7 +8,7 @@
 
 namespace {
 
-    use sharin\service\monitor\IOStatistics;
+    use driphp\service\monitor\IOStatistics;
 
     require __DIR__ . '/../../boot.php';
 

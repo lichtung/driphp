@@ -6,11 +6,11 @@
  * Time: 16:20
  */
 
-namespace sharin\core\database\driver;
+namespace driphp\core\database\driver;
 
 /**
  * Class OCI
- * @package sharin\core\database\driver
+ * @package driphp\core\database\driver
  * @deprecated
  */
 class OCI extends Driver

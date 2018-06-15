@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
-use sharin\core\Service;
+use driphp\core\Service;
 
 /**
  * Class SwiftMailer
  *
- * @package sharin\service
+ * @package driphp\service
  */
 class SwiftMailer extends Service
 {

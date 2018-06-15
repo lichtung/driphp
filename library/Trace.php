@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
 
-use sharin\core\database\Dao;
-use sharin\core\Log;
-use sharin\core\Response;
-use sharin\core\response\JSON;
+use driphp\core\database\Dao;
+use driphp\core\Log;
+use driphp\core\Response;
+use driphp\core\response\JSON;
 
 final class Trace
 {
@@ -217,7 +217,7 @@ endline;
      * @param int $line 错误发生的行
      * @param array $traces 错误回溯
      * @return void
-     * @throws \sharin\throws\ParametersInvalidException
+     * @throws \driphp\throws\ParametersInvalidException
      */
     public static function handleTrowable(string $message, string $className, string $file, int $line, array $traces)
     {

@@ -6,17 +6,17 @@
  * Time: 17:36
  */
 
-namespace sharin\service\crawler;
+namespace driphp\service\crawler;
 
 
-use sharin\core\FileSystem;
-use sharin\core\Log;
-use sharin\core\request\Curl;
+use driphp\core\FileSystem;
+use driphp\core\Log;
+use driphp\core\request\Curl;
 
 /**
  * Class XiciProxyCrawler
  * @method XiciProxyCrawler getInstance(array $config = []) static
- * @package sharin\service\crawler
+ * @package driphp\service\crawler
  */
 class XiciProxyCrawler extends ProxyCrawler
 {

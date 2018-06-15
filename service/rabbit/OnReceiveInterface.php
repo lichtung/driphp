@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\rabbit;
+namespace driphp\service\rabbit;
 
-use sharin\service\RabbitMQ;
+use driphp\service\RabbitMQ;
 use PhpAmqpLib\Message\AMQPMessage;
 
 /**
  * Interface OnReceiveInterface 接收到消息时的处理器
- * @package sharin\service\rabbit
+ * @package driphp\service\rabbit
  */
 interface OnReceiveInterface
 {

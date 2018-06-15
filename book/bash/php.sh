@@ -183,7 +183,7 @@ function php_ext_zlib(){
 #xdebug.remote_enable=On
 #xdebug.remote_port=10000
 #xdebug.remote_handler=dbgp
-#xdebug.remote_host=sharin.online
+#xdebug.remote_host=driphp.online
 #xdebug.idekey=phpstorm
 
 

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace {
 
-    use sharin\Kernel;
+    use driphp\Kernel;
 
     require __DIR__ . '/../bootstrap.php';
 

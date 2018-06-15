@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
 /**
  * Class Validator
  * @deprecated
- * @package sharin\library
+ * @package driphp\library
  */
 class Validator
 {

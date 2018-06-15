@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\websocket;
+namespace driphp\service\websocket;
 
 
-use sharin\service\WebSocketManager;
+use driphp\service\WebSocketManager;
 
 /**
  * Class AccountManager WebSocket账号管理
- * @package sharin\service\websocket
+ * @package driphp\service\websocket
  */
 class AccountManager
 {

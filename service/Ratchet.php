@@ -7,10 +7,10 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 
-use sharin\core\Service;
+use driphp\core\Service;
 
 /**
  * Class Ratchet
@@ -44,7 +44,7 @@ use sharin\core\Service;
  * IE10上的Websocket还处于起步阶段
  * In addition, any browser that does not support WebSockets can use a Flash polyfill.
  *
- * @package sharin\service
+ * @package driphp\service
  */
 class Ratchet extends Service
 {

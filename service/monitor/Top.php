@@ -6,7 +6,7 @@
  * Time: 14:41
  */
 
-namespace sharin\service\monitor;
+namespace driphp\service\monitor;
 
 /**
  * Class Top
@@ -27,7 +27,7 @@ namespace sharin\service\monitor;
  * 　　TIME+：该进程启动后占用的总的CPU时间，即占用CPU使用时间的累加值。
  * 　　COMMAND：进程启动命令名称
  *
- * @package sharin\service\monitor
+ * @package driphp\service\monitor
  */
 class Top
 {

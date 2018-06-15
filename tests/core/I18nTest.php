@@ -6,12 +6,12 @@
  */
 declare(strict_types=1);
 
-namespace sharin\tests\core;
+namespace driphp\tests\core;
 
 
-use sharin\core\I18n;
-use sharin\Kernel;
-use sharin\tests\UniTest;
+use driphp\core\I18n;
+use driphp\Kernel;
+use driphp\tests\UniTest;
 
 class I18nTest extends UniTest
 {
@@ -34,8 +34,8 @@ class I18nTest extends UniTest
     }
 
 //    /**
-//     * @throws \sharin\SharinException
-//     * @throws \sharin\throws\io\FileWriteException
+//     * @throws \sharin\DriException
+//     * @throws \driphp\throws\io\FileWriteException
 //     */
 //    public function testProjectDefine()
 //    {

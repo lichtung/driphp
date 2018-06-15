@@ -4,7 +4,7 @@
  * Date: 2018/2/28 0028
  * Time: 17:40
  */
-namespace sharin\service\workerman\socketio;
+namespace driphp\service\workerman\socketio;
 use PHPSocketIO\Socket;
 
 /**

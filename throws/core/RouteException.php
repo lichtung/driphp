@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core;
+namespace driphp\throws\core;
 
 
-use sharin\SharinException;
+use driphp\DriException;
 use Throwable;
 
 /**
  * Class RouteException 路由异常
- * @package sharin\throws\core
+ * @package driphp\throws\core
  */
-class RouteException extends SharinException
+class RouteException extends DriException
 {
 }

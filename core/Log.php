@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 
-namespace sharin\core;
+namespace driphp\core;
 
-use sharin\Component;
+use driphp\Component;
 
 
 /**
@@ -22,7 +22,7 @@ use sharin\Component;
  * @method info(mixed $message, bool $saveImmediately = false) static
  * @method fatal(mixed $message, bool $saveImmediately = false) static
  *
- * @package sharin\core
+ * @package driphp\core
  */
 class Log extends Component
 {

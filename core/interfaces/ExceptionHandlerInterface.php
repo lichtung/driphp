@@ -7,10 +7,15 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\interfaces;
+namespace driphp\core\interfaces;
 
 use Throwable;
 
+/**
+ * Interface ExceptionHandlerInterface
+ * @deprecated
+ * @package driphp\core\interfaces
+ */
 interface ExceptionHandlerInterface
 {
 

@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 
-namespace sharin\service\monitor;
+namespace driphp\service\monitor;
 
-use sharin\core\Service;
+use driphp\core\Service;
 
 /**
  * Class IOStatistics iostat 报告
@@ -17,7 +17,7 @@ use sharin\core\Service;
  *
  * TODO：
  * @method IOStatistics getInstance(array $config = []) static
- * @package sharin\service\monitor
+ * @package driphp\service\monitor
  */
 class IOStatistics extends Service
 {

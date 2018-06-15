@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use sharin\Component;
-use sharin\core\Logger;
-use sharin\service\email\Email;
-use sharin\throws\service\EmailException;
+use driphp\Component;
+use driphp\core\Logger;
+use driphp\service\email\Email;
+use driphp\throws\service\EmailException;
 
 /**
  * Class Emailer
@@ -21,7 +21,7 @@ use sharin\throws\service\EmailException;
  * @see https://github.com/PHPMailer/PHPMailer
  * @method Emailer getInstance(string $index = '')static
  *
- * @package sharin\service
+ * @package driphp\service
  */
 class Emailer extends Component
 {

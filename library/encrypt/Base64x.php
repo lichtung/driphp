@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\encrypt;
+namespace driphp\library\encrypt;
 
 /**
  * Class Base64x Base64加密解密
- * @package sharin\library\encrypt
+ * @package driphp\library\encrypt
  */
 class Base64x
 {

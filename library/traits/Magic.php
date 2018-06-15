@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\traits;
+namespace driphp\library\traits;
 
 /**
  * Trait Magic 魔术访问
- * @package sharin\library\traits
+ * @package driphp\library\traits
  */
 trait Magic
 {

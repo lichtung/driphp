@@ -7,11 +7,11 @@
 declare(strict_types=1);
 
 
-namespace sharin\library;
+namespace driphp\library;
 
 
-use sharin\core\database\Dao;
-use sharin\throws\core\dispatch\ParameterNotFoundException;
+use driphp\core\database\Dao;
+use driphp\throws\core\dispatch\ParameterNotFoundException;
 
 class DatatablesX
 {
@@ -159,10 +159,10 @@ class DatatablesX
 
     /**
      * @return array
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\QueryException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\QueryException
      */
     public function fetch(): array
     {
@@ -241,10 +241,10 @@ class DatatablesX
 
     /**
      * @return string
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\QueryException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\QueryException
      */
     public function __toString()
     {

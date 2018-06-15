@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
-use sharin\core\Service;
+use driphp\core\Service;
 
 /**
  * Class Zippy
@@ -17,7 +17,7 @@ use sharin\core\Service;
  *
  * TODO:replace pclzip.lib.php
  *
- * @package sharin\service
+ * @package driphp\service
  */
 class Zippy extends Service
 {

@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\database;
+namespace driphp\core\database;
 
-use sharin\Kernel;
-use sharin\throws\core\database\ExecuteException;
-use sharin\throws\core\database\QueryException;
-use sharin\throws\ParameterInvalidException;
+use driphp\Kernel;
+use driphp\throws\core\database\ExecuteException;
+use driphp\throws\core\database\QueryException;
+use driphp\throws\ParameterInvalidException;
 
 /**
  * Class Model
@@ -79,8 +79,8 @@ abstract class Model
     /**
      * @param Dao|null $dao
      * @return mixed
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
      */
     public static function getInstance(Dao $dao = null)
     {
@@ -107,10 +107,10 @@ abstract class Model
 
     /**
      * @return bool
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\QueryException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\QueryException
      */
     public function installed(): bool
     {
@@ -120,10 +120,10 @@ abstract class Model
 
     /**
      * @return void
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\ExecuteException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\ExecuteException
      */
     public function uninstall(): void
     {
@@ -133,10 +133,10 @@ abstract class Model
 
     /**
      * @return void
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\ExecuteException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\ExecuteException
      */
     final public function install(): void
     {
@@ -444,10 +444,10 @@ abstract class Model
 
     /**
      * @return bool
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\ExecuteException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\ExecuteException
      */
     public function insert(): bool
     {
@@ -473,10 +473,10 @@ abstract class Model
     /**
      * @return bool
      * @throws QueryException
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
-     * @throws \sharin\throws\core\database\ConnectException
-     * @throws \sharin\throws\core\database\ExecuteException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\database\ConnectException
+     * @throws \driphp\throws\core\database\ExecuteException
      */
     public function delete(): bool
     {

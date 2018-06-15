@@ -7,11 +7,15 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache\redis;
+namespace driphp\core\cache\redis;
 
 use Redis;
-use sharin\throws\core\cache\RedisException;
+use driphp\throws\core\cache\RedisException;
 
+/**
+ * Class Hash
+ * @package driphp\core\cache\redis
+ */
 class Hash
 {
     /**
@@ -123,7 +127,7 @@ class Hash
      *
      * </pre>
      *
-     * @param string[] ...$keys
+     * @param string ...$keys
      * @return  array   An array of elements, the contents of the hash.
      * @link    http://redis.io/commands/hgetall
      * @return array
@@ -157,7 +161,7 @@ class Hash
      * </pre>
      *
      *
-     * @param string[] ...$keys It will delete all if parameter is none
+     * @param string ...$keys It will delete all if parameter is none
      * @return int Number of deleted fields
      */
     public function delete(string ...$keys): int

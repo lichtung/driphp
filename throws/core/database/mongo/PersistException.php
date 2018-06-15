@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\throws\core\database\mongo;
+namespace driphp\throws\core\database\mongo;
 
 
-use sharin\throws\core\database\MongoException;
+use driphp\throws\core\database\MongoException;
 
 /**
  * Class PersistException Mongo保存异常
- * @package sharin\throws\core\database\mongo
+ * @package driphp\throws\core\database\mongo
  */
 class PersistException extends MongoException
 {

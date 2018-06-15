@@ -6,10 +6,10 @@
  * Time: 18:18
  */
 
-namespace sharin\service\crawler;
+namespace driphp\service\crawler;
 
 
-use sharin\core\request\Curl;
+use driphp\core\request\Curl;
 
 class WhatIsMyIpProxyValidator extends ProxyValidator
 {

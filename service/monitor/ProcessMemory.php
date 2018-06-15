@@ -6,7 +6,7 @@
  * Time: 14:40
  */
 
-namespace sharin\service\monitor;
+namespace driphp\service\monitor;
 
 /**
  * Class ProcessMemory
@@ -17,7 +17,7 @@ namespace sharin\service\monitor;
  * 　　$ ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid'  其中rsz是是实际内存
  * 　　$ ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' | grep oracle |  sort -nrk5
  *
- * @package sharin\service\monitor
+ * @package driphp\service\monitor
  */
 class ProcessMemory
 {

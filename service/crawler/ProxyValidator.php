@@ -6,10 +6,10 @@
  * Time: 18:17
  */
 
-namespace sharin\service\crawler;
+namespace driphp\service\crawler;
 
 
-use sharin\Component;
+use driphp\Component;
 
 abstract class ProxyValidator extends Component
 {

@@ -7,17 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\test\database;
+namespace driphp\test\database;
 
 
-use sharin\core\database\Dao;
-use sharin\tests\UniTest;
+use driphp\core\database\Dao;
+use driphp\tests\UniTest;
 
 /**
  * Class ModelTest
  *
  * TODO
- * @package sharin\test\database
+ * @package driphp\test\database
  */
 class ModelTest extends UniTest
 {

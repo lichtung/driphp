@@ -7,17 +7,17 @@
 declare(strict_types=1);
 
 
-namespace sharin\service;
+namespace driphp\service;
 
 
-use sharin\core\Service;
+use driphp\core\Service;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class Symfony
  * @method Symfony getInstance(string $index = '') static
- * @package sharin\service\symfony
+ * @package driphp\service\symfony
  */
 class Symfony extends Service
 {

@@ -7,15 +7,15 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\logger;
+namespace driphp\core\logger;
 
 
-use sharin\core\Logger;
+use driphp\core\Logger;
 
 /**
  * Interface LoggerInterface
  *
- * @package sharin\core\logger
+ * @package driphp\core\logger
  */
 interface LoggerInterface
 {

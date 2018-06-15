@@ -5,11 +5,11 @@
  * Date: 5/31/17 5:00 PM
  */
 
-namespace sharin\library\queue;
+namespace driphp\library\queue;
 
 /**
- * Interface QueneInterface 队列实现接口
- * @package sharin\library\quene
+ * Interface QueueInterface 队列实现接口
+ * @package driphp\library\quene
  */
 interface QueueInterface
 {

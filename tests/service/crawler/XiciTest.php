@@ -6,13 +6,13 @@
  * Time: 17:48
  */
 
-namespace sharin\tests\service\crawler;
+namespace driphp\tests\service\crawler;
 
 
-use sharin\core\Cache;
-use sharin\library\NetTelnet;
-use sharin\service\crawler\XiciProxyCrawler;
-use sharin\tests\UniTest;
+use driphp\core\Cache;
+use driphp\library\NetTelnet;
+use driphp\service\crawler\XiciProxyCrawler;
+use driphp\tests\UniTest;
 use Exception;
 
 class proxy
@@ -66,8 +66,8 @@ class proxy
 class XiciTest extends UniTest
 {
     /**
-     * @throws \sharin\throws\core\ClassNotFoundException
-     * @throws \sharin\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\core\ClassNotFoundException
+     * @throws \driphp\throws\core\DriverNotDefinedException
      */
     public function testDemo()
     {

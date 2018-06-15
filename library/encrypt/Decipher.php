@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace sharin\library\encrypt;
+namespace driphp\library\encrypt;
 
 
 class Decipher extends Encipher

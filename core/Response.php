@@ -6,13 +6,13 @@
  */
 declare(strict_types=1);
 
-namespace sharin\core;
+namespace driphp\core;
 
 
 /**
  * Class Response 响应类
  * @see https://en.wikipedia.org/wiki/Same-origin_policy
- * @package sharin\core
+ * @package driphp\core
  */
 class Response
 {

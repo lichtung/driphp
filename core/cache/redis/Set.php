@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace sharin\core\cache\redis;
+namespace driphp\core\cache\redis;
 
 use Redis;
-use sharin\throws\core\cache\RedisException;
+use driphp\throws\core\cache\RedisException;
 
 /**
  * Class Set 集合
- * @package sharin\core\cache\redis
+ * @package driphp\core\cache\redis
  */
 class Set
 {
@@ -33,7 +33,7 @@ class Set
 
     /**
      * 添加元素到数组中
-     * @param string[] ...$elements
+     * @param string ...$elements
      * @return int 返回实际添加到集合中的数量
      */
     public function add(string ...$elements): int
@@ -155,7 +155,7 @@ class Set
      * $redis->sAdd('k', 'v1', 'v2', 'v3');    // int(3)
      * $redis->sRem('k', 'v2', 'v3');          // int(2)   ["v1"]
      *
-     * @param string[] ...$elements
+     * @param string ...$elements
      * @return int The number of elements removed from the set.
      */
     public function remove(string ...$elements): int
@@ -187,7 +187,7 @@ class Set
      *
      * $redis->sDiff('s0', 's1', 's2'); // [ "4" , "2" ]
      *
-     * @param string[] ...$sets
+     * @param string ...$sets
      * @return string[]
      */
     public function diff(string ...$sets): array
@@ -211,7 +211,7 @@ class Set
      *
      * $redis->sUnion('s0', 's1', 's2'); // [ "3","4","1","2" ]
      *
-     * @param string[] ...$sets
+     * @param string ...$sets
      * @return mixed
      */
     public function union(string ...$sets)
@@ -233,7 +233,7 @@ class Set
      * $redis->sUnionStore('dst', 's0', 's1', 's2'); // 4
      * $redis->sMembers('dst'); // [ "3","4","1","2" ]
      *
-     * @param string[] ...$sets
+     * @param string ...$sets
      * @return int 返回新的集合的数量
      */
     public function unionStore(string ...$sets): int
@@ -261,7 +261,7 @@ class Set
      *
      * $redis->sInter('key1', 'key2', 'key3'); // [ "val4","val3" ]
      *
-     * @param string[] ...$sets
+     * @param string ...$sets
      * @return string[]
      */
     public function inter(string ...$sets): array
@@ -285,7 +285,7 @@ class Set
      * $redis->sDiffStore('dst', 's0', 's1', 's2'); // 2
      * $redis->sMembers('dst');   // [ '4','2']
      *
-     * @param string[] ...$sets
+     * @param string ...$sets
      * @return int 返回新的集合的数量
      */
     public function diffStore(string ...$sets): int
@@ -312,7 +312,7 @@ class Set
      * $redis->sInterStore('output', 'key1', 'key2', 'key3'); // 2
      * $redis->sMembers('output'); // [ "val4", "val3" ]
      *
-     * @param string[] ...$sets
+     * @param string ...$sets
      * @return int 返回新的集合的数量
      */
     public function interStore(string ...$sets): int

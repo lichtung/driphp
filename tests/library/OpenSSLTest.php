@@ -6,10 +6,10 @@
  */
 declare(strict_types=1);
 
-namespace sharin\test\library;
+namespace driphp\test\library;
 
-use sharin\library\OpenSSL;
-use sharin\tests\UniTest;
+use driphp\library\OpenSSL;
+use driphp\tests\UniTest;
 
 class OpenSSLTest extends UniTest
 {
@@ -39,7 +39,7 @@ class OpenSSLTest extends UniTest
 
     /**
      * @return OpenSSL
-     * @throws \sharin\SharinException
+     * @throws driphp\DriException
      */
     public function testEncryptInPrivateAndDecryptInPublic()
     {
@@ -55,7 +55,7 @@ class OpenSSLTest extends UniTest
      * @depends testEncryptInPrivateAndDecryptInPublic
      * @param OpenSSL $openssl
      * @return void
-     * @throws \sharin\SharinException
+     * @throws \sharin\DriException
      */
     public function testEncryptInPublicAndDecryptInPrivate(OpenSSL $openssl)
     {

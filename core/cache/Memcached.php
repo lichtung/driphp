@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace driphp\core\cache;
 
 
-use driphp\DriException;
+use driphp\DripException;
 use driphp\throws\core\cache\CacheException;
 
 class Memcached extends Driver
@@ -34,7 +34,7 @@ class Memcached extends Driver
     /**
      * Memcached constructor.
      * @param array $config
-     * @throws DriException
+     * @throws DripException
      */
     public function __construct(array $config)
     {
@@ -42,7 +42,7 @@ class Memcached extends Driver
 
         $this->handler = new \Memcached();
         if (empty($servers = $this->_config['servers'])) {
-            throw new DriException('require servers at least one');
+            throw new DripException('require servers at least one');
         }
         $this->handler->setOption(\Memcached::OPT_CONNECT_TIMEOUT, $this->_config['timeout']);
 

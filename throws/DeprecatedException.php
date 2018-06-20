@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class DeprecatedException 调用弃用代码
  * @package driphp\throws
  */
-class DeprecatedException extends DriException
+class DeprecatedException extends DripException
 {
 
     public function __construct()

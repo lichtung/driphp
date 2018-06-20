@@ -39,7 +39,7 @@ class OpenSSLTest extends UniTest
 
     /**
      * @return OpenSSL
-     * @throws driphp\DriException
+     * @throws driphp\DripException
      */
     public function testEncryptInPrivateAndDecryptInPublic()
     {
@@ -55,7 +55,7 @@ class OpenSSLTest extends UniTest
      * @depends testEncryptInPrivateAndDecryptInPublic
      * @param OpenSSL $openssl
      * @return void
-     * @throws \sharin\DriException
+     * @throws \sharin\DripException
      */
     public function testEncryptInPublicAndDecryptInPrivate(OpenSSL $openssl)
     {

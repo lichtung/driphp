@@ -8,13 +8,13 @@ declare(strict_types=1);
 
 namespace driphp\throws\library;
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class OpenSSLException OpenSSL异常
  * @package driphp\throws\library
  */
-class OpenSSLException extends DriException
+class OpenSSLException extends DripException
 {
 
 }

@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class IOException IO异常
  * @package driphp\throws
  */
-class IOException extends DriException
+class IOException extends DripException
 {
 
 }

@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\service;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class RabbitMQException RabbitMQ异常
  * @package driphp\throws\service
  */
-class RabbitMQException extends DriException
+class RabbitMQException extends DripException
 {
 
 

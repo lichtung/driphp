@@ -9,13 +9,13 @@
 namespace driphp\throws\service;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class ExcelException Excel异常
  * @package driphp\throws\service
  */
-class ExcelException extends DriException
+class ExcelException extends DripException
 {
 
 }

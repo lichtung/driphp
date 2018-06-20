@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\core;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class DriverNotDefinedException 驱动未定义
  * @package driphp\throws\core
  */
-class DriverNotDefinedException extends DriException
+class DriverNotDefinedException extends DripException
 {
     /**
      * DriverNotDefinedException constructor.

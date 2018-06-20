@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\core;
 
 
-use driphp\DriException;
+use driphp\DripException;
 use Throwable;
 
 /**
  * Class RouteException 路由异常
  * @package driphp\throws\core
  */
-class RouteException extends DriException
+class RouteException extends DripException
 {
 }

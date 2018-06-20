@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\core;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class WrongEnvironmentException web模式下或者cli模式下不可用
  * @package driphp\throws\core
  */
-class WrongEnvironmentException extends DriException
+class WrongEnvironmentException extends DripException
 {
 
 }

@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\core;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class DispatchException 调度异常
  * @package driphp\throws\core
  */
-abstract class DispatchException extends DriException
+abstract class DispatchException extends DripException
 {
 
 }

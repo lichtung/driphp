@@ -103,13 +103,13 @@ namespace driphp {
     use driphp\throws\core\ClassNotFoundException;
 
     /**
-     * Class DriException 内置异常
+     * Class DripException 内置异常
      * @package driphp
      */
-    class DriException extends \Exception
+    class DripException extends \Exception
     {
         /**
-         * DriException constructor.
+         * DripException constructor.
          * @param string $message
          * @param int $code
          */
@@ -302,7 +302,7 @@ namespace driphp {
          * @param string $key 配置项,多级配置项以点号分隔
          * @param mixed|null $value 为null时表示获取配置值,否则标识获取配置值
          * @return mixed|null
-         * @throws DriException 访问的config不存在时抛出
+         * @throws DripException 访问的config不存在时抛出
          */
         public function config(string $key, $value = null)
         {
@@ -314,7 +314,7 @@ namespace driphp {
 //                            if (!isset($config[$k])) $config[$k] = [];
                             $config = &$config[$k];
                         } else {
-                            throw new DriException("Bad config key [$key]");
+                            throw new DripException("Bad config key [$key]");
                         }
                     }
                     $config = $value;
@@ -413,10 +413,10 @@ namespace driphp {
             false === ini_set('session.cache_expire', (string)$this->config['session.cache_expire']) and die('set session.cache_expire failed');
 
             set_error_handler(function (int $code, string $message, string $file, int $line) {
-                DriException::dispose(null, $code, $message, $file, $line);
+                DripException::dispose(null, $code, $message, $file, $line);
             });
             set_exception_handler(function (Throwable $e) {
-                DriException::dispose($e);
+                DripException::dispose($e);
             });
 
             Kernel::status('init_end');
@@ -517,12 +517,12 @@ namespace driphp {
          * @param string $path
          * @param array|mixed $replace
          * @return array|mixed
-         * @throws DriException
+         * @throws DripException
          */
         public static function readConfig(string $path, $replace = [])
         {
             if (!is_array($result = is_file($path) ? include($path) : $replace)) {
-                throw new DriException("file $path must return array");
+                throw new DripException("file $path must return array");
             };
             return $result;
         }

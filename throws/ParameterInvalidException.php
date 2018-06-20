@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class ParameterInvalidException 非法参数
  * @package driphp\throws
  */
-class ParameterInvalidException extends DriException
+class ParameterInvalidException extends DripException
 {
 
 }

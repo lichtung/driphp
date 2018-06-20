@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace driphp\core\view;
 
 use driphp\core\Request;
-use driphp\DriException;
+use driphp\DripException;
 use driphp\throws\io\FileNotFoundException;
 
 /**
@@ -108,7 +108,7 @@ trait Render
             include $compile_view;
             echo ob_get_clean();
         } catch (\Throwable $throwable) {
-            DriException::dispose($throwable);
+            DripException::dispose($throwable);
         }
     }
 

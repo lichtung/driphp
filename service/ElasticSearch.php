@@ -8,10 +8,11 @@
 
 namespace driphp\service;
 
-
+use driphp\service\elastic\Index;
 use Elasticsearch\Client;
 use driphp\core\Service;
 use Elasticsearch\ClientBuilder;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 /**
  * Class ElasticSearch
@@ -28,12 +29,17 @@ class ElasticSearch extends Service
         # A retry is only performed if the operation results in a "hard" exception: connection refusal, connection timeout,
         # DNS lookup timeout, etc. 4xx and 5xx errors are not considered retry’able events, since the node returns an operational response.
         #  If all five nodes result in a connection timeout (for example), the client will throw an OperationTimeoutException
-        'retries' => 0,
+        'retries' => 1,
     ];
     /**
      * @var Client
      */
     private $client;
+
+    public function getClient()
+    {
+        return $this->client;
+    }
 
     public function connect(string... $hosts)
     {
@@ -45,7 +51,18 @@ class ElasticSearch extends Service
         return $this;
     }
 
+
     const STATS_INDICES = 1;
+
+    /**
+     * 判断Index是否存在
+     * @param string $index
+     * @return bool
+     */
+    public function exist(string $index): bool
+    {
+        return $this->client->indices()->exists(['index' => $index]);
+    }
 
     /**
      * @param string $index
@@ -53,116 +70,72 @@ class ElasticSearch extends Service
      * @param array $mappings
      * @return array
      */
-    public function createIndex(string $index, array $settings = [], array $mappings = [])
+    public function create(string $index, array $settings = [], array $mappings = [])
     {
+        $body = [];
+        $settings and $body['settings'] = $settings;
+        $mappings and $body['mappings'] = $mappings;
         return $this->client->indices()->create([
             'index' => $index,
-            'body' => [
-                'settings' => $settings,
-                'mappings' => $mappings
-            ],
+            'body' => $body,
         ]);
     }
 
-    public function stats()
+    /**
+     * 删除索引(注:收到了请求并不表示删除成功)
+     * @param string $index
+     * @return bool
+     * @throws Missing404Exception 索引不存
+     */
+    public function delete(string $index): bool
+    {
+        try {
+            $res = $this->client->indices()->delete([
+                'index' => $index,
+            ]);
+            return $res['acknowledged'] ?? false;
+        } catch (Missing404Exception $exception) {
+            if (strpos($exception->getMessage(), 'index_not_found_exception')) {
+                return false;
+            }
+            throw $exception;
+        }
+    }
+
+    /**
+     * @param string $index
+     * @return Index
+     */
+    public function index(string $index): Index
+    {
+        static $_instances = [];
+        if (!isset($_instances[$index])) {
+            $this->create($index, [], []);
+            $_instances[$index] = new Index($index, $this);
+        }
+        return $_instances[$index];
+    }
+
+    /**
+     * [
+     *  'indices'=>[
+     *      'index_1'=>...,
+     *      'index_2'=>...,
+     *  ]
+     * ]
+     * @return array
+     */
+    public function stats(): array
     {
         return $this->client->indices()->stats();
     }
 
     /**
-     * 建立索引
-     * To index a document, we need to specify four pieces of information: index, type, id and a document body.
-     * This is done by constructing an associative array of key:value pairs. The request body is itself an associative
-     * array with key:value pairs corresponding to the data in your document
-     *
-     * @param string $index
-     * @param string $type
-     * @param string $id
-     * @param array $body
      * @return array
      */
-    public function index(string $index, string $type, string $id, array $body): array
+    public function getIndices(): array
     {
-        $params = [
-            'index' => $index,
-            'type' => $type,
-            'id' => $id,
-            'body' => $body,
-        ];
-        return $this->client->index($params);
+        return $this->stats()['indices'] ?? [];
     }
 
-    /**
-     * Let’s get the document that we just indexed. This will simply return the document:
-     *
-     * $params = [
-     *  'index' => 'my_index',
-     *  'type' => 'my_type',
-     *  'id' => 'my_id'
-     * ];
-     *
-     * $response = $client->get($params);
-     * print_r($response);
-     * The response contains some metadata (index, type, etc) as well as a _source field…this is the original document that you sent to Elasticsearch.
-     *
-     * [
-     *  [_index] => my_index
-     *  [_type] => my_type
-     *  [_id] => my_id
-     *  [_version] => 1
-     *  [found] => 1
-     *  [_source] => [
-     *      [testField] => abc
-     *  ]
-     * ]
-     * @param string $index
-     * @param string $type
-     * @param string $id
-     * @return array
-     */
-    public function get(string $index, string $type, string $id): array
-    {
-        $params = [
-            'index' => $index,
-            'type' => $type,
-            'id' => $id,
-        ];
-        return $this->client->get($params);
-    }
-
-    /**
-     *
-     *
-     * @param string $index
-     * @param string $type
-     * @param array $match
-     * [
-     * 'testField' => 'abc'
-     * ]
-     * @param array $must
-     *  [
-     *  [ 'match' => [ 'testField' => 'abc' ] ],
-     *  [ 'match' => [ 'testField2' => 'xyz' ] ],
-     * ]
-     * @param array $filter
-     * @param array $should
-     * @return array
-     */
-    public function search(string $index, string $type, array $match, array $must, array $filter, array $should)
-    {
-        $params = [
-            'index' => $index,
-            'type' => $type,
-            'body' => [
-                'query' => [
-                    'match' => $match,
-                    'bool' => [
-                        'must' => $must,
-                    ],
-                ],
-            ],
-        ];
-
-        return $this->client->search($params);
-    }
 }

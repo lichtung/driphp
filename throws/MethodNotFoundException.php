@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class MethodNotFoundException 方法不存在异常
  * @package driphp\throws
  */
-class MethodNotFoundException extends DriException
+class MethodNotFoundException extends DripException
 {
 
 }

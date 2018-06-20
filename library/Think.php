@@ -13,7 +13,7 @@ use driphp\core\FileSystem;
 use driphp\core\Request;
 use driphp\Kernel;
 use driphp\library\CodeFactory;
-use driphp\DriException;
+use driphp\DripException;
 use driphp\throws\io\FileNotFoundException;
 
 /**
@@ -399,7 +399,7 @@ class Think
      * @param $content
      * @param bool $extend
      * @return mixed|null|string|string[]
-     * @throws DriException
+     * @throws DripException
      */
     protected function parseInclude($content, $extend = true)
     {
@@ -426,7 +426,7 @@ class Think
      * 解析模板中的extend标签
      * @param $content
      * @return mixed|null|string|string[]
-     * @throws DriException
+     * @throws DripException
      */
     protected function parseExtend($content)
     {
@@ -458,13 +458,13 @@ class Think
      * @access private
      * @param string $attrs XML属性字符串
      * @return array
-     * @throws DriException
+     * @throws DripException
      */
     private function parseXmlAttrs($attrs)
     {
         $xml = '<tpl><tag ' . $attrs . ' /></tpl>';
         $xml = simplexml_load_string($xml);
-        if (!$xml) throw new DriException("bad xml attributes :$attrs");
+        if (!$xml) throw new DripException("bad xml attributes :$attrs");
         $xml = (array)($xml->tag->attributes());
         $array = array_change_key_case($xml['@attributes']);
         return $array;
@@ -906,7 +906,7 @@ class Think
      * @param string $attr
      * @param string $tag 标签内容
      * @return array|false
-     * @throws DriException
+     * @throws DripException
      */
     public function parseXmlAttr($attr, $tag)
     {
@@ -914,7 +914,7 @@ class Think
         $attr = str_replace('&', '___', $attr);
         $xml = '<tpl><tag ' . $attr . ' /></tpl>';
         if (!($xml = simplexml_load_string($xml))) {
-            throw new DriException("Bad XML attributes:{$attr}");
+            throw new DripException("Bad XML attributes:{$attr}");
         }
         $xml = (array)($xml->tag->attributes());
         if (isset($xml['@attributes'])) {
@@ -943,7 +943,7 @@ class Think
                     if (isset($array[$name])) {
                         $array[$name] = str_replace('___', '&', $array[$name]);
                     } elseif (false !== array_search($name, $must)) {
-                        throw new DriException($name);
+                        throw new DripException($name);
                     }
                 }
                 return $array;

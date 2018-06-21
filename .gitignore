@@ -10,3 +10,4 @@ _/
 private.key
 rsa_private.key
 rsa_public.key
+*.log

@@ -70,7 +70,7 @@ class Index
      * @param string $type
      * @param string $id
      * @return Document
-     * @throws Missing404Exception index不存在时抛出
+     * @throws Missing404Exception 文档不存在时抛出
      * @throws ParameterInvalidException
      */
     public function get(string $type, string $id): Document
@@ -78,6 +78,20 @@ class Index
         $params = ['index' => $this->indexName, 'type' => $type, 'id' => $id];
         $res = $this->client->get($params);
         return Document::parseFromItem($res);
+    }
+
+    /**
+     * 删除文档
+     * @param string $type
+     * @param string $id
+     * @return bool
+     * @throws Missing404Exception 文档不存在时抛出
+     */
+    public function delete(string $type, string $id): bool
+    {
+        $params = ['index' => $this->indexName, 'type' => $type, 'id' => $id];
+        $res = $this->client->delete($params)['found'] ?? 0;
+        return $res === 0;
     }
 
     /**
@@ -99,17 +113,34 @@ class Index
     /**
      * @param string $field
      * @param $value
+     * @param  string $type
      * @return Document[]
      * @throws BadRequest400Exception
      * @throws ParameterInvalidException
      */
-    public function match(string $field, $value)
+    public function match(string $field, $value, string $type = ''): array
     {
-        return $this->search('bb', [
+        return $this->search($type, [
             'query' => [
                 'match' => [
                     $field => $value,
                 ],
+            ],
+        ]);
+    }
+
+    /**
+     * @param array $range
+     * @param string $type
+     * @return Document[]
+     * @throws BadRequest400Exception
+     * @throws ParameterInvalidException
+     */
+    public function range(array $range, string $type = ''): array
+    {
+        return $this->search($type, [
+            'query' => [
+                'range' => $range,
             ],
         ]);
     }

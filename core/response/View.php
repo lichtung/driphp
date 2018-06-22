@@ -38,7 +38,7 @@ class View extends Response
             # Loaders are responsible for loading templates from a resource such as the file system.
             # Twig_Loader_Filesystem loads templates from the file system.
             # This loader can find templates in folders on the file system and is the preferred way to load them:
-            $loader = new Twig_Loader_Filesystem(SR_PATH_PROJECT . "view/{$theme}/{$modules}/{$controller}");
+            $loader = new Twig_Loader_Filesystem(DRI_PATH_PROJECT . "view/{$theme}/{$modules}/{$controller}");
 
             # Instances of Twig_Environment are used to store the configuration and extensions,
             # and are used to load templates from the file system or other locations.
@@ -56,7 +56,7 @@ class View extends Response
 //            'base_template_class' => 'Twig_Template', # The base template class to use for generated templates.
                 # An absolute path where to store the compiled templates, or false to disable caching (which is the default).
                 # Dripex :Building cache will load more files.
-                'cache' => SR_PATH_RUNTIME . "view/{$theme}_{$controller}/",
+                'cache' => DRI_PATH_RUNTIME . "view/{$theme}_{$controller}/",
                 # ???
                 # Sets the default auto-escaping strategy (name, html, js, css, url, html_attr, or a PHP callback that takes
                 # the template "filename" and returns the escaping strategy to use -- the callback cannot be a function name

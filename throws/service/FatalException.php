@@ -19,5 +19,9 @@ use driphp\DriException;
 class FatalException extends DriException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 
 }

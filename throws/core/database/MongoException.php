@@ -18,8 +18,13 @@ use driphp\throws\core\DatabaseException;
  */
 class MongoException extends DatabaseException
 {
-    public function __construct($message = '', int $code = -1)
+    public function __construct($message = '')
     {
-        parent::__construct($message, $code);
+        parent::__construct($message);
+    }
+
+    public function getExceptionCode(): int
+    {
+        return 3600;
     }
 }

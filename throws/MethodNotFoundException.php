@@ -19,4 +19,8 @@ use driphp\DriException;
 class MethodNotFoundException extends DriException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 10600;
+    }
 }

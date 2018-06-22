@@ -18,4 +18,8 @@ use driphp\throws\core\DispatchException;
 class ControllerNotFoundException extends DispatchException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3103;
+    }
 }

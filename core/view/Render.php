@@ -46,9 +46,9 @@ trait Render
             if (preg_match('/\<\!--layout\:([^-]+)--\>/', $content, $match) and !empty($match[1])) {
                 $layout = trim($match[1] ?? '', '/');
                 if (strpos($layout, '/') === 0) {
-                    $layout_file = SR_PATH_PROJECT . $layout . '.php';
+                    $layout_file = DRI_PATH_PROJECT . $layout . '.php';
                 } else {
-                    $layout_file = SR_PATH_PROJECT . "view/{$theme}/{$module}/layout/{$layout}.php";
+                    $layout_file = DRI_PATH_PROJECT . "view/{$theme}/{$module}/layout/{$layout}.php";
                 }
                 if (is_file($layout_file)) {
                     $layout_content = file_get_contents($layout_file);
@@ -79,9 +79,9 @@ trait Render
 
 
             # check the compiled template
-            $view = SR_PATH_PROJECT . "view/{$theme}/{$module}/{$controller}/{$template}.php";
-            $compile_view = SR_PATH_RUNTIME . "view/{$module}-{$controller}/{$template}.{$theme}.php";;
-            if (SR_DEBUG_ON or !is_file($compile_view) or (filemtime($view) > filemtime($compile_view))) {
+            $view = DRI_PATH_PROJECT . "view/{$theme}/{$module}/{$controller}/{$template}.php";
+            $compile_view = DRI_PATH_RUNTIME . "view/{$module}-{$controller}/{$template}.{$theme}.php";;
+            if (DRI_DEBUG_ON or !is_file($compile_view) or (filemtime($view) > filemtime($compile_view))) {
                 # compiled template not exist or template has modified
                 if (is_file($view)) {
                     $content = file_get_contents($view);

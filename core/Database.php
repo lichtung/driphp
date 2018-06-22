@@ -40,7 +40,7 @@ class Database extends Component
      */
     protected function initialize()
     {
-        $this->configuration = Setup::createAnnotationMetadataConfiguration($this->config['paths'], SR_DEBUG_ON);
+        $this->configuration = Setup::createAnnotationMetadataConfiguration($this->config['paths'], DRI_DEBUG_ON);
         try {
             $this->connection = DriverManager::getConnection([
                 'pdo' => Dao::getInstance($this->index)->drive()
@@ -55,7 +55,7 @@ class Database extends Component
 
     protected $config = [
         'paths' => [
-            SR_PATH_PROJECT . 'entity/',
+            DRI_PATH_PROJECT . 'entity/',
         ],
     ];
 

@@ -85,7 +85,7 @@ class Think
             'CACHE_EXPIRE' => 10,//缓存时间，0便是永久缓存,仅以设置为30
             'CACHE_UPDATE_CHECK' => true,//是否检查模板文件是否发生了修改，如果发生修改将更新缓存文件（实现：检测模板文件的时间是否大于缓存文件的修改时间）
 
-            'CACHE_PATH' => SR_PATH_RUNTIME . '/tpview/',
+            'CACHE_PATH' => DRI_PATH_RUNTIME . '/tpview/',
             'TEMPLATE_SUFFIX' => '.php',     // 默认模板文件后缀
             'CACHFILE_SUFFIX' => '.php',      // 默认模板缓存后缀
             'TAGLIB_BEGIN' => '<',  // 标签库标签开始标记
@@ -377,7 +377,7 @@ class Think
     public static function parseTemplatePath($context): string
     {
         $context['t'] = isset($context['t']) ? $context['t'] . '/' : '';
-        return SR_PATH_PROJECT . "app/{$context['m']}/view/{$context['t']}{$context['c']}/{$context['a']}";
+        return DRI_PATH_PROJECT . "app/{$context['m']}/view/{$context['t']}{$context['c']}/{$context['a']}";
     }
 
     // 检查PHP语法
@@ -855,7 +855,7 @@ class Think
 
             if (strpos($templateName, '/') === 0) {
                 //Absolute path
-                $templateName = SR_PATH_PROJECT . $templateName;//abs
+                $templateName = DRI_PATH_PROJECT . $templateName;//abs
             } elseif (strpos($templateName, '~/') === 0) {
                 //View根目录
                 $templateName = dirname(dirname($this->template)) . substr($templateName, 1);

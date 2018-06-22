@@ -19,4 +19,8 @@ use driphp\throws\core\DispatchException;
 class RouteInvalidException extends DispatchException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3106;
+    }
 }

@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 use driphp\library\Trace;
 # php版本需要
-const SR_RELY_PHP_VERSION = 7.0;
+const DRI_RELY_PHP_VERSION = 7.0;
 
-version_compare(PHP_VERSION, (string)SR_RELY_PHP_VERSION, '<') and die('require php >= ' . SR_RELY_PHP_VERSION . '!');
+version_compare(PHP_VERSION, (string)DRI_RELY_PHP_VERSION, '<') and die('require php >= ' . DRI_RELY_PHP_VERSION . '!');
 
 
 function in_build_message($params, $traces)
@@ -39,7 +39,7 @@ function in_build_message_for_cli($params, $traces)
  */
 function in_dump(...$params)
 {
-    echo call_user_func_array(SR_IS_CLI ? 'in_build_message_for_cli' : 'in_build_message', [
+    echo call_user_func_array(DRI_IS_CLI ? 'in_build_message_for_cli' : 'in_build_message', [
         $params, debug_backtrace()
     ]);
 }
@@ -49,7 +49,7 @@ function in_dump(...$params)
  */
 function dumpout(...$params)
 {
-    exit(call_user_func_array(SR_IS_CLI ? 'in_build_message_for_cli' : 'in_build_message', [
+    exit(call_user_func_array(DRI_IS_CLI ? 'in_build_message_for_cli' : 'in_build_message', [
         $params, debug_backtrace()
     ]));
 }
@@ -57,7 +57,7 @@ function dumpout(...$params)
 class _inframe_dvlp
 {
 
-    private static $showTrace = SR_DEBUG_ON;
+    private static $showTrace = DRI_DEBUG_ON;
 
     /**
      * @var array
@@ -68,8 +68,8 @@ class _inframe_dvlp
      */
     private static $_status = [
         'begin' => [
-            SR_MICROTIME,
-            SR_MEMORY,
+            DRI_MICROTIME,
+            DRI_MEMORY,
         ],
     ];
     /**
@@ -102,7 +102,7 @@ class _inframe_dvlp
      */
     public static function status($tag)
     {
-        SR_DEBUG_ON and self::$_status[$tag] = [
+        DRI_DEBUG_ON and self::$_status[$tag] = [
             microtime(true),
             memory_get_usage(),
         ];
@@ -126,9 +126,9 @@ class _inframe_dvlp
     public static function trace($message = null)
     {
         static $index = 0;
-        if (!SR_DEBUG_ON) return;
+        if (!DRI_DEBUG_ON) return;
         if (null === $message) {
-            !SR_IS_CLI and self::$showTrace and Trace::show(self::$highlightes, self::$_traces, self::$_status);
+            !DRI_IS_CLI and self::$showTrace and Trace::show(self::$highlightes, self::$_traces, self::$_status);
         } else {
             $location = debug_backtrace();
             if (isset($location[0])) {

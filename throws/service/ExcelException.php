@@ -18,4 +18,8 @@ use driphp\DriException;
 class ExcelException extends DriException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 }

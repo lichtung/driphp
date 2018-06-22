@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace driphp\throws\core;
+namespace driphp\throws\core\logger;
 
 
 use driphp\DriException;
@@ -18,5 +18,8 @@ use driphp\DriException;
  */
 class BadLoggerLevelException extends DriException
 {
-
+    public function getExceptionCode(): int
+    {
+        return 3201;
+    }
 }

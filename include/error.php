@@ -18,7 +18,7 @@ namespace driphp {
         $html = '';
         foreach ($traces as $id => $trace) {
             # Error和Exception获取的trace是不一样的，Exception包含自身提示信息的部分，但是Error少了这一部分，所以把下面的代码注释
-            $relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(SR_PATH_ROOT, '\\'), array('', '/'), $trace['file']), '/') : '';
+            $relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(DRI_PATH_ROOT, '\\'), array('', '/'), $trace['file']), '/') : '';
             $current_line = (isset($trace['line'])) ? $trace['line'] : '';
             $html .= '<li>';
             $html .= '<b>' . ((isset($trace['class'])) ? $trace['class'] : '') . ((isset($trace['type'])) ? $trace['type'] : '') . $trace['function'] . '</b>';
@@ -102,7 +102,7 @@ endline;
     function _build_content($message, $file, $line)
     {
         $format = '<p><b style="color: mediumslateblue">%s</b><br/><i>at line </i><b>%d</b><i> in file </i><b style="color: darkorchid">%s</b></p>';
-        return sprintf($format, $message, $line, ltrim(str_replace(array(SR_PATH_ROOT, '\\'), array('', '/'), $file), '/'));
+        return sprintf($format, $message, $line, ltrim(str_replace(array(DRI_PATH_ROOT, '\\'), array('', '/'), $file), '/'));
     }
 
     /**

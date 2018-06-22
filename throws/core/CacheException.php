@@ -18,5 +18,8 @@ use driphp\DriException;
  */
 class CacheException extends DriException
 {
-
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 }

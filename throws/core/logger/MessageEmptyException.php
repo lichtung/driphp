@@ -19,4 +19,8 @@ use driphp\DriException;
 class MessageEmptyException extends DriException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3200;
+    }
 }

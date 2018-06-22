@@ -18,5 +18,8 @@ use driphp\DriException;
  */
 abstract class DispatchException extends DriException
 {
-
+    public function getExceptionCode(): int
+    {
+        return 20300;
+    }
 }

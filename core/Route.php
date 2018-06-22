@@ -78,7 +78,6 @@ class Route extends Component
             }
         }
 
-
         $pathInfo = $request->getPathInfo();
 
         if (!empty(self::$vhost2controller)) {
@@ -90,7 +89,7 @@ class Route extends Component
             }
         }
 
-        $method = strtolower(SR_REQUEST_METHOD);
+        $method = strtolower(DRI_REQUEST_METHOD);
         # 静态式路由
         if (!empty(self::$staticRoute) and $rule = self::$staticRoute[$method . '-' . $pathInfo] ?? self::$staticRoute['any-' . $pathInfo] ?? false) {
             return $rule;

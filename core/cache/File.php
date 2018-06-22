@@ -19,7 +19,7 @@ use driphp\throws\core\cache\CacheException;
 class File extends Driver
 {
     protected $config = [
-        'cache_path' => SR_PATH_RUNTIME . 'cache/',
+        'cache_path' => DRI_PATH_RUNTIME . 'cache/',
     ];
 
     public function __construct(array $config = [])

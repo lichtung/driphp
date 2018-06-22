@@ -19,4 +19,8 @@ use Throwable;
  */
 class RouteException extends DriException
 {
+    public function getExceptionCode(): int
+    {
+        return 20400;
+    }
 }

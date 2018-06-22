@@ -23,7 +23,7 @@ class DoctrineORM extends Service
 {
 
     protected $config = [
-        'entity_home' => SR_PATH_PROJECT . '/doctrine/entities', # /path/to/entity-files
+        'entity_home' => DRI_PATH_PROJECT . '/doctrine/entities', # /path/to/entity-files
         'connections' => [
             [
                 'driver' => 'pdo_mysql',

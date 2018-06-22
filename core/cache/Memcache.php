@@ -57,7 +57,7 @@ class Memcache extends Driver
     public function __construct(array $config = [])
     {
         parent::__construct($config);
-        $this->key = SR_DEBUG_ON ? '' : sha1($this->config['key']);
+        $this->key = DRI_DEBUG_ON ? '' : sha1($this->config['key']);
         $this->handler = new M();
         if (empty($servers = $this->config['servers'])) {
             throw new CacheException('require servers at least one');

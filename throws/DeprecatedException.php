@@ -26,6 +26,11 @@ class DeprecatedException extends DriException
         $function = $trace[1]['function'] ?? 'unknownFunction';
         $file = $trace[1]['file'] ?? 'unknownFile';
         $line = $trace[1]['line'] ?? 'unknownLine';
-        parent::__construct("Method [$class::$function] is deprecated at '$file'($line)", 400);
+        parent::__construct("Method [$class::$function] is deprecated at '$file'($line)");
+    }
+
+    public function getExceptionCode(): int
+    {
+        return 10300;
     }
 }

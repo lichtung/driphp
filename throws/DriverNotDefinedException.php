@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace driphp\throws\core;
+namespace driphp\throws;
 
 
 use driphp\DriException;
@@ -25,5 +25,10 @@ class DriverNotDefinedException extends DriException
     public function __construct(string $index)
     {
         parent::__construct("driver '{$index}' not found");
+    }
+
+    public function getExceptionCode(): int
+    {
+        return 10400;
     }
 }

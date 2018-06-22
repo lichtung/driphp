@@ -18,5 +18,8 @@ use driphp\throws\core\database\MongoException;
  */
 class CollectionNotSelectException extends MongoException
 {
-
+    public function getExceptionCode(): int
+    {
+        return 3604;
+    }
 }

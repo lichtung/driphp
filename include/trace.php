@@ -13,7 +13,7 @@ namespace driphp {
         public function __toString()
         {
 
-            if (SR_IS_CLI) return false;
+            if (DRI_IS_CLI) return false;
             $status = Kernel::status();
             //吞吐率  1秒/单次执行时间
             if (count($status) > 1) {
@@ -31,7 +31,7 @@ namespace driphp {
             //包含的文件数组
             $files = get_included_files();
             $info = [];
-            $len = strlen(SR_PATH_ROOT);
+            $len = strlen(DRI_PATH_ROOT);
             foreach ($files as $currentKey => $file) {
                 $size = number_format(filesize($file) / 1024, 2);
                 $file = substr($file, $len);
@@ -164,7 +164,7 @@ endline;
         }
     }
 
-    if (!SR_IS_AJAX) {
+    if (!DRI_IS_AJAX) {
         echo new TracePage();
     }
 }

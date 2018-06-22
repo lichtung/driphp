@@ -18,5 +18,8 @@ use driphp\throws\core\DatabaseException;
  */
 class SqliteException extends DatabaseException
 {
-
+    public function getExceptionCode(): int
+    {
+        return 3007;
+    }
 }

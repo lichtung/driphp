@@ -83,8 +83,8 @@ class Request extends Component
     protected function initialize()
     {
         # Gets options from the command line argument list
-        SR_IS_CLI and $this->commandArguments = getopt('p:');
-        switch (SR_REQUEST_METHOD) {
+        DRI_IS_CLI and $this->commandArguments = getopt('p:');
+        switch (DRI_REQUEST_METHOD) {
             case '':# client script
                 break;
             case 'GET': # Get resource from server(one or more)
@@ -160,7 +160,7 @@ class Request extends Component
         if ($method = $this->headers['X-HTTP-METHOD-OVERRIDE'] ?? false) {
             return strtoupper($method);
         } else {
-            return $_REQUEST['_method'] ?? SR_REQUEST_METHOD;
+            return $_REQUEST['_method'] ?? DRI_REQUEST_METHOD;
         }
     }
 
@@ -203,7 +203,7 @@ class Request extends Component
      */
     public function getPathInfo(): string
     {
-        if (SR_IS_CLI) {
+        if (DRI_IS_CLI) {
             $pathInfo = $this->commandArguments['p'] ?? '';
         } else {
             if (empty($_SERVER['PATH_INFO'])) {
@@ -218,6 +218,10 @@ class Request extends Component
         $pathInfo = trim($pathInfo, '.');
         if ($pos = strpos($pathInfo, '.')) {
             # 删除伪后缀 如 .html .htm .jsp(假透了)
+            $pathInfo = substr($pathInfo, 0, $pos);
+        }
+        # 截去query部分
+        if ($pos = strpos($pathInfo, '?')) {
             $pathInfo = substr($pathInfo, 0, $pos);
         }
         return $pathInfo ?: '/';
@@ -238,7 +242,7 @@ class Request extends Component
      */
     public function getClientIP(): string
     {
-        if (SR_LOAN_BALANCE_ON) return $_SERVER['REMOTE_ADDR'] ?? '';
+        if (DRI_LOAN_BALANCE_ON) return $_SERVER['REMOTE_ADDR'] ?? '';
         return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? '';
     }
 
@@ -337,7 +341,7 @@ class Request extends Component
 
     public function getHostUrl(): string
     {
-        return SR_IS_CLI ? '' : ($this->isHttps() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'];
+        return DRI_IS_CLI ? '' : ($this->isHttps() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'];
     }
 
     /**
@@ -346,7 +350,7 @@ class Request extends Component
      */
     public function getPublicUrl(): string
     {
-        return SR_IS_CLI ? '' : $this->getHostUrl() . trim(dirname($_SERVER['SCRIPT_NAME'] . '\\/'));
+        return DRI_IS_CLI ? '' : $this->getHostUrl() . trim(dirname($_SERVER['SCRIPT_NAME'] . '\\/'));
     }
 
     /**

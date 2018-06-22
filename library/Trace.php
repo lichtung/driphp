@@ -36,7 +36,7 @@ final class Trace
      */
     public static function show(array $keywords = null, array $trace = null, array $status = null)
     {
-        if (SR_IS_CLI) return false;
+        if (DRI_IS_CLI) return false;
         $trace and self::$trace = array_merge(self::$trace, $trace);
         $status and self::$status = array_merge(self::$status, $status);
 
@@ -62,7 +62,7 @@ final class Trace
         //包含的文件数组
         $files = get_included_files();
         $info = [];
-        $len = strlen(SR_PATH_BASE);
+        $len = strlen(DRI_PATH_BASE);
         foreach ($files as $key => $file) {
             $size = number_format(filesize($file) / 1024, 2);
             $file = substr($file, $len);
@@ -233,15 +233,15 @@ endline;
         # 记录错误日志
         Log::getLogger('throwable')->fatal($infos);
 
-        if (SR_IS_CLI) {
+        if (DRI_IS_CLI) {
             var_dump($infos);
-        } elseif (SR_IS_AJAX) {
+        } elseif (DRI_IS_AJAX) {
             exit(new JSON([
                 'status' => -1,
-                'message' => SR_DEBUG_ON ? var_export($infos, true) : 'an error occur',
+                'message' => DRI_DEBUG_ON ? var_export($infos, true) : 'an error occur',
             ]));
         } else {
-            if (SR_DEBUG_ON) {
+            if (DRI_DEBUG_ON) {
                 // Display error message
                 echo '<style>
 				#lite_throwable_display{ font-size: 14px;font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace}
@@ -279,7 +279,7 @@ endline;
         foreach ($traces as $id => $trace) {
             # Error和Exception获取的trace是不一样的，Exception包含自身提示信息的部分，但是Error少了这一部分，所以把下面的代码注释
 //            if(!$id) continue;
-            $relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(SR_PATH_BASE, '\\'), array('', '/'), $trace['file']), '/') : '';
+            $relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(DRI_PATH_BASE, '\\'), array('', '/'), $trace['file']), '/') : '';
             $current_line = (isset($trace['line'])) ? $trace['line'] : '';
             $html .= '<li>';
             $html .= '<b>' . ((isset($trace['class'])) ? $trace['class'] : '') . ((isset($trace['type'])) ? $trace['type'] : '') . $trace['function'] . '</b>';
@@ -362,7 +362,7 @@ endline;
     private static function _buildContent(string $message, string $file, int $line): string
     {
         $format = '<p><b style="color: mediumslateblue">%s</b><br/><i>at line </i><b>%d</b><i> in file </i><b style="color: darkorchid">%s</b></p>';
-        return sprintf($format, $message, $line, ltrim(str_replace(array(SR_PATH_BASE, '\\'), array('', '/'), $file), '/'));
+        return sprintf($format, $message, $line, ltrim(str_replace(array(DRI_PATH_BASE, '\\'), array('', '/'), $file), '/'));
     }
 
 }

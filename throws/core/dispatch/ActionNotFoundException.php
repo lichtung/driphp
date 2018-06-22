@@ -18,4 +18,8 @@ use driphp\throws\core\DispatchException;
 class ActionNotFoundException extends DispatchException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3102;
+    }
 }

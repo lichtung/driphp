@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 namespace driphp\library;
 
+use driphp\Component;
 use driphp\throws\library\OpenSSLException as Exception;
 
 /**
- * Class OpenSSL
- *
+ * Class RSA
  *
  * Note:
  * "- openssl_private_encrypt can encrypt a maximum of 117 chars at one time."
@@ -44,10 +44,22 @@ use driphp\throws\library\OpenSSLException as Exception;
  * but in general the resulting encoded string will be about a 33% bigger (for 128 bytes bout 170 bytes and for 256 bytes about
  * 340 bytes).
  *
+ * @method RSA getInstance(array $config = []) static
  * @package driphp\library
  */
-class OpenSSL
+class RSA extends Component
 {
+    protected $config = [
+        'private_key' => '', # 公钥内容或者存储位置
+        'public_key' => '', # 私钥内容或者存储位置
+    ];
+
+    protected function initialize()
+    {
+        $this->privateKey = $this->config['private_key'];
+        $this->publicKey = $this->config['public_key'];
+    }
+
     /**
      *
      * Block size for encryption block cipher
@@ -71,17 +83,6 @@ class OpenSSL
      * @var resource
      */
     private $publicKeyResource = null;
-
-    /**
-     * Rsa constructor.
-     * @param string $public_key 公钥内容或者存储位置
-     * @param string $private_key 私钥内容或者存储位置
-     */
-    public function __construct(string $public_key, string $private_key)
-    {
-        $this->privateKey = $private_key;
-        $this->publicKey = $public_key;
-    }
 
     /**
      * @return resource

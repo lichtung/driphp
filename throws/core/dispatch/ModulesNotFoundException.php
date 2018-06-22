@@ -18,4 +18,8 @@ use driphp\throws\core\DispatchException;
 class ModulesNotFoundException extends DispatchException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3104;
+    }
 }

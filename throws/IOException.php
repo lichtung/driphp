@@ -19,4 +19,8 @@ use driphp\DripException;
 class IOException extends DripException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 10500;
+    }
 }

@@ -19,5 +19,9 @@ use driphp\DripException;
 class RabbitMQException extends DripException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 
 }

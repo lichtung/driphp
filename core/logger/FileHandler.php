@@ -43,7 +43,7 @@ class FileHandler implements DriverInterface, LoggerInterface
     public function __construct(array $config, Component $context)
     {
         # web模式下脚本结束自动保存
-        if (!SR_IS_CLI) register_shutdown_function([$this, 'store']);
+        if (!DRI_IS_CLI) register_shutdown_function([$this, 'store']);
         $this->config = $config;
         $this->context = $context;
     }
@@ -53,7 +53,7 @@ class FileHandler implements DriverInterface, LoggerInterface
         $yearMonth = date('Ym');
         $day = date('d');
 
-        if (SR_IS_CLI) {
+        if (DRI_IS_CLI) {
             $title = '[CLI-MODE]';
         } else {
             $now = date('Y-m-d H:i:s');
@@ -64,8 +64,8 @@ class FileHandler implements DriverInterface, LoggerInterface
         foreach (self::$records as $name => & $logs) {
             if ($logs) {
                 $message = implode(PHP_EOL, $logs);
-                is_dir($directoryName = dirname($destination = SR_PATH_RUNTIME . "log/{$yearMonth}/{$day}/{$name}.log")) or mkdir($directoryName, 0777, true);
-                SR_IS_CLI or $message = "{$title}\n{$message}";
+                is_dir($directoryName = dirname($destination = DRI_PATH_RUNTIME . "log/{$yearMonth}/{$day}/{$name}.log")) or mkdir($directoryName, 0777, true);
+                DRI_IS_CLI or $message = "{$title}\n{$message}";
                 error_log($message . PHP_EOL, 3, $destination);
                 $logs = [];
             }
@@ -103,7 +103,7 @@ class FileHandler implements DriverInterface, LoggerInterface
 
             # 命令行模式下／参数三为true 立即保存
             # 注意命令行模式下应该避免频繁记录日志
-            if ($storeImmediately or SR_IS_CLI) {
+            if ($storeImmediately or DRI_IS_CLI) {
                 $this->store();
             }
             return true;

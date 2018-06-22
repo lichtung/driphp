@@ -52,11 +52,11 @@ class Dispatcher extends Component
                 $route = call_user_func($route);
             }
             switch ($type = gettype($route)) {
-                case SR_TYPE_ARRAY:
+                case DRI_TYPE_ARRAY:
                     list($controller, $action) = $route;
                     Dispatcher::runMethod($controller, $action);
                     break;
-                case SR_TYPE_STR:
+                case DRI_TYPE_STR:
                     if (strpos($route, 'http') === 0) {
                         exit(new Redirect($route));# 立即重定向
                     } else {
@@ -71,7 +71,7 @@ class Dispatcher extends Component
             $request = Request::getInstance();
 
             $requestModules = $request->getModule();
-            if (!is_dir($modulePath = SR_PATH_PROJECT . 'controller/' . $requestModules))
+            if (!is_dir($modulePath = DRI_PATH_PROJECT . 'controller/' . $requestModules))
                 throw new ModulesNotFoundException($modulePath);
             if (!class_exists($controllerName = 'controller\\' . ($requestModules ? $requestModules . '\\' : '') . ucfirst($request->getController())))
                 throw new ControllerNotFoundException($controllerName);
@@ -129,7 +129,7 @@ class Dispatcher extends Component
             $args = [];
             /** @var \ReflectionParameter[] $methodParams */
             $methodParams = $method->getParameters();
-            isset($arguments) or $arguments = SR_IS_CLI ? Request::getInstance()->getCommandArguments() : $_REQUEST;
+            isset($arguments) or $arguments = DRI_IS_CLI ? Request::getInstance()->getCommandArguments() : $_REQUEST;
             if ($methodParams) {
                 foreach ($methodParams as $param) {
                     $paramName = $param->getName();

@@ -101,7 +101,7 @@ class MySQL2 extends PDO
      */
     protected function _write(string $table, string $sql, bool $append = false): bool
     {
-        $file = SR_PATH_DATA . 'backup/' . $table . '/' . time() . '.sql';
+        $file = DRI_PATH_DATA . 'backup/' . $table . '/' . time() . '.sql';
         is_dir($dir = dirname($file)) or mkdir($dir, 0755, true);
         if (false === ($res = file_put_contents($file, $sql, $append ? FILE_APPEND : 0))) {
             throw new FileWriteException($file);

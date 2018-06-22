@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 version_compare(PHP_VERSION, '7.0', '<') and die('require php >= 7.0!');
 
-function sr_build_message($params, $traces)
+function DRI_build_message($params, $traces)
 {
     $color = '#';
     $str = '9ABCDEF';//随机浅色背景
@@ -21,7 +21,7 @@ function sr_build_message($params, $traces)
     return $str . '</pre>';
 }
 
-function sr_build_message_for_cli($params, $traces)
+function DRI_build_message_for_cli($params, $traces)
 {
     $str = "F:{$traces[0]['file']} << L:{$traces[0]['line']} >>" . PHP_EOL;
     foreach ($params as $key => $val) $str .= "[Parameter-{$key}]\n" . var_export($val, true) . PHP_EOL;
@@ -33,7 +33,7 @@ function sr_build_message_for_cli($params, $traces)
  */
 function dumpon(...$params)
 {
-    echo call_user_func_array(SR_IS_CLI ? 'sr_build_message_for_cli' : 'sr_build_message', [
+    echo call_user_func_array(DRI_IS_CLI ? 'DRI_build_message_for_cli' : 'DRI_build_message', [
         $params, debug_backtrace()
     ]);
 }
@@ -43,7 +43,7 @@ function dumpon(...$params)
  */
 function dumpout(...$params)
 {
-    exit(call_user_func_array(SR_IS_CLI ? 'sr_build_message_for_cli' : 'sr_build_message', [
+    exit(call_user_func_array(DRI_IS_CLI ? 'DRI_build_message_for_cli' : 'DRI_build_message', [
         $params, debug_backtrace()
     ]));
 }

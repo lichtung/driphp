@@ -18,4 +18,8 @@ use driphp\throws\core\DispatchException;
 class ActionAccessException extends DispatchException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3101;
+    }
 }

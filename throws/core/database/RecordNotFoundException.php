@@ -18,4 +18,8 @@ use driphp\throws\core\DatabaseException;
 class RecordNotFoundException extends DatabaseException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3005;
+    }
 }

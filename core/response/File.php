@@ -59,7 +59,7 @@ class File extends Response
         $file = str_replace(['..', ' ', '\\'], '', $file); # 禁止空格和访问上级目录
 
         //First, see if the file exists
-        $file = SR_PATH_DATA . $file;
+        $file = DRI_PATH_DATA . $file;
         if (!is_file($file)) {
             $this->setStatus(404);
             die;

@@ -77,7 +77,7 @@ final class Swoole extends Component
         'open_cpu_affinity' => 1,
         'open_tcp_nodelay' => 1,
         'tcp_defer_accept' => 5,
-        'log_file' => SR_PATH_FRAMEWORK . 'runtime/swoole.log',
+        'log_file' => DRI_PATH_FRAMEWORK . 'runtime/swoole.log',
 
         'heartbeat_check_interval' => 30,
         'heartbeat_idle_time' => 60,

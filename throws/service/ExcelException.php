@@ -18,4 +18,8 @@ use driphp\DripException;
 class ExcelException extends DripException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 }

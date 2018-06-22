@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\core\logger;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**.
  * Class MessageEmptyException 日志消息未空异常
  * @package driphp\throws\core\logger
  */
-class MessageEmptyException extends DriException
+class MessageEmptyException extends DripException
 {
 
     public function getExceptionCode(): int

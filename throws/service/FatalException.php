@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\service;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class FatalException
  * @package driphp\throws\service
  */
-class FatalException extends DriException
+class FatalException extends DripException
 {
 
     public function getExceptionCode(): int

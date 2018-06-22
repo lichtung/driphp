@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\service;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class OSSException OSS异常
  * @package driphp\throws\service
  */
-class OSSException extends DriException
+class OSSException extends DripException
 {
 
     public function getExceptionCode(): int

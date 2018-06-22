@@ -11,7 +11,7 @@ namespace driphp\library;
 
 use driphp\Component;
 use driphp\core\Cache;
-use driphp\DriException;
+use driphp\DripException;
 
 class ThinkCaptcha extends Component
 {
@@ -70,7 +70,7 @@ class ThinkCaptcha extends Component
      * @access public
      * @param string $id 标识
      * @return void
-     * @throws DriException
+     * @throws DripException
      */
     public function entry($id)
     {
@@ -122,7 +122,7 @@ class ThinkCaptcha extends Component
         $code = array(); // 验证码
         $codeNX = 0; // 验证码第N个字符的左边距
         if (!function_exists('imagettftext')) {
-            throw new DriException('gd2/freetype is required');
+            throw new DripException('gd2/freetype is required');
         }
         if ($config['useZh']) { // 中文验证码
             for ($i = 0; $i < $config['length']; $i++) {

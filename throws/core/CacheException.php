@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\core\cache;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class CacheException 缓存异常
  * @package driphp\throws\core\cache
  */
-class CacheException extends DriException
+class CacheException extends DripException
 {
     public function getExceptionCode(): int
     {

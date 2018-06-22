@@ -11,7 +11,7 @@ namespace driphp\service;
 use driphp\Component;
 use driphp\Kernel;
 use driphp\service\rabbit\OnReceiveInterface;
-use driphp\DriException;
+use driphp\DripException;
 use driphp\throws\core\ClassNotFoundException;
 use driphp\throws\service\FatalException;
 use driphp\throws\service\RabbitMQException;
@@ -119,7 +119,7 @@ class RabbitMQ extends Component
             $this->channel = $this->connection->channel();
             $this->channel->basic_qos(null, $config['prefetch_count'] ?? 1, null);
         } catch (ClassNotFoundException $exception) {
-            DriException::dispose($exception);
+            DripException::dispose($exception);
         } catch (\Throwable $throwable) {
             throw new RabbitMQException($throwable->getMessage());
         }
@@ -167,7 +167,7 @@ class RabbitMQ extends Component
      * Our code will block while our $channel has callbacks. Whenever we receive a message our $callback function will be passed the received message.
      * @param OnReceiveInterface $handler
      * @return void
-     * @throws DriException
+     * @throws DripException
      */
     public function receive(OnReceiveInterface $handler)
     {
@@ -189,7 +189,7 @@ class RabbitMQ extends Component
                         if ($t instanceof FatalException) {
                             throw $t;
                         } else {
-                            DriException::dispose($t);
+                            DripException::dispose($t);
                         }
                     }
                 }

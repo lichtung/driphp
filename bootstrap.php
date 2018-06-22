@@ -104,7 +104,7 @@ namespace driphp {
     use driphp\throws\core\ClassNotFoundException;
 
     /**
-     * Class DriException 内置异常
+     * Class DripException 内置异常
      * @package driphp
      */
     abstract class DriException extends \Exception
@@ -318,6 +318,7 @@ namespace driphp {
          * @param mixed|null $value 为null时表示获取配置值,否则标识获取配置值
          * @return mixed|null
          * @throws ConfigException 访问的config不存在时抛出
+         * >>>>>>> 03f29befa566479f1b72df79295ba9f9a681a74a
          */
         public function config(string $key, $value = null)
         {
@@ -428,10 +429,10 @@ namespace driphp {
             false === ini_set('session.cache_expire', (string)$this->config['session.cache_expire']) and die('set session.cache_expire failed');
 
             set_error_handler(function (int $code, string $message, string $file, int $line) {
-                DriException::dispose(null, $code, $message, $file, $line);
+                DripException::dispose(null, $code, $message, $file, $line);
             });
             set_exception_handler(function (Throwable $e) {
-                DriException::dispose($e);
+                DripException::dispose($e);
             });
 
             Kernel::status('init_end');
@@ -644,7 +645,8 @@ namespace driphp {
 //            Response::getInstance()->clean();
             $isFile or $tpl = DRI_PATH_FRAMEWORK . "include/template/{$tpl}.php";
             if (!is_file($tpl)) {
-                $vars['error'] = "'{$tpl}' not found";
+                $vars['error'] = "'{
+                                $tpl}' not found";
                 $tpl = DRI_PATH_FRAMEWORK . 'include/template/error.php';
             }
             $vars and extract($vars, EXTR_OVERWRITE);

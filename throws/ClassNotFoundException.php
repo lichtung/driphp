@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class ClassNotFoundException 类不存在异常
  * @package driphp\throws\core
  */
-class ClassNotFoundException extends DriException
+class ClassNotFoundException extends DripException
 {
     public function getExceptionCode(): int
     {

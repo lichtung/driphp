@@ -10,13 +10,13 @@ declare(strict_types=1);
 namespace driphp\throws\core\logger;
 
 
-use driphp\DriException;
+use driphp\DripException;
 
 /**
  * Class BadLoggerLevelException 错误的日志记录级别
  * @package driphp\throws\core
  */
-class BadLoggerLevelException extends DriException
+class BadLoggerLevelException extends DripException
 {
     public function getExceptionCode(): int
     {

@@ -13,7 +13,8 @@ use driphp\Kernel;
 use driphp\throws\core\database\ExecuteException;
 use driphp\throws\core\database\RecordNotFoundException;
 use driphp\throws\core\database\RecordNotUniqueException;
-
+use driphp\throws\ClassNotFoundException;
+use driphp\throws\DriverNotDefinedException;
 
 /**
  * Class ORM  对象关系映射(Object Relational Mapping)
@@ -42,8 +43,8 @@ abstract class ORM extends Model
      * @param int $primaryKey
      * @param Dao|null $dao
      * @return mixed
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      */
     public static function instance($primaryKey = 0, Dao $dao = null)
     {
@@ -100,8 +101,8 @@ abstract class ORM extends Model
      * @throws ExecuteException
      * @throws RecordNotFoundException
      * @throws RecordNotUniqueException
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\QueryException
      */
@@ -140,8 +141,8 @@ abstract class ORM extends Model
      * @param array $data
      * @return bool
      * @throws ExecuteException
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      */
     public function update(array $data = []): bool
@@ -173,8 +174,8 @@ abstract class ORM extends Model
      * @return $this
      * @throws RecordNotFoundException 记录不存在时抛出
      * @throws RecordNotUniqueException 记录不唯一时抛出
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\QueryException
      */
@@ -205,8 +206,8 @@ abstract class ORM extends Model
 
     /**
      * @return bool
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\ExecuteException
      */

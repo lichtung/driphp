@@ -24,56 +24,56 @@ declare(strict_types=1);
 namespace {
 
     use driphp\Kernel;
-    const SR_VERSION = '0.0';
+    const DRI_VERSION = '0.0';
 
-    define('SR_MICROTIME', ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)));
-    define('SR_MEMORY', memory_get_usage());# byte
+    define('DRI_MICROTIME', ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)));
+    define('DRI_MEMORY', memory_get_usage());# byte
 
-    defined('SR_DEBUG_ON') or define('SR_DEBUG_ON', true); #  debug模式默认开启
-    defined('SR_LOAN_BALANCE_ON') or define('SR_LOAN_BALANCE_ON', false);# 负载均衡模式默认关闭（开启时候需要手动设置HOST名称）
-    defined('SR_PROJECT_NAME') or define('SR_PROJECT_NAME', '');# 项目名称（项目所在目录的名称，如 idea.driphp.com/ ）
+    defined('DRI_DEBUG_ON') or define('DRI_DEBUG_ON', true); #  debug模式默认开启
+    defined('DRI_LOAN_BALANCE_ON') or define('DRI_LOAN_BALANCE_ON', false);# 负载均衡模式默认关闭（开启时候需要手动设置HOST名称）
+    defined('DRI_PROJECT_NAME') or define('DRI_PROJECT_NAME', '');# 项目名称（项目所在目录的名称，如 idea.driphp.com/ ）
 
     # environment constant
-    const SR_IS_CLI = PHP_SAPI === 'cli'; # is client environment?
-    define('SR_IS_WIN', false !== stripos(PHP_OS, 'WIN'));# is windows?
-    define('SR_IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) and $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+    const DRI_IS_CLI = PHP_SAPI === 'cli'; # is client environment?
+    define('DRI_IS_WIN', false !== stripos(PHP_OS, 'WIN'));# is windows?
+    define('DRI_IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) and $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
     # request method
-    define('SR_REQUEST_METHOD', strtoupper($_SERVER['REQUEST_METHOD'] ?? ''));//'GET', 'DELETE'，'POST'，'PUT' 'PATCH' ...
+    define('DRI_REQUEST_METHOD', strtoupper($_SERVER['REQUEST_METHOD'] ?? ''));//'GET', 'DELETE'，'POST'，'PUT' 'PATCH' ...
 
     # directory constant
-    define('SR_PATH_ROOT', dirname(__DIR__) . '/'); # the parent directory of project and framework
-    const SR_PATH_FRAMEWORK = __DIR__ . '/';    # framework directory
-    const SR_PATH_PROJECT = SR_PATH_ROOT . SR_PROJECT_NAME . '/'; # project directory
-    const SR_PATH_CONFIG = SR_PATH_PROJECT . 'config/'; # project directory
-    const SR_PATH_DATA = SR_PATH_PROJECT . 'data/'; # data directory to store dynamic config or file-based data
-    const SR_PATH_VENDOR = SR_PATH_PROJECT . 'vendor/'; # vendor directory for project
-    const SR_PATH_RUNTIME = SR_PATH_PROJECT . 'runtime/'; # to store temporary, cache file
-    const SR_PATH_PUBLIC = SR_PATH_PROJECT . 'public/'; # public resource (css, js, image...) and entry script
-    const SR_PATH_CONTROLLER = SR_PATH_PROJECT . 'controller/'; # to store controller class
-    const SR_PATH_MODEL = SR_PATH_PROJECT . 'model/'; # to store model class
-    const SR_PATH_VIEW = SR_PATH_PROJECT . 'view/'; # to store view template
+    define('DRI_PATH_ROOT', dirname(__DIR__) . '/'); # the parent directory of project and framework
+    const DRI_PATH_FRAMEWORK = __DIR__ . '/';    # framework directory
+    const DRI_PATH_PROJECT = DRI_PATH_ROOT . DRI_PROJECT_NAME . '/'; # project directory
+    const DRI_PATH_CONFIG = DRI_PATH_PROJECT . 'config/'; # project directory
+    const DRI_PATH_DATA = DRI_PATH_PROJECT . 'data/'; # data directory to store dynamic config or file-based data
+    const DRI_PATH_VENDOR = DRI_PATH_PROJECT . 'vendor/'; # vendor directory for project
+    const DRI_PATH_RUNTIME = DRI_PATH_PROJECT . 'runtime/'; # to store temporary, cache file
+    const DRI_PATH_PUBLIC = DRI_PATH_PROJECT . 'public/'; # public resource (css, js, image...) and entry script
+    const DRI_PATH_CONTROLLER = DRI_PATH_PROJECT . 'controller/'; # to store controller class
+    const DRI_PATH_MODEL = DRI_PATH_PROJECT . 'model/'; # to store model class
+    const DRI_PATH_VIEW = DRI_PATH_PROJECT . 'view/'; # to store view template
 
 
     # charset
-    const SR_CHARSET_UTF8 = 'UTF-8';
-    const SR_CHARSET_GBK = 'GBK';
-    const SR_CHARSET_ASCII = 'ASCII';
-    const SR_CHARSET_GB2312 = 'GB2312';
-    const SR_CHARSET_LATIN1 = 'ISO-8859-1';# Latin1 is the alia of ISO-8859-1  欧洲部分国家使用(西欧语言)
+    const DRI_CHARSET_UTF8 = 'UTF-8';
+    const DRI_CHARSET_GBK = 'GBK';
+    const DRI_CHARSET_ASCII = 'ASCII';
+    const DRI_CHARSET_GB2312 = 'GB2312';
+    const DRI_CHARSET_LATIN1 = 'ISO-8859-1';# Latin1 is the alia of ISO-8859-1  欧洲部分国家使用(西欧语言)
 
-    const SR_TYPE_BOOL = 'boolean';
-    const SR_TYPE_INT = 'integer';
-    const SR_TYPE_FLOAT = 'double'; # gettype(1.7) === 'double'
-    const SR_TYPE_STR = 'string';
-    const SR_TYPE_ARRAY = 'array';
-    const SR_TYPE_OBJ = 'object'; # gettype(function (){})
-    const SR_TYPE_RESOURCE = 'resource';
-    const SR_TYPE_NULL = 'NULL'; # gettype(null) === 'NULL'
-    const SR_TYPE_UNKNOWN = 'unknown type';
+    const DRI_TYPE_BOOL = 'boolean';
+    const DRI_TYPE_INT = 'integer';
+    const DRI_TYPE_FLOAT = 'double'; # gettype(1.7) === 'double'
+    const DRI_TYPE_STR = 'string';
+    const DRI_TYPE_ARRAY = 'array';
+    const DRI_TYPE_OBJ = 'object'; # gettype(function (){})
+    const DRI_TYPE_RESOURCE = 'resource';
+    const DRI_TYPE_NULL = 'NULL'; # gettype(null) === 'NULL'
+    const DRI_TYPE_UNKNOWN = 'unknown type';
 
-    if (SR_DEBUG_ON) {
+    if (DRI_DEBUG_ON) {
         require __DIR__ . '/include/debug.php';
-        SR_IS_CLI or register_shutdown_function(function () {
+        DRI_IS_CLI or register_shutdown_function(function () {
 //            if (class_exists(Response::class)) echo Response::getInstance();
             Kernel::status('shutdown');
             isset($_GET['show_trace']) and require(__DIR__ . '/include/trace.php');
@@ -97,28 +97,44 @@ namespace driphp {
     use driphp\core\Request;
     use driphp\core\response\JSON;
     use driphp\core\Route;
-    use driphp\throws\core\DriverNotDefinedException;
+    use driphp\throws\ClassNotFoundException;
+    use driphp\throws\ConfigException;
+    use driphp\throws\DriverNotDefinedException;
     use driphp\throws\io\FileWriteException;
     use Throwable;
-    use driphp\throws\core\ClassNotFoundException;
 
     /**
      * Class DripException 内置异常
      * @package driphp
      */
-    class DripException extends \Exception
+    abstract class DripException extends \Exception
     {
         /**
-         * DripException constructor.
-         * @param string $message
-         * @param int $code
+         * DriException constructor.
+         * @param object|string|int|float $message
          */
-        public function __construct(string $message, int $code = -1)
+        public function __construct($message)
         {
-            parent::__construct($message, $code);
+            if (!is_string($message)) {
+                switch (gettype($message)) {
+                    case DRI_TYPE_ARRAY:
+                        $message = var_export($message, true);
+                        break;
+                    default:
+                        $message = (string)$message;
+                }
+            }
+            parent::__construct($message, $this->getExceptionCode());
         }
 
         /**
+         * 返回异常的错误代号
+         * @return int
+         */
+        abstract public function getExceptionCode(): int;
+
+        /**
+         * @return void
          * @throws \ReflectionException
          */
         public static function throwing()
@@ -157,12 +173,12 @@ namespace driphp {
                 'line' => $line,
                 'class' => $className,
             ]);
-            if (SR_IS_CLI) {
+            if (DRI_IS_CLI) {
                 var_dump($information);
-            } elseif (SR_IS_AJAX) {
+            } elseif (DRI_IS_AJAX) {
                 exit(new JSON($information));
             } else {
-                if (SR_DEBUG_ON) {
+                if (DRI_DEBUG_ON) {
                     require_once __DIR__ . '/include/error.php';
                     _display_error($message, $className, $file, $line, $code, $traces);
                 } else {
@@ -302,7 +318,8 @@ namespace driphp {
          * @param string $key 配置项,多级配置项以点号分隔
          * @param mixed|null $value 为null时表示获取配置值,否则标识获取配置值
          * @return mixed|null
-         * @throws DripException 访问的config不存在时抛出
+         * @throws ConfigException 访问的config不存在时抛出
+         * >>>>>>> 03f29befa566479f1b72df79295ba9f9a681a74a
          */
         public function config(string $key, $value = null)
         {
@@ -314,7 +331,7 @@ namespace driphp {
 //                            if (!isset($config[$k])) $config[$k] = [];
                             $config = &$config[$k];
                         } else {
-                            throw new DripException("Bad config key [$key]");
+                            throw new ConfigException($key);
                         }
                     }
                     $config = $value;
@@ -382,7 +399,7 @@ namespace driphp {
             'shutdown_handler' => null,
             'exception_handler' => null,
             'session.save_handler' => 'files',# redis
-            'session.save_path' => SR_PATH_RUNTIME,# tcp://127.0.0.1:6379
+            'session.save_path' => DRI_PATH_RUNTIME,# tcp://127.0.0.1:6379
             'session.gc_maxlifetime' => 3600,
             'session.cache_expire' => 3600,
         ];
@@ -397,7 +414,7 @@ namespace driphp {
 
             # 类自动装载函数
             spl_autoload_register(function (string $className) {
-                $path = (strpos($className, 'driphp\\') === 0) ? SR_PATH_ROOT : SR_PATH_PROJECT;
+                $path = (strpos($className, 'driphp\\') === 0) ? DRI_PATH_ROOT : DRI_PATH_PROJECT;
                 $path .= str_replace('\\', '/', $className) . '.php';
                 if (is_file($path)) require($path);
             }, false, true) or die('register class loader failed');
@@ -429,7 +446,7 @@ namespace driphp {
          */
         public function start()
         {
-            if (SR_IS_CLI) return;
+            if (DRI_IS_CLI) return;
             self::status('start');
             $request = Request::getInstance();
             self::status('route');
@@ -470,7 +487,7 @@ namespace driphp {
                 $this->config[$component] = $config;
             } else {
                 if (!isset($this->config[$component])) {
-                    if (is_file($extra = SR_PATH_CONFIG . str_replace('\\', '.', $component) . '.php')) {
+                    if (is_file($extra = DRI_PATH_CONFIG . str_replace('\\', '.', $component) . '.php')) {
                         $this->config[$component] = include $extra;
                     } else {
                         $this->config[$component] = [];
@@ -504,8 +521,8 @@ namespace driphp {
         {
             static $_status = [
                 'onload' => [
-                    SR_MICROTIME,
-                    SR_MEMORY,
+                    DRI_MICROTIME,
+                    DRI_MEMORY,
                 ],
             ];
             return isset($tag) ? ($_status[$tag] = [microtime(true), memory_get_usage()]) : $_status;
@@ -517,12 +534,12 @@ namespace driphp {
          * @param string $path
          * @param array|mixed $replace
          * @return array|mixed
-         * @throws DripException
+         * @throws ConfigException
          */
         public static function readConfig(string $path, $replace = [])
         {
             if (!is_array($result = is_file($path) ? include($path) : $replace)) {
-                throw new DripException("file $path must return array");
+                throw new ConfigException("PHP config [$path] return a non-array");
             };
             return $result;
         }
@@ -538,7 +555,7 @@ namespace driphp {
         {
             $parentDirectory = dirname($path);
             is_dir($parentDirectory) or mkdir($parentDirectory, 0777, true);
-            if (!file_put_contents($path, '<?php defined(\'SR_VERSION\') or die(\'No Permission\'); return ' .
+            if (!file_put_contents($path, '<?php defined(\'DRI_VERSION\') or die(\'No Permission\'); return ' .
                 var_export($config, true) . ';')) {
                 throw new FileWriteException($path);
             }
@@ -554,15 +571,15 @@ namespace driphp {
         {
             $hash = '';
             switch (gettype($params)) {
-                case SR_TYPE_ARRAY:
+                case DRI_TYPE_ARRAY:
                     foreach ($params as $item) {
                         $hash .= self::hash($item);
                     }
                     break;
-                case SR_TYPE_OBJ:
+                case DRI_TYPE_OBJ:
                     $hash = spl_object_hash($params);
                     break;
-                case SR_TYPE_RESOURCE:
+                case DRI_TYPE_RESOURCE:
                     $hash = get_resource_type($params);
                     break;
                 default:
@@ -627,10 +644,11 @@ namespace driphp {
         public static function template(string $tpl, array $vars = [], bool $isFile = false)
         {
 //            Response::getInstance()->clean();
-            $isFile or $tpl = SR_PATH_FRAMEWORK . "include/template/{$tpl}.php";
+            $isFile or $tpl = DRI_PATH_FRAMEWORK . "include/template/{$tpl}.php";
             if (!is_file($tpl)) {
-                $vars['error'] = "'{$tpl}' not found";
-                $tpl = SR_PATH_FRAMEWORK . 'include/template/error.php';
+                $vars['error'] = "'{
+                                $tpl}' not found";
+                $tpl = DRI_PATH_FRAMEWORK . 'include/template/error.php';
             }
             $vars and extract($vars, EXTR_OVERWRITE);
             include $tpl;

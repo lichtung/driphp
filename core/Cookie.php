@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 
-namespace driphp\library;
+namespace driphp\core;
 
 
 use driphp\Component;
@@ -15,9 +15,9 @@ use driphp\Component;
 /**
  * Class Cookie
  *
- * @method Cookie getInstance(string $index = '') static
+ * @method Cookie getInstance(array $config = []) static
  *
- * @package driphp\library
+ * @package driphp\core
  */
 class Cookie extends Component
 {

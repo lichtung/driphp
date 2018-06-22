@@ -19,7 +19,7 @@ use driphp\DripException;
  */
 abstract class DatabaseException extends DripException
 {
-    public function __construct($message, int $code = -1)
+    public function __construct($message)
     {
 //        if (is_object($message)) {
 //            if ($message instanceof \PDO or $message instanceof \PDOStatement) {
@@ -31,6 +31,11 @@ abstract class DatabaseException extends DripException
 //            $code = $info[1] ?? -1;
 //        }
 //        Logger::getInstance('database')->emergency($message);
-        parent::__construct($message, $code);
+        parent::__construct($message);
+    }
+
+    public function getExceptionCode(): int
+    {
+        return 20200;
     }
 }

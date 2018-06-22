@@ -75,7 +75,7 @@ class Log extends Component
     {
         $date = date('Ymd');
 
-        if (SR_IS_CLI) {
+        if (DRI_IS_CLI) {
             $title = '[IS_CLIENT]';
         } else {
             $now = date('Y-m-d H:i:s');
@@ -86,9 +86,9 @@ class Log extends Component
         foreach (self::$records as $name => & $logs) {
             if ($logs) {
                 $message = implode(PHP_EOL, $logs);
-                is_dir($directoryName = dirname($destination = SR_PATH_RUNTIME . "log/{$name}/{$date}.log"))
+                is_dir($directoryName = dirname($destination = DRI_PATH_RUNTIME . "log/{$name}/{$date}.log"))
                 or mkdir($directoryName, 0777, true);
-                SR_IS_CLI or $message = "{$title}\n{$message}";
+                DRI_IS_CLI or $message = "{$title}\n{$message}";
                 error_log($message . PHP_EOL, 3, $destination);
                 $logs = [];
             }

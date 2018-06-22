@@ -67,7 +67,7 @@ abstract class Driver extends PDO implements DriverInterface
                 ]
             );
         } catch (PDOException $e) {
-            throw new ConnectException($e->getMessage(), $e->getCode());
+            throw new ConnectException($e->getMessage());
         }
     }
 

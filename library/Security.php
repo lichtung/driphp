@@ -177,7 +177,7 @@ class Security extends Component
     public function csrf_verify()
     {
         // If it's not a POST request we will set the CSRF cookie
-        if (SR_REQUEST_METHOD !== 'POST') {
+        if (DRI_REQUEST_METHOD !== 'POST') {
             return $this->csrf_set_cookie();
         }
 

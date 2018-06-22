@@ -118,7 +118,7 @@ class Excel extends Service
         } else {
             throw new ExcelException('上传的文件MIME为' . $info['type']);
         }
-        $dest = SR_PATH_PUBLIC . 'upload/' . SR_MICROTIME . '-' . $info['name'];
+        $dest = DRI_PATH_PUBLIC . 'upload/' . DRI_MICROTIME . '-' . $info['name'];
         copy($info['tmp_name'], $dest);
         return $dest;
     }

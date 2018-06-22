@@ -13,5 +13,8 @@ use driphp\DripException;
 
 class KernelException extends DripException
 {
-
+    public function getExceptionCode(): int
+    {
+        return 111;
+    }
 }

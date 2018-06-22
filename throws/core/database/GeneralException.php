@@ -19,4 +19,8 @@ use driphp\throws\core\DatabaseException;
 class GeneralException extends DatabaseException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3003;
+    }
 }

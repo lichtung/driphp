@@ -19,7 +19,7 @@ use driphp\throws\core\cache\CacheException;
 class File extends Driver
 {
     protected $config = [
-        'cache_path' => SR_PATH_RUNTIME . 'cache/',
+        'cache_path' => DRI_PATH_RUNTIME . 'cache/',
     ];
 
     public function __construct(array $config = [])
@@ -44,7 +44,7 @@ class File extends Driver
             'ttl' => $ttl,#
         ];
         if (!FileSystem::write($path = $this->_parsePath($key), serialize($contents))) {
-            throw new CacheException("Writing cache to '$path' failed", -1);
+            throw new CacheException("Writing cache to '$path' failed");
         }
     }
 

@@ -14,5 +14,8 @@ namespace driphp\throws\core\cache;
  */
 class RedisConnectException extends RedisException
 {
-
+    public function getExceptionCode(): int
+    {
+        return 2001;
+    }
 }

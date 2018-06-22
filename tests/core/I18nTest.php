@@ -39,7 +39,7 @@ class I18nTest extends UniTest
 //     */
 //    public function testProjectDefine()
 //    {
-//        Kernel::configuration(SR_PATH_PROJECT . 'i18n/zh_CN.php', [
+//        Kernel::configuration(DRI_PATH_PROJECT . 'i18n/zh_CN.php', [
 //            REDIRECT_KEY => 'XXX %d YYY',
 //            'hello' => '你好啊',
 //        ]);

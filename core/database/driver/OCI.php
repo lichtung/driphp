@@ -17,7 +17,7 @@ class OCI extends Driver
 {
     public function compile(array $components): string
     {
-        // TODO: Implement compile() method.
+        return '';
     }
 
     public function escape(string $field): string

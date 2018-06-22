@@ -19,4 +19,8 @@ use driphp\throws\IOException;
 class NetworkException extends IOException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 }

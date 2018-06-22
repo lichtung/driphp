@@ -16,6 +16,7 @@ use driphp\throws\io\NetworkException;
 
 /**
  * Class Curl
+ * @see http://docs.guzzlephp.org/en/stable/
  * @package driphp\core\request
  */
 class Curl

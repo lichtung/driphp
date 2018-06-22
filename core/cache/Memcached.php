@@ -11,6 +11,7 @@ namespace driphp\core\cache;
 
 
 use driphp\DripException;
+use driphp\throws\ConfigException;
 use driphp\throws\core\cache\CacheException;
 
 class Memcached extends Driver
@@ -42,7 +43,7 @@ class Memcached extends Driver
 
         $this->handler = new \Memcached();
         if (empty($servers = $this->_config['servers'])) {
-            throw new DripException('require servers at least one');
+            throw new ConfigException('require servers at least one');
         }
         $this->handler->setOption(\Memcached::OPT_CONNECT_TIMEOUT, $this->_config['timeout']);
 
@@ -62,7 +63,7 @@ class Memcached extends Driver
     {
         $res = $this->handler->set($key, serialize($value), $ttl);
         if (false === $res) {
-            throw new CacheException($this->handler->getResultMessage(), $this->handler->getResultCode());
+            throw new CacheException($this->handler->getResultMessage());
         }
     }
 
@@ -79,7 +80,7 @@ class Memcached extends Driver
             if ($this->handler->getResultCode() === \Memcached::RES_NOTFOUND) {
                 return $replace;
             } else {
-                throw new CacheException($this->handler->getResultMessage(), $this->handler->getResultCode());
+                throw new CacheException($this->handler->getResultMessage());
             }
         }
         return unserialize($data);
@@ -95,7 +96,7 @@ class Memcached extends Driver
         $res = $this->handler->delete($key);
         if (false === $res) {
             if ($this->handler->getResultCode() !== \Memcached::RES_NOTFOUND) {
-                throw new CacheException($this->handler->getResultMessage(), $this->handler->getResultCode());
+                throw new CacheException($this->handler->getResultMessage());
             }
         }
     }
@@ -108,7 +109,7 @@ class Memcached extends Driver
     {
         $res = $this->handler->flush();
         if (false === $res) {
-            throw new CacheException($this->handler->getResultMessage(), $this->handler->getResultCode());
+            throw new CacheException($this->handler->getResultMessage());
         }
     }
 

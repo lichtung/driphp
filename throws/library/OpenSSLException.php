@@ -16,5 +16,9 @@ use driphp\DripException;
  */
 class OpenSSLException extends DripException
 {
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 
 }

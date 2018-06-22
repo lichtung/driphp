@@ -14,13 +14,13 @@ use PDOStatement;
 use PDOException;
 use driphp\Component;
 use driphp\core\database\driver\MySQL;
-use driphp\throws\core\ClassNotFoundException;
 use driphp\throws\core\database\ConnectException;
 use driphp\throws\core\database\ExecuteException;
 use driphp\throws\core\database\GeneralException;
 use driphp\throws\core\database\QueryException;
-use driphp\throws\core\DriverNotDefinedException;
 use driphp\core\database\driver\Driver;
+use driphp\throws\ClassNotFoundException;
+use driphp\throws\DriverNotDefinedException;
 
 /**
  * Class Dao  数据库访问对象(Database Access Object)
@@ -197,7 +197,7 @@ class Dao extends Component
         try {
             return $this->drive()->beginTransaction();
         } catch (PDOException $exception) {
-            throw new GeneralException($exception->getMessage(), self::ERROR_TRANSACTION_ALREADY_ACTIVE);
+            throw new GeneralException($exception->getMessage());
         }
     }
 

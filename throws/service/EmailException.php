@@ -19,4 +19,8 @@ use driphp\DripException;
 class EmailException extends DripException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 20100;
+    }
 }

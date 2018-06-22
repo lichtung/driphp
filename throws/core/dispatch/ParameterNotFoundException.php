@@ -17,9 +17,13 @@ use driphp\throws\core\DispatchException;
  */
 class ParameterNotFoundException extends DispatchException
 {
-    public function __construct(string $message, int $code = -1)
+    public function __construct(string $message)
     {
         parent::__construct("action parameter '$message' not found");
     }
 
+    public function getExceptionCode(): int
+    {
+        return 3105;
+    }
 }

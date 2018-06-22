@@ -21,6 +21,11 @@ use Monolog\Logger;
 /**
  * Class ElasticSearch
  *
+ * Elasticsearch是一个实时的分布式搜索和分析引擎。它可以帮助你用前所未有的速度去处理大规模数据。
+ * 它可以用于全文搜索，结构化搜索以及分析，当然你也可以将这三者进行组合。
+ * Elasticsearch是一个建立在全文搜索引擎 Apache Lucene™ 基础上的搜索引擎，可以说Lucene是当今最先进，最高效的全功能开源搜索引擎框架。
+ *
+ * @see https://www.cnblogs.com/chowmin/articles/4629220.html
  * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index.html
  *
  * @method ElasticSearch getInstance(array $config = []) static

@@ -90,8 +90,8 @@ class I18n extends Component
         static $_languages = [];
         if (!isset($_languages[$this->lang])) {
             $relativePath = "i18n/{$this->lang}.php";
-            $innerLang = Kernel::readConfig(SR_PATH_FRAMEWORK . $relativePath);
-            if (is_file($outerPath = SR_PATH_PROJECT . $relativePath)) {
+            $innerLang = Kernel::readConfig(DRI_PATH_FRAMEWORK . $relativePath);
+            if (is_file($outerPath = DRI_PATH_PROJECT . $relativePath)) {
                 $outerLang = include($outerPath);
                 $_languages[$this->lang] = array_merge($innerLang, $outerLang);
             } else {

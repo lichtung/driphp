@@ -171,7 +171,7 @@ class RabbitMQ extends Component
      */
     public function receive(OnReceiveInterface $handler)
     {
-        if (!SR_IS_CLI) throw new DripException('cli-mode is required');
+        if (!DRI_IS_CLI) throw new DriException('cli-mode is required');
         $this->channel->basic_consume($this->queueName, '', false, !$handler->acknowledge(), false, false,
             function (AMQPMessage $message) use ($handler) {
                 try {

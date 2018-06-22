@@ -19,4 +19,8 @@ use driphp\throws\core\database\MongoException;
 class UpdateException extends MongoException
 {
 
+    public function getExceptionCode(): int
+    {
+        return 3603;
+    }
 }

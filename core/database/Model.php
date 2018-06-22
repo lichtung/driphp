@@ -13,6 +13,8 @@ use driphp\Kernel;
 use driphp\throws\core\database\ExecuteException;
 use driphp\throws\core\database\QueryException;
 use driphp\throws\ParameterInvalidException;
+use driphp\throws\ClassNotFoundException;
+use driphp\throws\DriverNotDefinedException;
 
 /**
  * Class Model
@@ -79,8 +81,8 @@ abstract class Model
     /**
      * @param Dao|null $dao
      * @return mixed
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      */
     public static function getInstance(Dao $dao = null)
     {
@@ -107,8 +109,8 @@ abstract class Model
 
     /**
      * @return bool
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\QueryException
      */
@@ -120,8 +122,8 @@ abstract class Model
 
     /**
      * @return void
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\ExecuteException
      */
@@ -133,8 +135,8 @@ abstract class Model
 
     /**
      * @return void
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\ExecuteException
      */
@@ -444,8 +446,8 @@ abstract class Model
 
     /**
      * @return bool
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\ExecuteException
      */
@@ -473,8 +475,8 @@ abstract class Model
     /**
      * @return bool
      * @throws QueryException
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws ClassNotFoundException
+     * @throws DriverNotDefinedException
      * @throws \driphp\throws\core\database\ConnectException
      * @throws \driphp\throws\core\database\ExecuteException
      */

@@ -37,6 +37,7 @@ class Session extends Component
     protected function initialize()
     {
     }
+
     /**
      * 客户端缓存控制策略
      * 客户端或者代理服务器通过检测这个响应头信息来 确定对于页面内容的缓存规则

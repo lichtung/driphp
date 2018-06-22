@@ -33,7 +33,7 @@ class SQLite
     public function __construct($dbName, $createIfNotExist = false)
     {
         if (!self::$sqlite3) {
-            $sqlite = realpath(SR_IS_WIN ? __DIR__ . '/../../bin/sqlite3.exe' : __DIR__ . '/../../bin/sqlite3');
+            $sqlite = realpath(DRI_IS_WIN ? __DIR__ . '/../../bin/sqlite3.exe' : __DIR__ . '/../../bin/sqlite3');
             if (!is_file($sqlite)) {
                 throw new SqliteException("sqlite engine $sqlite not exist");
             } elseif (!is_executable($sqlite)) {
@@ -45,10 +45,10 @@ class SQLite
             }
         }
         $this->dbName = $dbName;
-        $this->dbFile = strpos($dbName, '/') !== false ? $dbName : SR_PATH_DATA . $dbName . '.db';
+        $this->dbFile = strpos($dbName, '/') !== false ? $dbName : DRI_PATH_DATA . $dbName . '.db';
         if (!is_file($this->dbFile)) {
             if ($createIfNotExist) {
-                $this->createTable(SR_PROJECT_NAME);
+                $this->createTable(DRI_PROJECT_NAME);
             } else {
                 throw new SqliteException("sqlite [$dbName] not found");
             }
@@ -79,7 +79,7 @@ class SQLite
         # 数据库文件不存在是创建
         $kvSQL = "CREATE TABLE {$tableName} ( ID INT NOT NULL PRIMARY KEY , {$_fields} );";
         //临时SQL文件，用于保存SQL 作为创建的参数
-        $sqlFile = SR_PATH_RUNTIME . 'temp/table.create.' . $tableName . microtime(true) . '.sql';
+        $sqlFile = DRI_PATH_RUNTIME . 'temp/table.create.' . $tableName . microtime(true) . '.sql';
 
         is_dir($sql_dir = dirname($this->dbFile)) or mkdir($sql_dir, 0700, true);
         is_dir($sqlFileParentDir = dirname($sqlFile)) or mkdir($sqlFileParentDir, 0700, true);

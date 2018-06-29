@@ -19,7 +19,7 @@ use driphp\throws\service\EmailException;
  * Class Emailer
  *
  * @see https://github.com/PHPMailer/PHPMailer
- * @method Emailer getInstance(string $index = '')static
+ * @method Emailer getInstance(string $index = '') static
  *
  * @package driphp\service
  */

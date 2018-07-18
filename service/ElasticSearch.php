@@ -9,9 +9,12 @@
 namespace driphp\service;
 
 use driphp\service\elastic\Index;
+use driphp\throws\service\elastic\ResourceAlreadyExistsSearchException;
+use driphp\throws\service\ElasticSearchException;
 use Elasticsearch\Client;
 use driphp\core\Service;
 use Elasticsearch\ClientBuilder;
+use Elasticsearch\Common\Exceptions\BadRequest400Exception;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Elasticsearch\ConnectionPool\Selectors\StickyRoundRobinSelector;
 use Elasticsearch\Serializers\SmartSerializer;
@@ -119,37 +122,45 @@ class ElasticSearch extends Service
      * @param array $settings
      * @param array $mappings
      * @return bool
+     * @throws ResourceAlreadyExistsSearchException Index已经存在
+     * @throws ElasticSearchException
      */
     public function create(string $index, array $settings = [], array $mappings = []): bool
     {
         $body = [];
         $settings and $body['settings'] = $settings;
         $mappings and $body['mappings'] = $mappings;
-        $res = $this->client->indices()->create([
-                'index' => $index,
-                'body' => $body,
-            ])['acknowledged'] ?? 0;
-        return $res > 0;
+        try {
+            $res = $this->client->indices()->create([
+                    'index' => $index,
+                    'body' => $body,
+                ])['acknowledged'] ?? 0;
+            return $res > 0;
+        } catch (BadRequest400Exception $exception) {
+            # 创建已经存在的
+            $message = $exception->getMessage();
+            if (strpos($message, 'resource_already_exists_exception')) {
+                throw new ResourceAlreadyExistsSearchException($message);
+            } else {
+                throw new ElasticSearchException($message);
+            }
+        }
     }
 
     /**
      * 删除索引(注:收到了请求并不表示删除成功)
-     * @param string $index
-     * @return bool
-     * @throws Missing404Exception 索引不存
+     * @param string $index 索引名称,如果有多个索引使用逗号分隔
+     * @return bool 如果索引不存在,则返回false
      */
     public function delete(string $index): bool
     {
         try {
             $res = $this->client->indices()->delete([
                 'index' => $index,
-            ]);
+            ]); # 返回 [ 'acknowledged' => true, ]
             return $res['acknowledged'] ?? false;
-        } catch (Missing404Exception $exception) {
-            if (strpos($exception->getMessage(), 'index_not_found_exception')) {
-                return false;
-            }
-            throw $exception;
+        } catch (Missing404Exception $exception) { # strpos($exception->getMessage(), 'index_not_found_exception')
+            return false;
         }
     }
 

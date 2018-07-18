@@ -39,6 +39,7 @@ class Index
 
     /**
      * 建立索引
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html
      * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_indexing_documents.html
      * To index a document, we need to specify four pieces of information: index, type, id and a document body.
      * This is done by constructing an associative array of key:value pairs. The request body is itself an associative
@@ -47,7 +48,35 @@ class Index
      * @param string $type
      * @param string $id 如果为null时,ID将会自动生成
      * @param array $body
-     * @return array
+     * @return array 数据格式如下:
+     *  [
+     *      '_shards' => [ # 分片 The _shards header provides information about the replication process of the index operation.
+     *          'total' => 2, # Indicates to how many shard copies (primary and replica shards) the index operation should be executed on.
+     *          'failed' => 0, # An array that contains replication related errors in the case an index operation failed on a replica shard.
+     *          'successful' => 2, # Indicates the number of shard copies the index operation succeeded on.
+     *      ],
+     *      # Replica shards may not all be started when an indexing operation successfully returns
+     *      #   (by default, only the primary is required, but this behavior can be changed). shards的复制可能在建立索引成功返回后并未全部开始,默认primary复制完成即返回
+     *      # In that case, total will be equal to the total shards based on the number_of_replicas setting and
+     *      # successful will be equal to the number of shards started (primary plus replicas).
+     *      # If there were no failures, the failed will be 0.
+     *      # 这个时候total返回的是number_of_replicas设置的值,并且successful指的是开始复制的shard, failed指的是已经失败的数目
+     *
+     *      '_index' => 'twitter',
+     *      '_type' => '_doc',
+     *      '_id' => '1',
+     *      '_version' => 1,
+     *      '_seq_no' => 0,
+     *      '_primary_term' => 1,
+     *      'result' => 'created',
+     *  ]
+     *
+     *  注意:
+     *  The index operation automatically creates an index if it has not been created before (check out the create index API for manually creating an index), and also automatically creates a dynamic
+     *  type mapping for the specific type if one has not yet been created (check out the put mapping API for manually creating a type mapping).
+     *  如果之前未建立索引和类型,那么索引和类型会被自动创建
+     *
+     *
      * @throws NoNodesAvailableException 无可用节点时抛出
      */
     public function set(string $type, string $id = null, array $body = []): array

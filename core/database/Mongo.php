@@ -49,9 +49,14 @@ class Mongo extends Component
     const ITERATOR_CONTINUE = 1;  # 继续遍历
 
     protected $config = [
+        'scheme' => 'mongodb',
+        'user' => '',
+        'pass' => '',
         'host' => '127.0.0.1',
         'port' => 27017,
-        'default' => 'default', # 默认数据库
+        'path' => '/gtarcade',
+
+        'dsn' => '',
     ];
 
     /**
@@ -81,14 +86,21 @@ class Mongo extends Component
     protected $_adapter = null;
 
     /**
+     * 穿件连接
      * @return Component|void
      * @throws MongoConnectionException
      */
     protected function initialize()
     {
         $this->isv7 = version_compare(PHP_VERSION, '7.0', '>=');
-        $this->currentDatabaseName = $this->config['default'];
-        $server = "mongodb://{$this->config['host']}:{$this->config['port']}";
+        if (!empty($this->config['dsn'])) {
+            $server = $this->config['dsn'];
+            $this->config = array_merge($this->config, parse_url($server));
+        } else {
+            # TODO
+            $server = $this->createUri($this->config);
+        }
+        $this->currentDatabaseName = trim($this->config['path'], '/');
 
         if ($this->isv7) {
             # PHPv7
@@ -98,6 +110,27 @@ class Mongo extends Component
             $this->_adapter = new MongoClient($server);
             $this->database($this->currentDatabaseName);
         }
+    }
+
+    private function createUri(array $config): string
+    {
+        $url = ($config['scheme'] ?? 'mongodb') . '://';
+        if ($config['user']) {
+            $url .= $config['user'];
+            if ($config['pass']) {
+                $url .= ':' . $config['pass'] . '@';
+            } else {
+                $url .= '@';
+            }
+        }
+        $url .= "{$config['host']}:{$config['port']}";
+        if (!empty($config['path'])) {
+            if (strpos($config['path'], '/') !== 0) {
+                $config['path'] = '/' . $config['path'];
+            }
+            $url .= $config['path'];
+        }
+        return $url;
     }
 
     /**
@@ -135,7 +168,7 @@ class Mongo extends Component
      * @throws CollectionNotSelectException
      * @throws DatabaseNotSelectException
      */
-    private function getDatabaseCollection()
+    public function getDatabaseCollection()
     {
         if ($this->isv7) {
             if (!$this->currentDatabaseName) {

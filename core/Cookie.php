@@ -21,6 +21,7 @@ use driphp\Component;
  */
 class Cookie extends Component
 {
+
     protected $config = [
         // cookie 名称前缀
         'prefix' => '',
@@ -35,10 +36,14 @@ class Cookie extends Component
         // httponly设置
         'httponly' => '',
     ];
+    /** @var array $source */
+    private $source;
 
     protected function initialize()
     {
         empty($this->config['httponly']) or ini_set('session.cookie_httponly', '1');
+
+        $this->source = &$_COOKIE;
     }
 
     /**
@@ -46,23 +51,9 @@ class Cookie extends Component
      * @param string $name cookie名称
      * @return bool
      */
-    public function has($name)
+    public function has($name): bool
     {
-        return isset($_COOKIE[$name]);
-    }
-
-    /**
-     * 设置或者获取cookie作用域（前缀）
-     * @param string $prefix
-     * @return string
-     */
-    public function prefix($prefix = null)
-    {
-        if (null === $prefix) {
-            return $this->config['prefix'];
-        } else {
-            return $this->config['prefix'] = $prefix;
-        }
+        return isset($this->source[$name]);
     }
 
     /**
@@ -75,19 +66,20 @@ class Cookie extends Component
      */
     public function set($name, $value = '', $option = null)
     {
-        // 参数设置(会覆盖黙认设置)
+        # 参数设置(会覆盖黙认设置)
         if (isset($option)) {
             if (is_numeric($option)) {
                 $option = ['expire' => $option];
             }
             $this->config = array_merge($this->config, array_change_key_case($option));
         }
+
         // 设置cookie
         if (is_array($value)) {
             array_walk($value, function (&$val) {
                 empty($val) or $val = urlencode($val);
             });
-            $value = 'lite:' . json_encode($value);
+            $value = json_encode($value);
         }
         $expire = !empty($this->config['expire']) ? time() + intval($this->config['expire']) : 0;
         setcookie($name, $value, $expire,
@@ -95,7 +87,7 @@ class Cookie extends Component
             (string)$this->config['domain'],
             (bool)$this->config['secure'],
             (bool)$this->config['httponly']);
-        $_COOKIE[$name] = $value;
+        $this->source[$name] = $value;
     }
 
     /**
@@ -105,15 +97,13 @@ class Cookie extends Component
      */
     public function get($name)
     {
-        if (isset($_COOKIE[$name])) {
-            $value = $_COOKIE[$name];
-            if (0 === strpos($value, 'lite:')) {
-                $value = substr($value, 6);
-                $value = json_decode($value, true);
-                array_walk($value, function (&$val) {
-                    empty($val) or $val = urldecode($val);
-                });
-            }
+        if (isset($this->source[$name])) {
+            $value = $this->source[$name];
+            $value = substr($value, 6);
+            $value = json_decode($value, true);
+            array_walk($value, function (&$val) {
+                empty($val) or $val = urldecode($val);
+            });
             return $value;
         } else {
             return null;
@@ -133,7 +123,7 @@ class Cookie extends Component
             (bool)$this->config['secure'],
             (bool)$this->config['httponly']);
         // 删除指定cookie
-        unset($_COOKIE[$name]);
+        unset($this->source[$name]);
     }
 
     /**
@@ -143,9 +133,9 @@ class Cookie extends Component
     public function clear()
     {
         // 清除指定前缀的所有cookie
-        if ($_COOKIE) {
+        if ($this->source) {
             // 如果前缀为空字符串将不作处理直接返回
-            foreach ($_COOKIE as $key => $val) {
+            foreach ($this->source as $key => $val) {
                 setcookie(
                     $key,
                     '',
@@ -155,7 +145,7 @@ class Cookie extends Component
                     (bool)$this->config['secure'],
                     (bool)$this->config['httponly']
                 );
-                unset($_COOKIE[$key]);
+                unset($this->source[$key]);
             }
         }
     }

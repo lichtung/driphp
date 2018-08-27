@@ -1,27 +1,19 @@
 <?php
 /**
- * User: linzhv@qq.com
- * Date: 15/04/2018
- * Time: 08:50
+ * Created by PhpStorm.
+ * User: zhonghuanglin
+ * Date: 24/08/2018
+ * Time: 11:30
  */
-declare(strict_types=1);
-
 
 namespace driphp\core;
 
-
 use driphp\Component;
 
-/**
- * Class Service Vendor服务类
- * @package driphp\core
- */
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
 abstract class Service extends Component
 {
-
-    protected function initialize()
-    {
-        require_once __DIR__ . '/../vendor/autoload.php';
-    }
 
 }

@@ -11,7 +11,7 @@ namespace driphp\core;
 
 use SessionHandlerInterface;
 use driphp\Component;
-use driphp\throws\ParameterInvalidException;
+use driphp\throws\ParametersInvalidException;
 
 /**
  * Class Session 会话
@@ -336,7 +336,7 @@ class Session extends Component
      * 清除指定名称的session
      * @param string|array $name 如果为null将清空全部
      * @return bool
-     * @throws ParameterInvalidException
+     * @throws ParametersInvalidException
      */
     public static function delete($name)
     {
@@ -354,7 +354,7 @@ class Session extends Component
                     self::delete($val);
                 }
             } else {
-                throw new ParameterInvalidException($name);
+                throw new ParametersInvalidException($name);
             }
         }
         return false;

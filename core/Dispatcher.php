@@ -9,19 +9,18 @@ declare(strict_types=1);
 
 namespace driphp\core;
 
+use driphp\throws\core\ParameterNotFoundException;
+use driphp\throws\RouteException;
 use Throwable;
 use Closure;
 use ReflectionClass;
 use driphp\Component;
 use driphp\core\response\Redirect;
-use driphp\throws\core\dispatch\ActionAccessException;
-use driphp\throws\core\ClassNotFoundException;
-use driphp\throws\core\dispatch\ParameterNotFoundException;
-use driphp\throws\core\dispatch\RouteInvalidException;
 use driphp\Kernel;
-use driphp\throws\core\dispatch\ActionNotFoundException;
-use driphp\throws\core\dispatch\ControllerNotFoundException;
-use driphp\throws\core\dispatch\ModulesNotFoundException;
+use driphp\throws\ClassNotFoundException;
+use driphp\throws\core\ActionNotFoundException;
+use driphp\throws\core\ControllerNotFoundException;
+use driphp\throws\core\ModulesNotFoundException;
 
 /**
  * Class Dispatcher
@@ -37,12 +36,11 @@ class Dispatcher extends Component
     /**
      * @param $route
      * @return void
-     * @throws ActionAccessException
+     * @throws ParameterNotFoundException
      * @throws ActionNotFoundException
      * @throws ControllerNotFoundException
      * @throws ModulesNotFoundException
-     * @throws ParameterNotFoundException
-     * @throws RouteInvalidException 错误的路由规则
+     * @throws RouteException 错误的路由规则
      */
     public function dispatch($route)
     {
@@ -64,7 +62,7 @@ class Dispatcher extends Component
                     }
                     break;
                 default:
-                    throw new RouteInvalidException($route);
+                    throw new RouteException($route);
 
             }
         } else {
@@ -73,7 +71,7 @@ class Dispatcher extends Component
             $requestModules = $request->getModule();
             if (!is_dir($modulePath = DRI_PATH_PROJECT . 'controller/' . $requestModules))
                 throw new ModulesNotFoundException($modulePath);
-            if (!class_exists($controllerName = 'controller\\' . ($requestModules ? $requestModules . '\\' : '') . ucfirst($request->getController())))
+            if (!class_exists($controllerName = 'controller\\' . ($requestModules ? str_replace('/', '\\', $requestModules) . '\\' : '') . ucfirst($request->getController())))
                 throw new ControllerNotFoundException($controllerName);
             try {
                 self::runMethod($controllerName, $request->getAction());
@@ -92,7 +90,6 @@ class Dispatcher extends Component
      * @param string $actionName 操作名（方法名）
      * @param array $arguments 参数列表，默认从
      * @return void
-     * @throws ActionAccessException
      * @throws ActionNotFoundException
      * @throws ControllerNotFoundException
      * @throws ParameterNotFoundException
@@ -111,7 +108,7 @@ class Dispatcher extends Component
 
             # 非公开方法、静态方法、以下划线开头的方法都是被禁止访问的
             if (!$method->isPublic() or $method->isStatic() or strpos($method->name, '_') === 0) {
-                throw new ActionAccessException($method->name);
+                throw new ActionNotFoundException($method->name);
             }
             $controller = Kernel::factory($controllerName);
         } catch (ClassNotFoundException $e) {

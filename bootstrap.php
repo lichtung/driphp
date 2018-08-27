@@ -3,20 +3,20 @@
  * User: linzhv@qq.com
  * Date: 09/04/2018
  * Time: 23:13
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- *                 ┏━┓    ┏━┓
- *                ┏┛ ┻━━━━┛ ┻━┓
- *                ┃           ┃ 　
- *   ┏┓      ┏┓   ┃           ┃
- *  ┏┛┻━━━━━━┛┻━┓ ┃ ==    ==  ┃
- *  ┃           ┃ ┃           ┃   ┏┓      ┏┓
- *  ┃ ==    ==  ┃ ┃     ^     ┃  ┏┛┻━━━━━━┛┻━┓
- *  ┃           ┃ ┃           ┃  ┃ ==    ==  ┃
- *  ┃     ^     ┃ ┗━━┓      ┏━┛  ┃     ^     ┃
- *  ┗━━┓      ┏━┛    ┃      ┃    ┗━━┓      ┏━┛
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *|                 ┏━┓    ┏━┓                  |
+ *|                ┏┛ ┻━━━━┛ ┻━┓                |
+ *|                ┃           ┃                |　
+ *|   ┏┓      ┏┓   ┃           ┃                |
+ *|  ┏┛┻━━━━━━┛┻━┓ ┃ ==    ==  ┃                |
+ *|  ┃           ┃ ┃           ┃   ┏┓      ┏┓   |
+ *|  ┃ ==    ==  ┃ ┃     ^     ┃  ┏┛┻━━━━━━┛┻━┓ |
+ *|  ┃           ┃ ┃           ┃  ┃ ==    ==  ┃ |
+ *|  ┃     ^     ┃ ┗━━┓      ┏━┛  ┃     ^     ┃ |
+ *|  ┗━━┓      ┏━┛    ┃      ┃    ┗━━┓      ┏━┛ |
+ *|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
  * Description: Sharing the driphp framework for web developers of beginner.
  */
 declare(strict_types=1);
@@ -24,9 +24,10 @@ declare(strict_types=1);
 namespace {
 
     use driphp\Kernel;
+
     const DRI_VERSION = '0.0';
 
-    define('DRI_MICROTIME', ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)));
+    define('DRI_MICROTIME', ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true))); # 当前时间（微妙）
     define('DRI_MEMORY', memory_get_usage());# byte
 
     defined('DRI_DEBUG_ON') or define('DRI_DEBUG_ON', true); #  debug模式默认开启
@@ -34,33 +35,33 @@ namespace {
     defined('DRI_PROJECT_NAME') or define('DRI_PROJECT_NAME', '');# 项目名称（项目所在目录的名称，如 idea.driphp.com/ ）
 
     # environment constant
-    const DRI_IS_CLI = PHP_SAPI === 'cli'; # is client environment?
-    define('DRI_IS_WIN', false !== stripos(PHP_OS, 'WIN'));# is windows?
-    define('DRI_IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) and $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
+    const DRI_IS_CLI = PHP_SAPI === 'cli'; # 是否是cli模式
+    define('DRI_IS_WIN', false !== stripos(PHP_OS, 'WIN'));# 是否是windows系统
+    define('DRI_IS_AJAX', isset($_SERVER['HTTP_X_REQUESTED_WITH']) and $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest'); # 是否是ajax请求，cli模式下始终为false
     # request method
-    define('DRI_REQUEST_METHOD', strtoupper($_SERVER['REQUEST_METHOD'] ?? ''));//'GET', 'DELETE'，'POST'，'PUT' 'PATCH' ...
+    define('DRI_REQUEST_METHOD', strtoupper($_SERVER['X-HTTP-METHOD-OVERRIDE'] ?? $_SERVER['REQUEST_METHOD'] ?? ''));//'GET', 'DELETE'，'POST'，'PUT' 'PATCH' ...
 
-    # directory constant
-    define('DRI_PATH_ROOT', dirname(__DIR__) . '/'); # the parent directory of project and framework
-    const DRI_PATH_FRAMEWORK = __DIR__ . '/';    # framework directory
-    const DRI_PATH_PROJECT = DRI_PATH_ROOT . DRI_PROJECT_NAME . '/'; # project directory
-    const DRI_PATH_CONFIG = DRI_PATH_PROJECT . 'config/'; # project directory
-    const DRI_PATH_DATA = DRI_PATH_PROJECT . 'data/'; # data directory to store dynamic config or file-based data
-    const DRI_PATH_VENDOR = DRI_PATH_PROJECT . 'vendor/'; # vendor directory for project
-    const DRI_PATH_RUNTIME = DRI_PATH_PROJECT . 'runtime/'; # to store temporary, cache file
-    const DRI_PATH_PUBLIC = DRI_PATH_PROJECT . 'public/'; # public resource (css, js, image...) and entry script
-    const DRI_PATH_CONTROLLER = DRI_PATH_PROJECT . 'controller/'; # to store controller class
-    const DRI_PATH_MODEL = DRI_PATH_PROJECT . 'model/'; # to store model class
-    const DRI_PATH_VIEW = DRI_PATH_PROJECT . 'view/'; # to store view template
+    # 目录常量
+    define('DRI_PATH_ROOT', dirname(__DIR__) . '/'); # 框架所在的上级目录（即根目录）
+    const DRI_PATH_FRAMEWORK = __DIR__ . '/';    # 框架目录
+    const DRI_PATH_PROJECT = DRI_PATH_ROOT . DRI_PROJECT_NAME . '/'; # 项目目录
+    const DRI_PATH_CONFIG = DRI_PATH_PROJECT . 'config/'; # 配置目录
+    const DRI_PATH_DATA = DRI_PATH_PROJECT . 'data/'; # 数据目录
+    const DRI_PATH_VENDOR = DRI_PATH_PROJECT . 'vendor/'; # 第三方目录
+    const DRI_PATH_RUNTIME = DRI_PATH_PROJECT . 'runtime/'; # 运行时目录
+    const DRI_PATH_PUBLIC = DRI_PATH_PROJECT . 'public/'; # 公共资源 (css, js, image...) 或者公开脚本
+    const DRI_PATH_CONTROLLER = DRI_PATH_PROJECT . 'controller/'; # 控制器目录
+    const DRI_PATH_MODEL = DRI_PATH_PROJECT . 'model/'; # 模型目录
+    const DRI_PATH_VIEW = DRI_PATH_PROJECT . 'view/'; # 模板文件目录
 
-
-    # charset
+    # 编码
     const DRI_CHARSET_UTF8 = 'UTF-8';
     const DRI_CHARSET_GBK = 'GBK';
     const DRI_CHARSET_ASCII = 'ASCII';
     const DRI_CHARSET_GB2312 = 'GB2312';
     const DRI_CHARSET_LATIN1 = 'ISO-8859-1';# Latin1 is the alia of ISO-8859-1  欧洲部分国家使用(西欧语言)
 
+    # 类型常量
     const DRI_TYPE_BOOL = 'boolean';
     const DRI_TYPE_INT = 'integer';
     const DRI_TYPE_FLOAT = 'double'; # gettype(1.7) === 'double'
@@ -74,9 +75,8 @@ namespace {
     if (DRI_DEBUG_ON) {
         require __DIR__ . '/include/debug.php';
         DRI_IS_CLI or register_shutdown_function(function () {
-//            if (class_exists(Response::class)) echo Response::getInstance();
             Kernel::status('shutdown');
-            isset($_GET['show_trace']) and require(__DIR__ . '/include/trace.php');
+            isset($_GET['show_trace']) and require(__DIR__ . '/include/trace.php'); # show trace
         });
     } else {
         function dumpon(...$a)
@@ -98,8 +98,9 @@ namespace driphp {
     use driphp\core\response\JSON;
     use driphp\core\Route;
     use driphp\throws\ClassNotFoundException;
-    use driphp\throws\ConfigException;
-    use driphp\throws\DriverNotDefinedException;
+    use driphp\throws\ConfigInvalidException;
+    use driphp\throws\ConfigNotFoundException;
+    use driphp\throws\NoDriverAvailableException;
     use driphp\throws\io\FileWriteException;
     use Throwable;
 
@@ -115,7 +116,7 @@ namespace driphp {
          */
         public function __construct($message)
         {
-            if (!is_string($message)) {
+            if (!is_string($message)) { # 非字符串，先进行格式化
                 switch (gettype($message)) {
                     case DRI_TYPE_ARRAY:
                         $message = var_export($message, true);
@@ -128,14 +129,14 @@ namespace driphp {
         }
 
         /**
-         * 返回异常的错误代号
+         * 返回异常的错误代号,可用于隐藏错误信息的情况下断定异常类型
          * @return int
          */
         abstract public function getExceptionCode(): int;
 
         /**
          * @return void
-         * @throws \ReflectionException
+         * @throws \ReflectionException|DripException
          */
         public static function throwing()
         {
@@ -144,7 +145,7 @@ namespace driphp {
         }
 
         /**
-         * Dispose an throwable and quit
+         * 处理异常（记录日志、输出展示错误信息）
          * @param Throwable|null $throwable
          * @param int $code
          * @param string $message
@@ -174,15 +175,20 @@ namespace driphp {
                 'class' => $className,
             ]);
             if (DRI_IS_CLI) {
+                # 命令行模式下直接输出
                 var_dump($information);
-            } elseif (DRI_IS_AJAX) {
-                exit(new JSON($information));
             } else {
-                if (DRI_DEBUG_ON) {
-                    require_once __DIR__ . '/include/error.php';
-                    _display_error($message, $className, $file, $line, $code, $traces);
+                if (DRI_IS_AJAX) {
+                    # ajax下输出json
+                    exit(new JSON($information));
                 } else {
-                    Kernel::template('404');
+                    # 展示错误模板
+                    if (DRI_DEBUG_ON) {
+                        require_once __DIR__ . '/include/error.php';
+                        _display_error($message, $className, $file, $line, $code, $traces);
+                    } else {
+                        Kernel::template('404');
+                    }
                 }
             }
             exit(1);
@@ -230,7 +236,7 @@ namespace driphp {
         /** @var array $config 组件实例配置 */
         protected $config = [];
         /** @var string $index 默认驱动索引 */
-        protected $index = '';
+        protected $index = 'default';
         /** @var string 驱动类名称 */
         protected $driverName = '';
         /** @var array 驱动类配置 */
@@ -245,25 +251,20 @@ namespace driphp {
          */
         final public static function getInstance(array $config = []): Component
         {
-            $className = static::class;
-            $_config = Kernel::getInstance()->config($className);
-
-            if ($config) $_config = array_merge($_config, $config);
-
-            try {
-                /** @var Component $component */
-                $component = Kernel::factory($className, [$_config]);
-            } catch (ClassNotFoundException $throwable) {
-                # 不会发生
+            static $_instances = [];
+            $key = md5(static::class . Kernel::hash($config));
+            if (!isset($_instances[$key])) {
+                $_config = Kernel::getInstance()->config(static::class) and $_config = array_merge($_config, $config);
+                $_instances[$key] = new static($_config); # Kernel::factory($className, [$_config]);
             }
-            return $component;
+            return $_instances[$key];
         }
 
         /**
          * Component constructor.
          * @param array $config
          */
-        final public function __construct(array $config = [])
+        final protected function __construct(array $config = [])
         {
             $this->config = array_merge($this->config, $config);
             $this->initialize();
@@ -271,34 +272,30 @@ namespace driphp {
 
         /**
          * 初始化
-         * @return $this
+         * @return void
          */
         abstract protected function initialize();
 
         /**
-         * 获取驱动索引
-         * @return array
+         * 获取驱动信息
+         * @return array [驱动索引、驱动类、驱动配置]
          */
         public function driveInfo(): array
         {
-            return [
-                $this->index,
-                $this->driverName,
-                $this->driverConfig,
-            ];
+            return [$this->index, $this->driverName, $this->driverConfig];
         }
 
 
         /**
-         * 加载驱动
+         * 获取驱动实例
          * @param string $index 驱动器角标
          * @return Driver |object 返回驱动实例
-         * @throws DriverNotDefinedException 适配器未定义
+         * @throws NoDriverAvailableException 适配器未定义
          * @throws ClassNotFoundException  适配器类不存在
          */
-        public function drive(string $index = 'default'): DriverInterface
+        public function drive(string $index = ''): DriverInterface
         {
-            $this->index = $index;
+            $index and $this->index = $index;
             if (!isset($this->driver)) {
                 if (isset($this->config['drivers'][$this->index])) {
                     $this->driverName = $this->config['drivers'][$this->index]['name'];
@@ -307,7 +304,7 @@ namespace driphp {
                         $this->driverConfig, $this
                     ]);
                 } else {
-                    throw new DriverNotDefinedException($this->index);
+                    throw new NoDriverAvailableException($this->index);
                 }
             }
             return $this->driver;
@@ -318,8 +315,7 @@ namespace driphp {
          * @param string $key 配置项,多级配置项以点号分隔
          * @param mixed|null $value 为null时表示获取配置值,否则标识获取配置值
          * @return mixed|null
-         * @throws ConfigException 访问的config不存在时抛出
-         * >>>>>>> 03f29befa566479f1b72df79295ba9f9a681a74a
+         * @throws ConfigNotFoundException 访问的config不存在时抛出
          */
         public function config(string $key, $value = null)
         {
@@ -328,10 +324,9 @@ namespace driphp {
                     $config = &$this->config;
                     foreach (explode('.', $key) as $k) {
                         if ($k) {
-//                            if (!isset($config[$k])) $config[$k] = [];
                             $config = &$config[$k];
                         } else {
-                            throw new ConfigException($key);
+                            throw new ConfigNotFoundException($key);
                         }
                     }
                     $config = $value;
@@ -389,6 +384,10 @@ namespace driphp {
         }
     }
 
+    /**
+     * Class Kernel 核心引擎
+     * @package driphp
+     */
     final class Kernel
     {
         /**
@@ -402,6 +401,7 @@ namespace driphp {
             'session.save_path' => DRI_PATH_RUNTIME,# tcp://127.0.0.1:6379
             'session.gc_maxlifetime' => 3600,
             'session.cache_expire' => 3600,
+            Route::class => [], # 路由配置
         ];
 
         /**
@@ -441,19 +441,32 @@ namespace driphp {
         }
 
         /**
+         * 设定路由
+         * @param array $route
+         * @return Kernel
+         */
+        public function route(array $route): Kernel
+        {
+            $this->config[Route::class] = array_merge($this->config[Route::class], $route);
+            return $this;
+        }
+
+        /**
+         * 运行应用
          * @return void
          * @throws
          */
         public function start()
         {
-            if (DRI_IS_CLI) return;
-            self::status('start');
-            $request = Request::getInstance();
-            self::status('route');
-            $route = Route::getInstance()->parse($request);
-            self::status('dispatch');
-            Dispatcher::getInstance()->dispatch($route);
-            self::status('end');
+            if (!DRI_IS_CLI) {
+                self::status('start');
+                $request = Request::getInstance();
+                self::status('route');
+                $route = Route::getInstance()->parse($request);
+                self::status('dispatch');
+                Dispatcher::getInstance()->dispatch($route);
+                self::status('end');
+            }
         }
 
         /**
@@ -475,7 +488,7 @@ namespace driphp {
          *
          * @version 1.0
          * @param string $component 组件名称
-         * @param array|null $config 组件配置
+         * @param array|null $config 组件配置,为空时获取配置，否则设定配置
          * @return array
          */
         public function config(string $component, array $config = null): array
@@ -534,13 +547,15 @@ namespace driphp {
          * @param string $path
          * @param array|mixed $replace
          * @return array|mixed
-         * @throws ConfigException
+         * @throws ConfigNotFoundException
+         * @throws ConfigInvalidException
          */
         public static function readConfig(string $path, $replace = [])
         {
+            if (!is_file($path)) throw new ConfigNotFoundException($path);
             if (!is_array($result = is_file($path) ? include($path) : $replace)) {
-                throw new ConfigException("PHP config [$path] return a non-array");
-            };
+                throw new ConfigInvalidException("PHP config [$path] return a non-array");
+            }
             return $result;
         }
 
@@ -549,14 +564,15 @@ namespace driphp {
          * @version 1.0
          * @param string $path
          * @param array $config
+         * @return void
          * @throws FileWriteException
          */
-        public static function writeConfig(string $path, array $config): void
+        public static function writeConfig(string $path, array $config)
         {
             $parentDirectory = dirname($path);
             is_dir($parentDirectory) or mkdir($parentDirectory, 0777, true);
-            if (!file_put_contents($path, '<?php defined(\'DRI_VERSION\') or die(\'No Permission\'); return ' .
-                var_export($config, true) . ';')) {
+            $content = '<?php defined(\'DRI_VERSION\') or die(\'No Permission\'); return ' . var_export($config, true) . ';';
+            if (!file_put_contents($path, $content)) {
                 throw new FileWriteException($path);
             }
         }

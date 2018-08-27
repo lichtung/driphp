@@ -6,9 +6,7 @@
  */
 declare(strict_types=1);
 
-
 namespace driphp\core;
-
 
 use driphp\Component;
 use driphp\Kernel;

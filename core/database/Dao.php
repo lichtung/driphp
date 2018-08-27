@@ -6,7 +6,6 @@
  */
 declare(strict_types=1);
 
-
 namespace driphp\core\database;
 
 use PDO;
@@ -14,13 +13,13 @@ use PDOStatement;
 use PDOException;
 use driphp\Component;
 use driphp\core\database\driver\MySQL;
-use driphp\throws\core\database\ConnectException;
-use driphp\throws\core\database\ExecuteException;
-use driphp\throws\core\database\GeneralException;
-use driphp\throws\core\database\QueryException;
+use driphp\throws\database\ConnectException;
+use driphp\throws\database\ExecuteException;
+use driphp\throws\database\GeneralException;
+use driphp\throws\database\QueryException;
 use driphp\core\database\driver\Driver;
 use driphp\throws\ClassNotFoundException;
-use driphp\throws\DriverNotDefinedException;
+use driphp\throws\NoDriverAvailableException;
 
 /**
  * Class Dao  数据库访问对象(Database Access Object)
@@ -39,7 +38,7 @@ use driphp\throws\DriverNotDefinedException;
  *
  * @method int lastInsertId($name = null) get auto-inc id of last insert record
  * @method Dao getInstance(array $config = []) static
- * @method Driver drive(string $index = 'default')
+ * @method Driver drive(string $index = 'default') throw ClassNotFoundException
  * @package driphp\core
  */
 class Dao extends Component
@@ -94,7 +93,7 @@ class Dao extends Component
      * @return array 返回array类型表述查询结果
      * @throws ClassNotFoundException
      * @throws ConnectException
-     * @throws DriverNotDefinedException
+     * @throws NoDriverAvailableException
      * @throws QueryException
      */
     public function query(string $sql, array $params = null, bool $fetchAll = true): array
@@ -128,7 +127,7 @@ class Dao extends Component
      * @return int 返回受到影响的行数
      * @throws ExecuteException
      * @throws ConnectException
-     * @throws DriverNotDefinedException
+     * @throws NoDriverAvailableException
      * @throws ClassNotFoundException
      */
     public function exec(string $sql, array $params = null): int
@@ -188,7 +187,7 @@ class Dao extends Component
      * 开启事务
      * @return bool
      * @throws GeneralException 服务事务关闭了自动提交并且嵌套开启了事务，抛出异常，警告"There is already an active transaction"
-     * @throws DriverNotDefinedException
+     * @throws NoDriverAvailableException
      * @throws ClassNotFoundException
      * @throws ConnectException
      */

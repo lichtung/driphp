@@ -15,7 +15,7 @@ use driphp\throws\io\FileNotFoundException;
 use driphp\throws\io\FileReadException;
 
 /**
- * Class FileSystem
+ * Class FileSystem 文件系统
  * @package driphp\core
  */
 class FileSystem extends Component

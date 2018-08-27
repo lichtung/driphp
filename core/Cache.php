@@ -24,7 +24,7 @@ use driphp\core\cache\Redis;
  *      缓和冲击。比如你每秒要写100次硬盘，对系统冲击很大，浪费了大量时间在忙着处理开始写和结束写这两件事嘛。用个buffer暂存起来，变成每10秒写一次硬盘，
  *      对系统的冲击就很小，写入效率高了，日子过得爽了。极大缓和了冲击。）
  *
- * >>>
+ * ```
  *  1、Buffer（缓冲区）是系统两端处理速度平衡（从长时间尺度上看）时使用的。它的引入是为了减小短期内突发I/O的影响，起到流量整形的作用。
  *      比如生产者——消费者问题，他们产生和消耗资源的速度大体接近，加一个buffer可以抵消掉资源刚产生/消耗时的突然变化。
  *  2、Cache（缓存）则是系统两端处理速度不匹配时的一种折衷策略。因为CPU和memory之间的速度差异越来越大，所以人们充分利用数据的局部性（locality）特征，
@@ -32,7 +32,7 @@ use driphp\core\cache\Redis;
  *  3、假定以后存储器访问变得跟CPU做计算一样快，cache就可以消失，但是buffer依然存在。比如从网络上下载东西，瞬时速率可能会有较大变化，
  *      但从长期来看却是稳定的，这样就能通过引入一个buffer使得OS接收数据的速率更稳定，进一步减少对磁盘的伤害。
  *  4、TLB（Translation LookAside Buffer，翻译后备缓冲器）名字起错了，其实它是一个cache.
- * >>>
+ * ```
  *
  * PHP的flush()和ob_flush()的区别:
  *  void flush ( void )         - Flush system output buffer(SOB)
@@ -89,8 +89,8 @@ class Cache extends Component
      * @param Closure|mixed $replace 如果是一个闭包，则值不存在时获取并设置缓存
      * @param int $expire Closure返回值的缓存期
      * @return mixed
-     * @throws \driphp\throws\core\ClassNotFoundException
-     * @throws \driphp\throws\core\DriverNotDefinedException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\NoDriverAvailableException
      */
     public function get(string $name, $replace = null, $expire = 3600)
     {

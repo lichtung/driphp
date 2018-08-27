@@ -54,8 +54,6 @@ class Route extends Component
      */
     public function parse(Request $request)
     {
-        $this->request = $request;
-
         if ($this->config['api_mode_on'] ?? false) {
 
             $result = [];
@@ -112,9 +110,10 @@ class Route extends Component
         }
         list($modules, $controller, $action) = Request::parsePathInfo($pathInfo);
         $modules or $modules = $this->config['default_modules'];
-        $this->request->setModule(is_array($modules) ? implode('/', $modules) : $modules);
-        $this->request->setController($controller ?: $this->config['default_controller']);
-        $this->request->setAction($action ?: $this->config['default_action']);
+
+        $request->setModule(is_array($modules) ? implode('/', $modules) : $modules);
+        $request->setController($controller ?: $this->config['default_controller']);
+        $request->setAction($action ?: $this->config['default_action']);
         return null;
     }
 

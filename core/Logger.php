@@ -12,8 +12,8 @@ namespace driphp\core;
 use driphp\Component;
 use driphp\core\logger\FileHandler;
 use driphp\core\logger\LoggerInterface;
-use driphp\throws\core\BadLoggerLevelException;
-use driphp\throws\core\logger\MessageEmptyException;
+use driphp\throws\MethodNotFoundException;
+use driphp\throws\ParametersInvalidException;
 
 /**
  * Class Logger 日志记录器
@@ -68,7 +68,6 @@ class Logger extends Component
 
     protected function initialize()
     {
-        // TODO: Implement initialize() method.
     }
 
     /**
@@ -199,15 +198,18 @@ class Logger extends Component
     /**
      * @param string $level
      * @param array $arguments
-     * @return void
-     * @throws
+     * @return mixed|void
+     * @throws MethodNotFoundException
+     * @throws ParametersInvalidException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\NoDriverAvailableException
      */
     public function __call(string $level, array $arguments)
     {
         if (!isset(self::LEVEL_MAP[$level])) {
-            throw new BadLoggerLevelException($level);
+            throw new MethodNotFoundException(static::class . '::' . $level);
         }
-        if (empty($arguments[0])) throw new MessageEmptyException('message to record should not be empty');
+        if (empty($arguments[0])) throw new ParametersInvalidException('parameters is empty');
         $this->drive()->record($arguments[0], self::LEVEL_MAP[$level], $this->loggerName, $arguments[1] ?? false);
     }
 

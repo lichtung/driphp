@@ -14,7 +14,7 @@ use PDOException;
 use driphp\Component;
 use driphp\core\database\Dao;
 use driphp\DriverInterface;
-use driphp\throws\core\database\ConnectException;
+use driphp\throws\database\ConnectException;
 
 /**
  * Class Driver

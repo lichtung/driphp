@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace driphp\tests;
 
 
-use PHPUnit\Framework\TestCase;
 use driphp\Kernel;
-use driphp\service\symfony\Yaml;
+use Symfony\Component\Yaml\Yaml;
+use PHPUnit\Framework\TestCase;
 
 class UniTest extends TestCase
 {
@@ -20,7 +20,7 @@ class UniTest extends TestCase
     public function __construct(string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $config = Yaml::getInstance()->parse(file_get_contents(__DIR__ . '/../env.yaml'));
+        $config = Yaml::parse(file_get_contents(__DIR__ . '/../env.yaml'));
         foreach ($config as $class => $item) {
             Kernel::getInstance()->config($class, $item);
         }

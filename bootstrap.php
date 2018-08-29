@@ -254,7 +254,8 @@ namespace driphp {
             static $_instances = [];
             $key = md5(static::class . Kernel::hash($config));
             if (!isset($_instances[$key])) {
-                $_config = Kernel::getInstance()->config(static::class) and $_config = array_merge($_config, $config);
+                $_config = Kernel::getInstance()->config(static::class);
+                $_config = $_config ? array_merge($_config, $config) : $config;
                 $_instances[$key] = new static($_config); # Kernel::factory($className, [$_config]);
             }
             return $_instances[$key];

@@ -15,9 +15,13 @@ use driphp\core\cache\redis\Hash;
 use driphp\core\cache\redis\Lists;
 use driphp\core\cache\redis\Set;
 use driphp\DriverInterface;
-use driphp\throws\core\cache\RedisConnectException;
-use driphp\throws\core\cache\RedisException;
+use driphp\throws\cache\RedisException;
+use driphp\throws\cache\redis\ConnectionException;
 
+/**
+ * Class Redis
+ * @package driphp\core\cache
+ */
 class Redis extends Driver implements DriverInterface
 {
 
@@ -83,7 +87,7 @@ class Redis extends Driver implements DriverInterface
                 $error = "Database[{$host}:{$port}/$database] connect failed ";
             }
 
-            if ($error) throw new RedisConnectException($error);
+            if ($error) throw new ConnectionException($error);
         }
         return $this->handler;
     }

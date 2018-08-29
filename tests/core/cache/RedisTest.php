@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace dripex\test\core\cache;
 
-
+use driphp\throws\cache\RedisException;
 use driphp\core\cache\Redis;
 use driphp\tests\UniTest;
 
@@ -17,7 +17,7 @@ class RedisTest extends UniTest
 {
     /**
      * @return Redis
-     * @throws \driphp\throws\core\cache\RedisException
+     * @throws RedisException
      */
     public function testRedis()
     {

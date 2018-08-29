@@ -38,7 +38,7 @@ use driphp\throws\core\database\mongo\UpdateException;
  * PHPv7 @see http://php.net/manual/zh/book.mongodb.php
  * PHPv5 @see http://php.net/manual/zh/mongo.core.php
  *
- * @method Mongo getInstance(string $index = '') static
+ * @method Mongo getInstance(string $config = []) static
  *
  * @package dripex\database
  */

@@ -41,10 +41,10 @@ class Doctrine extends Service
      * @var Configuration
      */
     private $configuration = null;
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     private $entityManager = null;
+    /** @var Dao $dao */
+    private $dao = null;
 
     /**
      * @throws GeneralException
@@ -55,8 +55,9 @@ class Doctrine extends Service
     {
         $this->configuration = Setup::createAnnotationMetadataConfiguration($this->config['paths'], DRI_DEBUG_ON);
         try {
+            $this->dao = Dao::getInstance();
             $this->connection = DriverManager::getConnection([
-                'pdo' => Dao::getInstance($this->index)->drive()
+                'pdo' => $this->dao->drive(),
             ], $this->configuration, new EventManager());
             $this->entityManager = EntityManager::create($this->connection, $this->configuration);
         } catch (DBALException $e) {
@@ -68,6 +69,9 @@ class Doctrine extends Service
 
     /**
      * @return Connection
+     * @throws DBALException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\NoDriverAvailableException
      */
     public function getConnection(): Connection
     {

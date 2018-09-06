@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace driphp\core\view;
 
+use driphp\core\Controller;
 use driphp\core\Request;
 use driphp\DripException;
 use driphp\throws\io\FileNotFoundException;
@@ -63,23 +64,24 @@ trait Render
 
     /**
      * display template content
+     * @param Controller $context 上下文环境
      * @param array $vars An array of parameters to pass to the template
      * @param string $template The template name,default using the method name
      * @param string $theme template theme
      * @return void
      */
-    public function render(array $vars = [], string $template = '', string $theme = 'default')
+    public function render(Controller $context, array $vars = [], string $template = '', string $theme = 'default')
     {
         try {
             $cache = null;
             if ('' === $template) {
                 $template = self::getPrevious();
             }
-            list($module, $controller) = self::fetchModuleAndControllerFromControllerName(self::getPrevious('class'));
+            list($module, $controller) = self::fetchModuleAndControllerFromControllerName(get_class($context));
 
 
             # check the compiled template
-            $view = DRI_PATH_PROJECT . "view/{$theme}/{$module}/{$controller}/{$template}.php";
+            $view = DRI_PATH_PROJECT . "view/{$theme}/{$module}/{$controller}/{$template}.twig";
             $compile_view = DRI_PATH_RUNTIME . "view/{$module}-{$controller}/{$template}.{$theme}.php";;
             if (DRI_DEBUG_ON or !is_file($compile_view) or (filemtime($view) > filemtime($compile_view))) {
                 # compiled template not exist or template has modified
@@ -94,7 +96,8 @@ trait Render
                     # template constant replace
                     $content = str_replace(array_keys($this->_template_constants), array_values($this->_template_constants), $content);
                     # template variable replace
-                    $content = preg_replace('/\{\{(\w[\w\d_]*)\}\}/', '<?php echo \$${1}; ?>', $content);
+                    $content = preg_replace('/\{\{\s(\w[\w\d_]*)\.(\w[\w\d_]*)\s\}\}/', '<?php echo \$${1}[\'${2}\'] ?? \'\'; ?>', $content);
+                    $content = preg_replace('/\{\{\s(\w[\w\d_]*)\s\}\}/', '<?php echo \$${1}; ?>', $content);
 
                     if (!is_dir($parent_dir = dirname($compile_view))) mkdir($parent_dir, 0700, true);
                     file_put_contents($compile_view, $content);

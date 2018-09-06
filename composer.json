@@ -11,8 +11,7 @@
   ],
   "require": {
     "php": ">=7.0.0",
-    "symfony/yaml": "^3.2",
-    "doctrine/orm": "^2.6"
+    "symfony/yaml": "^3.2"
   },
   "autoload": {
     "psr-0": {

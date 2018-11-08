@@ -36,9 +36,9 @@ case ${ACTION} in
         len=2048
     fi
     # 生成 RSA 私钥
-    openssl genrsa -out ${HOME_DIR}/rsa_private.key ${len}
+    openssl genrsa -out ${HOME_DIR}/runtime/rsa_private.key ${len}
     # 生成 RSA 公钥
-    openssl rsa -in ${HOME_DIR}/rsa_private.key -pubout -out ${HOME_DIR}/rsa_public.key
+    openssl rsa -in ${HOME_DIR}/runtime/rsa_private.key -pubout -out ${HOME_DIR}/runtime/rsa_public.key
 #    openssl pkcs8 -topk8 -inform PEM -in ${HOME_DIR}/rsa_private.key -outform PEM -nocrypt -out ${HOME_DIR}/private.key
     ;;
 

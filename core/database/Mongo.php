@@ -335,12 +335,8 @@ class Mongo extends Component
      * @param array $where
      * @param bool $justOne
      * @return int 返回删除的条数
-     *
-     * @throws CollectionNotSelectException
-     * @throws DatabaseNotSelectException
      * @throws MongoCursorException
      * @throws MongoException
-     * @throws PersistException
      * @throws \MongoCursorTimeoutException
      */
     public function remove(array $where, $justOne = true)

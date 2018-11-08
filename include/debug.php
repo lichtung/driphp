@@ -15,6 +15,7 @@ function DRI_build_message($params, $traces)
     for ($i = 0; $i < 6; $i++) $color = $color . $str[rand(0, strlen($str) - 1)];
     $str = "<pre style='background: {$color};width: 100%;padding: 10px;margin: 0'><h3 style='color: midnightblue'><b>F:</b>{$traces[0]['file']} << <b>L:</b>{$traces[0]['line']} >> </h3>";
     foreach ($params as $key => $val) {
+        if (is_resource($val)) $val = 'resource'; # var_export 会输出null
         $txt = htmlspecialchars(var_export($val, true));
         $str .= "<b>Parameter- . $key :</b><br /> $txt <br />";
     }

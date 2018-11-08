@@ -8,49 +8,73 @@ declare(strict_types=1);
 
 namespace driphp\test\library;
 
+use driphp\core\Generator;
+use driphp\library\encrypt\OpenSSL;
 use driphp\library\RSA;
 use driphp\tests\UniTest;
 
 class OpenSSLTest extends UniTest
 {
+
     private $rsa_private_key;
     private $rsa_public_key;
 
     public function __construct()
     {
         parent::__construct();
-        $this->rsa_private_key = __DIR__ . '/rsa_private.key';
-        $this->rsa_public_key = __DIR__ . '/rsa_public.key';
+        $this->rsa_private_key = DRI_PATH_FRAMEWORK . 'runtime/rsa_private_key.pem';
+        $this->rsa_public_key = DRI_PATH_FRAMEWORK . 'runtime/rsa_public_key.pem';
     }
 
+    public function testCreate()
+    {
+        is_file($this->rsa_private_key) and unlink($this->rsa_private_key);
+        is_file($this->rsa_public_key) and unlink($this->rsa_public_key);
+        OpenSSL::generate();
+        $this->assertTrue(true === is_file($this->rsa_public_key));
+        $this->assertTrue(true === is_file($this->rsa_private_key));
+    }
+
+
     /**
-     * @return RSA
-     * @throws \driphp\throws\library\OpenSSLException
+     * @return OpenSSL
+     * @throws \Exception
      */
     public function testEncryptInPrivateAndDecryptInPublic()
     {
-        $openssl = RSA::getInstance([
-            'private_key' => $this->rsa_private_key, # 公钥内容或者存储位置
+        $openssl = OpenSSL::factory([
+            'private_key' => $this->rsa_private_key,
             'public_key' => $this->rsa_public_key,
         ]);
-        $str = '123';
-        $newStr = $openssl->encryptInPrivate($str, true);
-        $decStr = $openssl->decryptInPublic($newStr, true);
-        $this->assertTrue($str === $decStr);
+        $i = 0;
+        while ($i++ <= 4097) { # 1-4096
+            $str = Generator::randomString($i);
+            $encryptStr = $openssl->encryptInPrivate($str, true);
+            $decryptStr = $openssl->decryptInPublic($encryptStr, true);
+            $this->assertTrue($str !== $encryptStr);
+            $this->assertTrue($encryptStr !== $decryptStr);
+            $this->assertTrue($str === $decryptStr);
+            echo "[$i]";
+        }
         return $openssl;
     }
 
     /**
      * @depends testEncryptInPrivateAndDecryptInPublic
-     * @param RSA $openssl
-     * @return void
-     * @throws \driphp\throws\library\OpenSSLException
+     * @param OpenSSL $openssl
+     * @throws \Exception
      */
-    public function testEncryptInPublicAndDecryptInPrivate(RSA $openssl)
+    public function testEncryptInPublicAndDecryptInPrivate(OpenSSL $openssl)
     {
-        $str = '123';
-        $newStr = $openssl->encryptInPublic($str, true);
-        $decStr = $openssl->decryptInPrivate($newStr, true);
-        $this->assertTrue($str === $decStr);
+        $i = 0;
+        while ($i++ <= 4097) { # 1-4096
+            $str = Generator::randomString($i);
+            $encryptStr = $openssl->encryptInPublic($str, true);
+            $decryptStr = $openssl->decryptInPrivate($encryptStr, true);
+            $this->assertTrue($str !== $encryptStr);
+            $this->assertTrue($encryptStr !== $decryptStr);
+            $this->assertTrue($str === $decryptStr);
+            echo "[$i]";
+        }
     }
 }

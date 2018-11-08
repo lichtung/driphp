@@ -20,7 +20,11 @@ class UniTest extends TestCase
     public function __construct(string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $config = Yaml::parse(file_get_contents(__DIR__ . '/../env.yaml'));
+        $env = __DIR__ . '/../env.yaml';
+        if (!is_file($env)) {
+            copy(__DIR__ . '/../tests/env.sample.yaml', $env);
+        }
+        $config = Yaml::parse(file_get_contents($env));
         foreach ($config as $class => $item) {
             Kernel::getInstance()->config($class, $item);
         }

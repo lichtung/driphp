@@ -249,7 +249,7 @@ namespace driphp {
          * @param array $config
          * @return Component
          */
-        final public static function getInstance(array $config = []): Component
+        final public static function factory(array $config = []): Component
         {
             static $_instances = [];
             $key = md5(static::class . Kernel::hash($config));

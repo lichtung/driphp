@@ -7,34 +7,18 @@
 declare(strict_types=1);
 
 
-namespace driphp\core\cache\redis;
+namespace driphp\core\redis;
 
+use driphp\throws\core\RedisException;
 use Redis;
-use driphp\throws\core\cache\RedisException;
 
 /**
  * Class Lists
- * @package driphp\core\cache\redis
+ * @package driphp\core\redis
  */
-class Lists
+class Lists extends Structure
 {
 
-    /**
-     * @var Redis
-     */
-    private $redis;
-    private $listName = '';
-
-    /**
-     * Lists constructor.
-     * @param string $listName
-     * @param Redis $redis
-     */
-    public function __construct(string $listName, Redis $redis)
-    {
-        $this->listName = $listName;
-        $this->redis = $redis;
-    }
 
     /**
      * 通过索引获取列表中的元素
@@ -44,7 +28,7 @@ class Lists
      */
     public function get(int $index, $replace = null)
     {
-        $val = $this->redis->lIndex($this->listName, $index);
+        $val = $this->adapter->lIndex($this->name, $index);
         return $val === false ? $replace : $val;
     }
 
@@ -63,7 +47,7 @@ class Lists
      */
     public function set(int $index, $value): bool
     {
-        return (bool)$this->redis->lSet($this->listName, $index, $value);
+        return (bool)$this->adapter->lSet($this->name, $index, $value);
     }
 
     /**
@@ -86,12 +70,12 @@ class Lists
     public function push(string $element, bool $left = true, bool $createIfNotExist = true): int
     {
         if ($createIfNotExist) {
-            $value = $left ? $this->redis->lPush($this->listName, $element) : $this->redis->rPush($this->listName, $element);
+            $value = $left ? $this->adapter->lPush($this->name, $element) : $this->adapter->rPush($this->name, $element);
         } else {
-            $value = $left ? $this->redis->lPushx($this->listName, $element) : $this->redis->rPushx($this->listName, $element);
+            $value = $left ? $this->adapter->lPushx($this->name, $element) : $this->adapter->rPushx($this->name, $element);
         }
         if (false === $value) {
-            throw new RedisException("Key {$this->listName} is not a list!");
+            throw new RedisException("Key {$this->name} is not a list!");
         }
         return $value;
     }
@@ -102,7 +86,7 @@ class Lists
      */
     public function length()
     {
-        return $this->redis->lLen($this->listName);
+        return $this->adapter->lLen($this->name);
     }
 
     /**
@@ -117,7 +101,7 @@ class Lists
      */
     public function range(int $start, int $stop = -1): array
     {
-        return (array)$this->redis->lRange($this->listName, $start, $stop);
+        return (array)$this->adapter->lRange($this->name, $start, $stop);
     }
 
     /**
@@ -126,7 +110,7 @@ class Lists
      */
     public function clean(): bool
     {
-        return (bool)$this->redis->lTrim($this->listName, 1, 0); # it will remove all elements if start is greater than stop
+        return (bool)$this->adapter->lTrim($this->name, 1, 0); # it will remove all elements if start is greater than stop
     }
 
     /**
@@ -138,7 +122,7 @@ class Lists
      */
     public function trim(int $start, int $stop = -1): bool
     {
-        return (bool)$this->redis->lTrim($this->listName, $start, $stop);
+        return (bool)$this->adapter->lTrim($this->name, $start, $stop);
     }
 
     /**
@@ -152,7 +136,7 @@ class Lists
      */
     public function remove(string $value, int $count): int
     {
-        return (int)$this->redis->lRem($this->listName, $value, $count);
+        return (int)$this->adapter->lRem($this->name, $value, $count);
     }
 
     /**
@@ -165,7 +149,7 @@ class Lists
      */
     public function insert(string $pivot, string $value, bool $after = true): int
     {
-        return (int)$this->redis->lInsert($this->listName, $after ? Redis::AFTER : Redis::BEFORE, $pivot, $value);
+        return (int)$this->adapter->lInsert($this->name, $after ? Redis::AFTER : Redis::BEFORE, $pivot, $value);
     }
 
 
@@ -190,9 +174,9 @@ class Lists
     public function pop($replace = null, bool $left = true)
     {
         if ($left) {
-            $value = $this->redis->lPop($this->listName);
+            $value = $this->adapter->lPop($this->name);
         } else {
-            $value = $this->redis->rPop($this->listName);
+            $value = $this->adapter->rPop($this->name);
         }
         return false === $value ? $replace : $value;
     }

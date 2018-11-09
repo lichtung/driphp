@@ -7,28 +7,16 @@
 declare(strict_types=1);
 
 
-namespace driphp\core\cache\redis;
+namespace driphp\core\redis;
 
-use Redis;
-use driphp\throws\core\cache\RedisException;
+use driphp\throws\core\RedisException;
 
 /**
  * Class Hash
- * @package driphp\core\cache\redis
+ * @package driphp\core\redis
  */
-class Hash
+class Hash extends Structure
 {
-    /**
-     * @var Redis
-     */
-    private $redis;
-    private $tableName = '';
-
-    public function __construct(string $tableName, Redis $redis)
-    {
-        $this->tableName = $tableName;
-        $this->redis = $redis;
-    }
 
     /**
      * Adds a value to the hash stored at key.
@@ -42,16 +30,13 @@ class Hash
     public function set(string $key, string $value, bool $setOnlyNotExist = false): bool
     {
         if ($setOnlyNotExist) {
-            return $this->redis->hSetNx($this->tableName, $key, $value);
+            return $this->adapter->hSetNx($this->name, $key, $value);
         } else {
-            $res = $this->redis->hSet($this->tableName, $key, $value);
+            $res = $this->adapter->hSet($this->name, $key, $value);
             if ($res === false) {
-                $errorMsg = $this->redis->getLastError();
-                $this->redis->clearLastError();
-                throw new RedisException($errorMsg);
-            } else {
-                return $res > 0; #
+                $this->context->checkError();
             }
+            return $res > 0;
         }
     }
 
@@ -72,8 +57,8 @@ class Hash
      */
     public function setInBatch(array $pairs, bool $clean = false): bool
     {
-        $clean and $this->redis->delete($this->tableName);
-        return $this->redis->hMset($this->tableName, $pairs);
+        $clean and $this->adapter->delete($this->name);
+        return $this->adapter->hMset($this->name, $pairs);
     }
 
     /**
@@ -84,7 +69,7 @@ class Hash
      */
     public function get(string $key = '', string $replace = ''): string
     {
-        $value = $this->redis->hGet($this->tableName, $key); # If the hash table doesn't exist, or the key doesn't exist, FALSE is returned.
+        $value = $this->adapter->hGet($this->name, $key); # If the hash table doesn't exist, or the key doesn't exist, FALSE is returned.
         return false === $value ? $replace : $value;
     }
 
@@ -95,7 +80,7 @@ class Hash
      */
     public function has(string $key): bool
     {
-        return false !== $this->redis->hGet($this->tableName, $key);
+        return false !== $this->adapter->hGet($this->name, $key);
     }
 
     /**
@@ -134,7 +119,7 @@ class Hash
      */
     public function getAll(string ...$keys): array
     {
-        return $keys ? $this->redis->hMGet($this->tableName, $keys) : $this->redis->hGetAll($this->tableName);
+        return $keys ? $this->adapter->hMGet($this->name, $keys) : $this->adapter->hGetAll($this->name);
     }
 
     /**
@@ -167,10 +152,10 @@ class Hash
     public function delete(string ...$keys): int
     {
         if (empty($keys)) {
-            return $this->redis->delete($this->tableName);
+            return $this->adapter->delete($this->name);
         } else {
-            array_unshift($keys, $this->tableName);
-            return call_user_func_array([$this->redis, 'hDel'], $keys); # Number of deleted fields
+            array_unshift($keys, $this->name);
+            return call_user_func_array([$this->adapter, 'hDel'], $keys); # Number of deleted fields
         }
     }
 
@@ -182,8 +167,8 @@ class Hash
      */
     public function length(): int
     {
-        $length = $this->redis->hLen($this->tableName);
-        if (false === $length) throw new RedisException("Item '$this->tableName' not exist or is not a hash");
+        $length = $this->adapter->hLen($this->name);
+        if (false === $length) throw new RedisException("Item '$this->name' not exist or is not a hash");
         return $length;
     }
 
@@ -209,7 +194,7 @@ class Hash
      */
     public function keys(): array
     {
-        return $this->redis->hKeys($this->tableName);
+        return $this->adapter->hKeys($this->name);
     }
 
     /**
@@ -233,6 +218,6 @@ class Hash
      */
     public function values(): array
     {
-        return $this->redis->hVals($this->tableName);
+        return $this->adapter->hVals($this->name);
     }
 }

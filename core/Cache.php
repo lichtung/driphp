@@ -56,7 +56,6 @@ use driphp\core\cache\Redis;
  * @method void  set(string $key, mixed $value, int $ttl = 3600)
  * @method bool  has(string $key)
  * @method void  delete(string $key)
- * @method void  clean()
  *
  * @method Cache getInstance(array $config = []) static
  * @package driphp\core

@@ -9,19 +9,42 @@ declare(strict_types=1);
 
 namespace dripex\test\core\cache;
 
-use driphp\throws\cache\RedisException;
-use driphp\core\cache\Redis;
+use driphp\core\RedisManager;
 use driphp\tests\UniTest;
+use driphp\throws\core\RedisConnectException;
 
 class RedisTest extends UniTest
 {
+    public function testConnection()
+    {
+        # 正确的连接
+        $connectionException = false;
+        try {
+            RedisManager::factory()->connect();
+        } catch (RedisConnectException $exception) {
+            $connectionException = true;
+        }
+        $this->assertTrue(!$connectionException);
+
+        # 修改成错误的密码,测试连接
+        $connectionException = false;
+        try {
+            $config = RedisManager::factory()->config();
+            $config['password'] = '123456_is_wrong';
+            RedisManager::factory($config)->connect();
+        } catch (RedisConnectException $exception) {
+            $connectionException = true;
+        }
+        $this->assertTrue($connectionException);
+    }
+
     /**
-     * @return Redis
-     * @throws RedisException
+     * @return RedisManager
+     * @throws \driphp\throws\core\RedisException
      */
     public function testRedis()
     {
-        $redis = Redis::getInstance();
+        $redis = RedisManager::factory();
         # get a item which not exist in redis
         $this->assertTrue('__not_exist__' === $redis->get('not_exist', '__not_exist__'));
         $redis->set('key_exist', ['__key_exist__']);
@@ -55,17 +78,16 @@ class RedisTest extends UniTest
         $this->assertTrue(false === $redis->has($key . '-1'));
         $this->assertTrue(false === $redis->has($key . '-2'));
 
-
         return $redis;
     }
 
     /**
      * @depends testRedis
-     * @param Redis $redis
-     * @return Redis
+     * @param RedisManager $redis
+     * @return RedisManager
      * @throws
      */
-    public function testHash(Redis $redis)
+    public function testHash(RedisManager $redis)
     {
         $redis->delete('hash_demo');
         $hash = $redis->getHash('hash_demo');
@@ -111,7 +133,7 @@ class RedisTest extends UniTest
 
         # get
         unset($hash);
-        $hash = (new Redis())->getHash('hash_demo');
+        $hash = $redis->getHash('hash_demo');
         $this->assertTrue('hash_val5' === $hash->get('hash_key5', 'hash_key5_not_exist'));
         $this->assertTrue('hash_key52_not_exist' === $hash->get('hash_key52', 'hash_key52_not_exist'));
         #has
@@ -132,11 +154,11 @@ class RedisTest extends UniTest
 
     /**
      * @depends testHash
-     * @param Redis $redis
-     * @return Redis
+     * @param RedisManager $redis
+     * @return RedisManager
      * @throws
      */
-    public function testTransaction(Redis $redis)
+    public function testTransaction(RedisManager $redis)
     {
         # rollback
         $redis->beginTransaction();
@@ -159,11 +181,11 @@ class RedisTest extends UniTest
 
     /**
      * @depends testTransaction
-     * @param Redis $redis
-     * @return Redis
+     * @param RedisManager $redis
+     * @return RedisManager
      * @throws
      */
-    public function testList(Redis $redis)
+    public function testList(RedisManager $redis)
     {
         $list = $redis->getList('demo_list');
         # basic : get set push length range
@@ -257,11 +279,11 @@ class RedisTest extends UniTest
 
     /**
      * @depends testList
-     * @param Redis $redis
+     * @param RedisManager $redis
      * @return void
      * @throws
      */
-    public function testSet(Redis $redis)
+    public function testSet(RedisManager $redis)
     {
         $set = $redis->getSet('demo_set');
 
@@ -349,7 +371,6 @@ class RedisTest extends UniTest
         $this->assertTrue($set7->unionStore('demo_union_store', 'demo_set5', 'demo_set8') === 5);# ['ele1', 'ele2', 'ele3', 'ele4', 'ele8']
         $this->assertArrayEqual($redis->getSet('demo_union_store')->members(),
             ['ele1', 'ele2', 'ele3', 'ele4', 'ele8']);
-
 
     }
 

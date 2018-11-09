@@ -6,30 +6,16 @@
  */
 declare(strict_types=1);
 
+namespace driphp\core\redis;
 
-namespace driphp\core\cache\redis;
-
-use Redis;
-use driphp\throws\core\cache\RedisException;
+use driphp\throws\core\RedisException;
 
 /**
  * Class Set 集合
- * @package driphp\core\cache\redis
+ * @package driphp\core\redis
  */
-class Set
+class Set extends Structure
 {
-
-    /**
-     * @var Redis
-     */
-    private $redis;
-    private $setName = '';
-
-    public function __construct(string $setName, Redis $redis)
-    {
-        $this->setName = $setName;
-        $this->redis = $redis;
-    }
 
     /**
      * 添加元素到数组中
@@ -38,8 +24,8 @@ class Set
      */
     public function add(string ...$elements): int
     {
-        $params = array_merge([$this->setName], $elements);
-        return (int)call_user_func_array([$this->redis, 'sAdd'], $params);
+        $params = array_merge([$this->name], $elements);
+        return (int)call_user_func_array([$this->adapter, 'sAdd'], $params);
     }
 
     /**
@@ -55,7 +41,7 @@ class Set
      */
     public function has(string $element): bool
     {
-        return (bool)$this->redis->sIsMember($this->setName, $element);
+        return (bool)$this->adapter->sIsMember($this->name, $element);
     }
 
     /**
@@ -71,7 +57,7 @@ class Set
      */
     public function members()
     {
-        return $this->redis->sMembers($this->setName);
+        return $this->adapter->sMembers($this->name);
     }
 
     /**
@@ -92,7 +78,7 @@ class Set
      */
     public function move(string $element, string $newSet): bool
     {
-        return (bool)$this->redis->sMove($this->setName, $newSet, $element);
+        return (bool)$this->adapter->sMove($this->name, $newSet, $element);
     }
 
     /**
@@ -117,9 +103,9 @@ class Set
      */
     public function pop(): string
     {
-        $value = $this->redis->sPop($this->setName) ?: '';
+        $value = $this->adapter->sPop($this->name) ?: '';
         if (false === $value) {
-            throw new RedisException("set {$this->setName} is empty");
+            throw new RedisException("set {$this->name} is empty");
         }
         return $value;
     }
@@ -130,9 +116,9 @@ class Set
      */
     public function random(): string
     {
-        $value = $this->redis->sRandMember($this->setName, 1);
+        $value = $this->adapter->sRandMember($this->name, 1);
         if (false === $value) {
-            throw new RedisException("set {$this->setName} is empty");
+            throw new RedisException("set {$this->name} is empty");
         }
         return reset($value);
     }
@@ -143,7 +129,7 @@ class Set
      */
     public function randomX(int $count): array
     {
-        $value = $this->redis->sRandMember($this->setName, $count);
+        $value = $this->adapter->sRandMember($this->name, $count);
         if (is_string($value)) {
             $value = [$value];
         }
@@ -160,8 +146,8 @@ class Set
      */
     public function remove(string ...$elements): int
     {
-        array_unshift($elements, $this->setName);
-        return (int)call_user_func_array([$this->redis, 'sRem'], $elements);
+        array_unshift($elements, $this->name);
+        return (int)call_user_func_array([$this->adapter, 'sRem'], $elements);
     }
 
     /**
@@ -170,7 +156,7 @@ class Set
      */
     public function count(): int
     {
-        return $this->redis->sCard($this->setName);
+        return $this->adapter->sCard($this->name);
     }
 
     /**
@@ -192,8 +178,8 @@ class Set
      */
     public function diff(string ...$sets): array
     {
-        array_unshift($sets, $this->setName);
-        return (array)call_user_func_array([$this->redis, 'sDiff'], $sets);
+        array_unshift($sets, $this->name);
+        return (array)call_user_func_array([$this->adapter, 'sDiff'], $sets);
     }
 
     /**
@@ -216,8 +202,8 @@ class Set
      */
     public function union(string ...$sets)
     {
-        $sets[] = $this->setName;
-        return call_user_func_array([$this->redis, 'sUnion'], $sets);
+        $sets[] = $this->name;
+        return call_user_func_array([$this->adapter, 'sUnion'], $sets);
     }
 
     /**
@@ -239,9 +225,9 @@ class Set
     public function unionStore(string ...$sets): int
     {
         $output = array_shift($sets);
-        array_unshift($sets, $this->setName);
+        array_unshift($sets, $this->name);
         array_unshift($sets, $output);
-        return (int)call_user_func_array([$this->redis, 'sUnionStore'], $sets);
+        return (int)call_user_func_array([$this->adapter, 'sUnionStore'], $sets);
     }
 
     /**
@@ -266,8 +252,8 @@ class Set
      */
     public function inter(string ...$sets): array
     {
-        array_unshift($sets, $this->setName);
-        return (array)call_user_func_array([$this->redis, 'sInter'], $sets);
+        array_unshift($sets, $this->name);
+        return (array)call_user_func_array([$this->adapter, 'sInter'], $sets);
     }
 
     /**
@@ -291,9 +277,9 @@ class Set
     public function diffStore(string ...$sets): int
     {
         $output = array_shift($sets);
-        array_unshift($sets, $this->setName);
+        array_unshift($sets, $this->name);
         array_unshift($sets, $output);
-        return (int)call_user_func_array([$this->redis, 'sDiffStore'], $sets);
+        return (int)call_user_func_array([$this->adapter, 'sDiffStore'], $sets);
     }
 
     /**
@@ -318,9 +304,9 @@ class Set
     public function interStore(string ...$sets): int
     {
         $output = array_shift($sets);
-        array_unshift($sets, $this->setName);
+        array_unshift($sets, $this->name);
         array_unshift($sets, $output);
-        return (int)call_user_func_array([$this->redis, 'sInterStore'], $sets);
+        return (int)call_user_func_array([$this->adapter, 'sInterStore'], $sets);
     }
 
 }

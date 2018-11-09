@@ -14,7 +14,7 @@ use driphp\Component;
 /**
  * Class Route
  *
- * @method Route getInstance(...$params) static
+ * @method Route factory() static
  *
  * @method mixed get(string $url, $rule) static
  * @method mixed post(string $url, $rule) static

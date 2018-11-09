@@ -24,7 +24,7 @@ use driphp\throws\core\ModulesNotFoundException;
 
 /**
  * Class Dispatcher
- * @method Dispatcher getInstance(string $index = '') static
+ * @method Dispatcher factory() static
  * @package driphp\core
  */
 class Dispatcher extends Component

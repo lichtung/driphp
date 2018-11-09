@@ -4,8 +4,8 @@
 HOME_DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 ACTION=${1}
 
-ENV=${HOME_DIR}/env.yaml
-ENV_SAMPLE=${HOME_DIR}/tests/env.sample.yaml
+ENV=${HOME_DIR}/tests/env.yaml
+ENV_SAMPLE=${HOME_DIR}/env.sample.yaml
 PHPUNIT=${HOME_DIR}/vendor/bin/phpunit
 PHPDOC=${HOME_DIR}/vendor/bin/phpdoc
 

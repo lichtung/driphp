@@ -66,7 +66,7 @@ class Dispatcher extends Component
 
             }
         } else {
-            $request = Request::getInstance();
+            $request = Request::factory();
 
             $requestModules = $request->getModule();
             if (!is_dir($modulePath = DRI_PATH_PROJECT . 'controller/' . $requestModules))
@@ -118,7 +118,7 @@ class Dispatcher extends Component
         $mc = explode('\\', substr($controllerName, 11));#strlen('controller\\') == 10
 
         # 建立请求常量
-        Request::getInstance()->setController(array_pop($mc) ?? '')
+        Request::factory()->setController(array_pop($mc) ?? '')
             ->setModule($mc ? implode('/', $mc) : '')
             ->setAction($actionName);
 
@@ -126,7 +126,7 @@ class Dispatcher extends Component
             $args = [];
             /** @var \ReflectionParameter[] $methodParams */
             $methodParams = $method->getParameters();
-            isset($arguments) or $arguments = DRI_IS_CLI ? Request::getInstance()->getCommandArguments() : $_REQUEST;
+            isset($arguments) or $arguments = DRI_IS_CLI ? Request::factory()->getCommandArguments() : $_REQUEST;
             if ($methodParams) {
                 foreach ($methodParams as $param) {
                     $paramName = $param->getName();

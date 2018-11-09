@@ -469,11 +469,11 @@ namespace driphp {
         {
             if (!DRI_IS_CLI) {
                 self::status('start');
-                $request = Request::getInstance();
+                $request = Request::factory();
                 self::status('route');
-                $route = Route::getInstance()->parse($request);
+                $route = Route::factory()->parse($request);
                 self::status('dispatch');
-                Dispatcher::getInstance()->dispatch($route);
+                Dispatcher::factory()->dispatch($route);
                 self::status('end');
             }
         }

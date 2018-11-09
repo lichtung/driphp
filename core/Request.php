@@ -53,7 +53,7 @@ use tests\core\RequestTest;
  * 'SCRIPT_NAME' => '/index.php',
  * 'PATH_INFO' => '/index/index',
  * 'PHP_SELF' => '/index.php/index/index',
- * @method Request getInstance(...$params) static
+ * @method Request factory(array $config = []) static
  * @package driphp\core
  */
 class Request extends Component

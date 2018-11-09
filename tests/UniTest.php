@@ -14,6 +14,11 @@ use driphp\Kernel;
 use Symfony\Component\Yaml\Yaml;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class UniTest
+ * @method void assertTrue($condition, $message = '') static
+ * @package driphp\tests
+ */
 class UniTest extends TestCase
 {
 

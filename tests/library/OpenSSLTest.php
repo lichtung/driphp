@@ -10,7 +10,6 @@ namespace driphp\test\library;
 
 use driphp\core\Generator;
 use driphp\library\encrypt\OpenSSL;
-use driphp\library\RSA;
 use driphp\tests\UniTest;
 
 class OpenSSLTest extends UniTest

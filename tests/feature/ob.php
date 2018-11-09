@@ -8,7 +8,11 @@ declare(strict_types=1);
 
 
 echo 'OB level on start : ' . ob_get_level() . '<br>';
-
+/**
+ * @param string $str
+ * @param bool $obAuto
+ * @param bool $sobAuto
+ */
 function output(string $str, bool $obAuto = true, bool $sobAuto = true)
 {
     echo 'OB level on output : ' . ob_get_level() . '<br>';

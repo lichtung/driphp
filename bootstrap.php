@@ -314,31 +314,39 @@ namespace driphp {
         /**
          * 获取和设置配置项
          * @param string $key 配置项,多级配置项以点号分隔
-         * @param mixed|null $value 为null时表示获取配置值,否则标识获取配置值
-         * @return mixed|null
-         * @throws ConfigNotFoundException 访问的config不存在时抛出
+         * @return array|int|string|bool
          */
-        public function config(string $key, $value = null)
+        public function config(string $key = '')
         {
-            if (isset($value)) {
-                if (strpos($key, '.') !== false) {
-                    $config = &$this->config;
-                    foreach (explode('.', $key) as $k) {
-                        if ($k) {
-                            $config = &$config[$k];
-                        } else {
-                            throw new ConfigNotFoundException($key);
-                        }
-                    }
-                    $config = $value;
-                } else {
-                    $this->config[$key] = $value;
-                }
+            if (empty($key)) {
+                return $this->config;
             } else {
                 # 设置配置项
-                $value = $this->config[$key] ?? null;
+                return $this->config[$key] ?? null;
             }
-            return $value;
+        }
+
+        /**
+         * @param string $key
+         * @param $value
+         * @return bool 返回是否设置成功
+         */
+        public function setConfig(string $key, $value): bool
+        {
+            if (strpos($key, '.') !== false) {
+                $config = &$this->config;
+                foreach (explode('.', $key) as $k) {
+                    if ($k) {
+                        $config = &$config[$k];
+                    } else {
+                        return false;
+                    }
+                }
+                $config = $value;
+            } else {
+                $this->config[$key] = $value;
+            }
+            return true;
         }
 
         /**
@@ -381,7 +389,7 @@ namespace driphp {
          */
         public static function __callStatic(string $name, array $arguments)
         {
-            return call_user_func_array([static::getInstance(), $name], $arguments);
+            return call_user_func_array([static::factory(), $name], $arguments);
         }
     }
 

@@ -175,7 +175,7 @@ class Logger extends Component
     public static function getLogger(string $loggerName = 'default')
     {
         /** @var Logger $instance */
-        $instance = parent::getInstance();
+        $instance = parent::factory();
         $instance->setLoggerName($loggerName);
         return $instance;
     }

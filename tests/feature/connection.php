@@ -10,10 +10,10 @@
 
 namespace {
     $config = [
-        'name' => 'ad_basis',
-        'user' => 'ad_user',
-        'passwd' => 'SMptoXq47MwTRzHSD4kU',
-        'host' => '10.7.26.19',
+        'name' => 'test',
+        'user' => 'root',
+        'passwd' => '123456',
+        'host' => '127.0.0.1',
         'port' => 3306,
         'charset' => 'UTF8',
         'dsn' => null,

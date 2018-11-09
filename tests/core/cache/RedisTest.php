@@ -6,10 +6,9 @@
  */
 declare(strict_types=1);
 
+namespace driphp\tests\core\cache;
 
-namespace dripex\test\core\cache;
-
-use driphp\core\RedisManager;
+use driphp\core\cache\Redis;
 use driphp\tests\UniTest;
 use driphp\throws\core\RedisConnectException;
 
@@ -20,7 +19,7 @@ class RedisTest extends UniTest
         # 正确的连接
         $connectionException = false;
         try {
-            RedisManager::factory()->connect();
+            Redis::factory()->connect();
         } catch (RedisConnectException $exception) {
             $connectionException = true;
         }
@@ -29,9 +28,9 @@ class RedisTest extends UniTest
         # 修改成错误的密码,测试连接
         $connectionException = false;
         try {
-            $config = RedisManager::factory()->config();
+            $config = Redis::factory()->config();
             $config['password'] = '123456_is_wrong';
-            RedisManager::factory($config)->connect();
+            Redis::factory($config)->connect();
         } catch (RedisConnectException $exception) {
             $connectionException = true;
         }
@@ -39,12 +38,12 @@ class RedisTest extends UniTest
     }
 
     /**
-     * @return RedisManager
+     * @return Redis
      * @throws \driphp\throws\core\RedisException
      */
     public function testRedis()
     {
-        $redis = RedisManager::factory();
+        $redis = Redis::factory();
         # get a item which not exist in redis
         $this->assertTrue('__not_exist__' === $redis->get('not_exist', '__not_exist__'));
         $redis->set('key_exist', ['__key_exist__']);
@@ -83,11 +82,11 @@ class RedisTest extends UniTest
 
     /**
      * @depends testRedis
-     * @param RedisManager $redis
-     * @return RedisManager
+     * @param Redis $redis
+     * @return Redis
      * @throws
      */
-    public function testHash(RedisManager $redis)
+    public function testHash(Redis $redis)
     {
         $redis->delete('hash_demo');
         $hash = $redis->getHash('hash_demo');
@@ -154,11 +153,11 @@ class RedisTest extends UniTest
 
     /**
      * @depends testHash
-     * @param RedisManager $redis
-     * @return RedisManager
+     * @param Redis $redis
+     * @return Redis
      * @throws
      */
-    public function testTransaction(RedisManager $redis)
+    public function testTransaction(Redis $redis)
     {
         # rollback
         $redis->beginTransaction();
@@ -181,11 +180,11 @@ class RedisTest extends UniTest
 
     /**
      * @depends testTransaction
-     * @param RedisManager $redis
-     * @return RedisManager
+     * @param Redis $redis
+     * @return Redis
      * @throws
      */
-    public function testList(RedisManager $redis)
+    public function testList(Redis $redis)
     {
         $list = $redis->getList('demo_list');
         # basic : get set push length range
@@ -279,11 +278,11 @@ class RedisTest extends UniTest
 
     /**
      * @depends testList
-     * @param RedisManager $redis
+     * @param Redis $redis
      * @return void
      * @throws
      */
-    public function testSet(RedisManager $redis)
+    public function testSet(Redis $redis)
     {
         $set = $redis->getSet('demo_set');
 

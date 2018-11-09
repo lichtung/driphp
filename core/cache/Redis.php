@@ -1,51 +1,96 @@
 <?php
 /**
- * User: linzhv@qq.com
- * Date: 24/04/2018
- * Time: 14:52
+ * Created by Linzh.
+ * Email: linzhv@outlook.com
+ * Date: 2018/11/9
+ * Time: 17:00
  */
-declare(strict_types=1);
-
 
 namespace driphp\core\cache;
 
+
 use driphp\Component;
-use driphp\core\RedisManager;
-use driphp\DriverInterface;
-use driphp\throws\cache\RedisException;
+use driphp\core\cache\redis\Hash;
+use driphp\core\cache\redis\Lists;
+use driphp\core\cache\redis\Set;
+use driphp\throws\core\RedisConnectException;
+use driphp\throws\core\RedisException;
 
 /**
- * Class Redis
+ * Class Redis Redis操作管理起
+ * @method Redis factory(array $config = []) static
  * @package driphp\core\cache
  */
-class Redis extends Driver implements DriverInterface
+class Redis extends Component
 {
 
-    /**
-     * @var \Redis
-     */
-    protected $handler = null;
+    /** @var \Redis */
+    protected $adapter = null;
 
     protected $config = [
         'host' => '127.0.0.1',
-        'secret' => '',
         'password' => NULL,
         'port' => 6379,
         'timeout' => 7.0,
         'database' => 0
     ];
 
-    /**
-     * Redis constructor.
-     * @param array $config
-     * @param Component $context
-     */
-    public function __construct(array $config = [], Component $context = null)
+    protected function initialize()
     {
-        parent::__construct($config);
-        $this->handler = RedisManager::factory()->getAdapter();
     }
 
+
+    /**
+     * @throws RedisException
+     */
+    public function checkError()
+    {
+        $errMsg = $this->getAdapter()->getLastError(); # A string with the last returned script based error message, or NULL if there is no error
+        if (isset($errMsg)) {
+            $this->getAdapter()->clearLastError(); # Clear the last error message
+            throw new RedisException($errMsg);
+        }
+    }
+
+    /**
+     * @return $this
+     * @throws RedisConnectException
+     */
+    public function connect()
+    {
+        $this->getAdapter();
+        return $this;
+    }
+
+    /**
+     * @return \Redis
+     * @throws RedisConnectException
+     */
+    public function getAdapter(): \Redis
+    {
+        if (!$this->adapter) {
+            $this->adapter = new \Redis();
+            $host = $this->config['host'];
+            $port = $this->config['port'];
+            $timeout = $this->config['timeout'];
+            $password = $this->config['password'];
+            $database = $this->config['database'];
+            $error = '';
+            if (!$this->adapter->connect($host, ($host[0] === '/' ? 0 : $port), $timeout)) {
+                $error = "Host[{$host}:{$port}] connect failed ";
+            }
+            if ($password and !$this->adapter->auth($password)) {
+                $error = "Authorize[{$host}:{$port} $password] authentication failed ";
+            }
+            if ($database and !$this->adapter->select($database)) {
+                $error = "Database[{$host}:{$port}/$database] connect failed ";
+            }
+            if ($error) {
+                throw new RedisConnectException($error);
+            }
+        }
+        return $this->adapter;
+    }
 
     /**
      * @param string $key
@@ -57,43 +102,136 @@ class Redis extends Driver implements DriverInterface
     public function set(string $key, $value, int $ttl = 3600)
     {
         $data = serialize($value);
-        if ($ttl ? $this->handler->setex($key, $ttl, $data) : $this->handler->set($key, $data)) {
+        if ($ttl ? $this->getAdapter()->setex($key, $ttl, $data) : $this->getAdapter()->set($key, $data)) {
         } else {
-            $errMsg = $this->handler->getLastError(); # A string with the last returned script based error message, or NULL if there is no error
-            if (isset($errMsg)) {
-                $this->handler->clearLastError(); # Clear the last error message
-                throw new RedisException($errMsg);
-            }
+            $this->checkError();
         }
     }
 
+    /**
+     * @param string $key
+     * @param null $replace
+     * @return mixed
+     * @throws RedisException
+     */
     public function get(string $key, $replace = null)
     {
-        $data = $this->handler->get($key); # If key didn't exist, FALSE is returned. Otherwise, the value related to this key is returned.
+        $data = $this->getAdapter()->get($key); # If key didn't exist, FALSE is returned. Otherwise, the value related to this key is returned.
+        $this->checkError();
         return (false === $data) ? $replace : unserialize($data);
     }
 
     /**
      * @param string $key
      * @return bool
+     * @throws RedisConnectException
      */
-    public function has(string $key)
+    public function has(string $key): bool
     {
-        return false !== $this->handler->get($key);
+        return (bool)$this->getAdapter()->exists($key);
     }
 
+    /**
+     * @param string $key
+     * @throws RedisConnectException
+     */
     public function delete(string $key)
     {
-        $this->handler->delete($key); # Number of keys deleted.
+        $this->getAdapter()->delete($key); # Number of keys deleted.
     }
 
+    /**
+     * @deprecated 危险
+     * @return void
+     * @throws RedisConnectException
+     */
     public function clean()
     {
-        $this->handler->flushDB(); # Always return TRUE.
+        $this->getAdapter()->flushDB(); # Always return TRUE.
     }
 
+    /**
+     * @throws RedisConnectException
+     */
     public function __destruct()
     {
-        $this->handler and $this->handler->close();
+        $this->getAdapter() and $this->getAdapter()->close();
+    }
+
+
+    ################### transaction ####################
+
+    /**
+     * @return void
+     * @throws RedisConnectException
+     */
+    public function beginTransaction()
+    {
+        $this->getAdapter()->multi();
+    }
+
+    /**
+     * @return void
+     * @throws RedisConnectException
+     */
+    public function rollback()
+    {
+        $this->getAdapter()->discard();
+    }
+
+    /**
+     * @return void
+     * @throws RedisConnectException
+     */
+    public function commit()
+    {
+        $this->getAdapter()->exec();
+    }
+
+    ################### complex structure ####################
+
+    static $_instances = [];
+
+    public function getHash(string $name): Hash
+    {
+        if (!isset(self::$_instances[$name])) {
+            try {
+                self::$_instances[$name] = new Hash($name, $this);
+            } catch (RedisConnectException $exception) {
+            }
+        }
+        return self::$_instances[$name];
+    }
+
+    /**
+     * Redis List
+     * @param string $name
+     * @return Lists
+     */
+    public function getList(string $name): Lists
+    {
+        if (!isset(self::$_instances[$name])) {
+            try {
+                self::$_instances[$name] = new Lists($name, $this);
+            } catch (RedisConnectException $exception) {
+            }
+        }
+        return self::$_instances[$name];
+    }
+
+    /**
+     * 获取集合
+     * @param string $name
+     * @return Set
+     */
+    public function getSet(string $name): Set
+    {
+        if (!isset(self::$_instances[$name])) {
+            try {
+                self::$_instances[$name] = new Set($name, $this);
+            } catch (RedisConnectException $exception) {
+            }
+        }
+        return self::$_instances[$name];
     }
 }

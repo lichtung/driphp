@@ -6,13 +6,13 @@
  */
 declare(strict_types=1);
 
-namespace driphp\core\redis;
+namespace driphp\core\cache\redis;
 
 use driphp\throws\core\RedisException;
 
 /**
  * Class Set 集合
- * @package driphp\core\redis
+ * @package driphp\core\cache\redis
  */
 class Set extends Structure
 {

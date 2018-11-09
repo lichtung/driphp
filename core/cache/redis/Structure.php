@@ -6,26 +6,32 @@
  * Time: 17:17
  */
 
-namespace driphp\core\redis;
+namespace driphp\core\cache\redis;
 
-use driphp\core\RedisManager;
+use driphp\core\cache\Redis;
 
 /**
  * Class Structure 数据结构
- * @package driphp\core\redis
+ * @package driphp\core\cache\redis
  */
 abstract class Structure
 {
 
 
-    /** @var RedisManager */
+    /** @var Redis */
     protected $context;
     /** @var string */
     protected $name;
     /** @var \Redis */
     protected $adapter;
 
-    public function __construct(string $name, RedisManager $context)
+    /**
+     * Structure constructor.
+     * @param string $name
+     * @param Redis $context
+     * @throws \driphp\throws\core\RedisConnectException
+     */
+    public function __construct(string $name, Redis $context)
     {
         $this->name = $name;
         $this->context = $context;

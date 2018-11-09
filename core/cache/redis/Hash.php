@@ -7,13 +7,13 @@
 declare(strict_types=1);
 
 
-namespace driphp\core\redis;
+namespace driphp\core\cache\redis;
 
 use driphp\throws\core\RedisException;
 
 /**
  * Class Hash
- * @package driphp\core\redis
+ * @package driphp\core\cache\redis
  */
 class Hash extends Structure
 {

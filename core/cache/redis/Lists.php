@@ -7,14 +7,14 @@
 declare(strict_types=1);
 
 
-namespace driphp\core\redis;
+namespace driphp\core\cache\redis;
 
 use driphp\throws\core\RedisException;
 use Redis;
 
 /**
  * Class Lists
- * @package driphp\core\redis
+ * @package driphp\core\cache\redis
  */
 class Lists extends Structure
 {

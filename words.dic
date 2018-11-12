@@ -44,5 +44,5 @@ readdir
 imagettftext
 revalidate
 ttfs
-
+bytetokey
 

@@ -9,7 +9,7 @@
 namespace driphp\test\library;
 
 
-use driphp\core\Generator;
+use driphp\core\Chars;
 use driphp\Kernel;
 use driphp\library\client\Mongo;
 use driphp\library\client\mongo\NotFoundException;
@@ -59,7 +59,7 @@ class MongoTest extends UniTest
      */
     public function testInsert(Mongo $mongo)
     {
-        define('TEST_NAME', Generator::randomString(32));
+        define('TEST_NAME', Chars::random(32));
 
         # 测试插入返回oid
         $res = $mongo->insert([

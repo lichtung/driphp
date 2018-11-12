@@ -30,7 +30,7 @@ class Redirect extends Response
     public function __construct(string $url, int $time = 0, string $message = '')
     {
         if (strpos($url, 'http') !== 0) {
-            $url = Request::getInstance()->getPublicUrl() . str_replace(["\n", "\r"], ' ', $url);
+            $url = Request::factory()->getPublicUrl() . str_replace(["\n", "\r"], ' ', $url);
         }
         $message or $message = "Redirection after {$time} seconds'{$url}'！";
         if (headers_sent()) {

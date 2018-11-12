@@ -9,7 +9,7 @@
 namespace driphp\test\library;
 
 
-use driphp\core\Generator;
+use driphp\core\Chars;
 use driphp\library\encrypt\AES;
 use driphp\tests\UniTest;
 
@@ -30,7 +30,7 @@ class AESTest extends UniTest
         ]);
         $i = 0;
         while ($i++ <= 4097) { # 1-4096
-            $str = Generator::randomString($i);
+            $str = Chars::random($i);
             $enAes = $aes->encrypt($str);
             $enCam = $camellia->encrypt($str);
 

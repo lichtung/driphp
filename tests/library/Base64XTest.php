@@ -9,7 +9,7 @@
 namespace driphp\test\library;
 
 
-use driphp\core\Generator;
+use driphp\core\Chars;
 use driphp\library\encrypt\Base64X;
 use driphp\tests\UniTest;
 
@@ -21,7 +21,7 @@ class Base64XTest extends UniTest
 
         $i = 0;
         while ($i++ <= 4097) { # 1-4096
-            $str = Generator::randomString($i);
+            $str = Chars::random($i);
 
             $en = $base64x->encode($str);
             $de = $base64x->decode($en);

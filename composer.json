@@ -1,18 +1,19 @@
 {
   "name": "lichtung/driphp",
-  "description": "php framework of sharing",
+  "description": "php framework of lite",
   "type": "project",
   "license": "MIT",
   "authors": [
     {
-      "name": "linzh.mac",
-      "email": "linzongho@icloud.com"
+      "name": "linzh",
+      "email": "linzhv@outlook.com"
     }
   ],
   "require": {
     "php": ">=7.0.0",
     "symfony/yaml": "^3.2",
-    "doctrine/orm": "2.4.*"
+    "doctrine/orm": "2.4.*",
+    "elasticsearch/elasticsearch": "~6.0"
   },
   "autoload": {
     "psr-0": {

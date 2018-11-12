@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace driphp\test\library;
 
-use driphp\core\Generator;
+use driphp\core\Chars;
 use driphp\library\encrypt\OpenSSL;
 use driphp\tests\UniTest;
 
@@ -47,7 +47,7 @@ class OpenSSLTest extends UniTest
         ]);
         $i = 0;
         while ($i++ <= 4097) { # 1-4096
-            $str = Generator::randomString($i);
+            $str = Chars::random($i);
             $encryptStr = $openssl->encryptInPrivate($str, true);
             $decryptStr = $openssl->decryptInPublic($encryptStr, true);
             $this->assertTrue($str !== $encryptStr);
@@ -67,7 +67,7 @@ class OpenSSLTest extends UniTest
     {
         $i = 0;
         while ($i++ <= 4097) { # 1-4096
-            $str = Generator::randomString($i);
+            $str = Chars::random($i);
             $encryptStr = $openssl->encryptInPublic($str, true);
             $decryptStr = $openssl->decryptInPrivate($encryptStr, true);
             $this->assertTrue($str !== $encryptStr);

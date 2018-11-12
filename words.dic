@@ -35,13 +35,13 @@ PKCS
 passwd
 strpos
 zhonghuanglin
-
+mtime
 onload
 rmdir
 sprintf
 ADDR
-
-
+readdir
+imagettftext
 
 
 

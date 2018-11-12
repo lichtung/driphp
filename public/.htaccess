@@ -9,7 +9,8 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     # 这些后缀的文件，就直接访问文件，不进行Rewrite
     RewriteCond %{REQUEST_URI} !^.*(\.css|\.js|\.gif|\.png|\.jpg|\.jpeg)$
-    RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+#    RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+    RewriteRule ^ index.php [QSA,L]
 
 </IfModule>
 <Files *>

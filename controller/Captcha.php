@@ -12,14 +12,17 @@ namespace controller;
 class Captcha
 {
     /**
-     * @param string $id
      * @throws \driphp\library\captcha\CaptchaException
      */
-    public function flush($id = 'test')
+    public function flush()
     {
         $captcha = \driphp\library\Captcha::factory();
-        $captcha->flush(function ($code) {
+        echo $captcha->header()->generate(function ($code) {
             header("code: $code");
+            header('Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate');
+            header('Cache-Control: post-check=0, pre-check=0', false);
+            header('Pragma: no-cache');
+            header("content-type: image/png");
         });
     }
 }

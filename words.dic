@@ -42,7 +42,7 @@ sprintf
 ADDR
 readdir
 imagettftext
-
-
+revalidate
+ttfs
 
 

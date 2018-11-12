@@ -13,18 +13,15 @@ use driphp\Component;
 use driphp\library\captcha\CaptchaException;
 
 /**
- * Class Captcha
+ * Class Captcha 图形验证码生成类
  * @method Captcha factory(array $config = []) static
  * @package driphp\library
  */
 class Captcha extends Component
 {
     protected $config = [
-        'seKey' => 'ThinkPHP.CN',   // 验证码加密密钥
         'codeSet' => '2345678abcdefhijkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXY',             // 验证码字符集合
-        'expire' => 600,            // 验证码过期时间（s）
         'useZh' => false,           // 使用中文验证码
-        'zhSet' => '产的一是工就年阶义发成部民可出能方进在了不和有大这主中人上为来分生对于学下级地个用同行们以我到他会作时要动国',              // 中文验证码字符串
         'useImgBg' => false,           // 使用背景图片
         'fontSize' => 40,              // 验证码字体大小(px)
         'useCurve' => true,            // 是否画混淆曲线
@@ -33,8 +30,7 @@ class Captcha extends Component
         'imageW' => 300,               // 验证码图片宽度
         'length' => 4,               // 验证码位数
         'font' => '',              // 验证码字体，不设置随机获取
-        'bg' => array(243, 251, 254),  // 背景颜色
-        'reset' => true,           // 验证成功后是否重置
+        'backgroundColor' => array(243, 251, 254),  // 背景颜色
     ];
 
 
@@ -60,13 +56,26 @@ class Captcha extends Component
     }
 
     /**
+     * 设置输出到浏览器头部
+     * @return $this
+     */
+    public function header()
+    {
+        header('Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate');
+        header('Cache-Control: post-check=0, pre-check=0', false);
+        header('Pragma: no-cache');
+        header("content-type: image/png");
+        return $this;
+    }
+
+    /**
      * 输出验证码并把验证码的值保存的session中
      * @access public
-     * @param callable $handler 验证码生成后传到 $handler 中作为参数
-     * @return void
+     * @param callable $handler 验证码生成后传到 $handler 中作为参数,处理由用户自行设置
+     * @return string
      * @throws CaptchaException
      */
-    public function flush(callable $handler)
+    public function generate(callable $handler): string
     {
         $config = &$this->config;
         // 图片宽(px)
@@ -76,7 +85,8 @@ class Captcha extends Component
         // 建立一幅 $config['imageW'] x $config['imageH'] 的图像
         $this->image = imagecreate((int)$config['imageW'], (int)$config['imageH']);
         // 设置背景
-        imagecolorallocate($this->image, $config['bg'][0], $config['bg'][1], $config['bg'][2]);
+        $backgroundColor = $config['backgroundColor'];
+        imagecolorallocate($this->image, $backgroundColor[0], $backgroundColor[1], $backgroundColor[2]);
 
         // 验证码字体随机颜色
         $this->color = imagecolorallocate($this->image, mt_rand(1, 150), mt_rand(1, 150), mt_rand(1, 150));
@@ -144,15 +154,12 @@ class Captcha extends Component
 
         $handler(implode('', $code));
 
-        header('Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate');
-        header('Cache-Control: post-check=0, pre-check=0', false);
-        header('Pragma: no-cache');
-        header("content-type: image/png");
 
-        // 输出图像
+        ob_start();
         imagepng($this->image);
-        imagedestroy($this->image);
-        die;
+        $image_data = ob_get_contents();
+        ob_end_clean();
+        return $image_data;
     }
 
     /**

@@ -9,12 +9,15 @@
 namespace controller\manage;
 
 
+use driphp\core\Request;
 use driphp\core\response\View;
 
 class Index
 {
     public function index()
     {
-        return new View();
+        return new View([
+            'cdn' => Request::factory()->getPublicUrl(),
+        ]);
     }
 }

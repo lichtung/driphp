@@ -23,17 +23,17 @@ class View extends Response
 {
 
     /**
-     * @param array $vars An array of parameters to pass to the template
      * @param string $template The template name,default using the method name
+     * @param array $vars An array of parameters to pass to the template
      * @param string $theme template theme
      */
-    public function __construct(string $template = '', array $vars = [], string $theme = 'default')
+    public function __construct(array $vars = [], string $template = '', string $theme = 'default')
     {
         $request = Request::factory();
         $modules = $request->getModule();
         $controller = strtolower($request->getController());
         $template or $template = $request->getAction();
-        require_once __DIR__ . '/../../vendor/autoload.php';
+        require_once __DIR__ . '/../../vendor/autoload.php'; # 依赖于第三方
         try {
             # Loaders are responsible for loading templates from a resource such as the file system.
             # Twig_Loader_Filesystem loads templates from the file system.

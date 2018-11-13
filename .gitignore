@@ -13,4 +13,5 @@ rsa_public.key
 *.log
 
 # bower 安装目录
+public/develop.feature
 public/static/library

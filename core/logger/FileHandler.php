@@ -57,7 +57,7 @@ class FileHandler implements DriverInterface, LoggerInterface
             $title = '[CLI-MODE]';
         } else {
             $now = date('Y-m-d H:i:s');
-            $ip = Request::getInstance()->getClientIP();
+            $ip = Request::factory()->getClientIP();
             $title = "[{$now}] {$ip} {$_SERVER['REQUEST_URI']}";
         }
 

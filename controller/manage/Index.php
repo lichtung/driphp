@@ -9,10 +9,12 @@
 namespace controller\manage;
 
 
+use driphp\core\response\View;
+
 class Index
 {
     public function index()
     {
-        echo __METHOD__;
+        return new View();
     }
 }

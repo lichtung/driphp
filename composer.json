@@ -13,7 +13,9 @@
     "php": ">=7.0.0",
     "symfony/yaml": "^3.2",
     "doctrine/orm": "2.4.*",
-    "elasticsearch/elasticsearch": "~6.0"
+    "monolog/monolog": "^1.24",
+    "elasticsearch/elasticsearch": "~6.0",
+    "twig/twig": "^2.0"
   },
   "autoload": {
     "psr-0": {

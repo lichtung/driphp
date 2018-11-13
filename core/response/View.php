@@ -29,7 +29,7 @@ class View extends Response
      */
     public function __construct(string $template = '', array $vars = [], string $theme = 'default')
     {
-        $request = Request::getInstance();
+        $request = Request::factory();
         $modules = $request->getModule();
         $controller = strtolower($request->getController());
         $template or $template = $request->getAction();

@@ -89,7 +89,7 @@ trait Render
                     $content = file_get_contents($view);
                     $this->__parse_layout($content, $module, $theme);
 
-                    $request = Request::getInstance();
+                    $request = Request::factory();
                     $this->_template_constants['__PUBLIC__'] = $request->getPublicUrl();
                     $this->_template_constants['__HOST__'] = $request->getHostUrl();
 

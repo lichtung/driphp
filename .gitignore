@@ -11,3 +11,6 @@ private.key
 rsa_private.key
 rsa_public.key
 *.log
+
+# bower 安装目录
+public/static/library

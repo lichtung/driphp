@@ -8,6 +8,7 @@
 
 namespace driphp\library\client\es;
 
+use driphp\library\client\ElasticSearch;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\BadRequest400Exception;
 use Elasticsearch\Common\Exceptions\Missing404Exception;

@@ -1,7 +1,6 @@
 .idea
 .DS_Store
 composer.lock
-tests/env.yaml
 .buildpath
 .project
 .settings/
@@ -11,6 +10,8 @@ private.key
 rsa_private.key
 rsa_public.key
 *.log
+
+data/env.yaml
 
 # bower 安装目录
 public/develop.feature

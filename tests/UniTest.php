@@ -25,7 +25,7 @@ class UniTest extends TestCase
     public function __construct(string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $env = __DIR__ . '/../tests/env.yaml';
+        $env = __DIR__ . '/../data/env.yaml';
         if (!is_file($env)) {
             copy(__DIR__ . '/../env.sample.yaml', $env);
         }

@@ -16,7 +16,7 @@ namespace {
 
     # 加载配置环境测试
     if (class_exists(Yaml::class)) {
-        $env = __DIR__ . '/../tests/env.yaml';
+        $env = __DIR__ . '/../data/env.yaml';
         if (is_file($env)) {
             $config = Yaml::parse(file_get_contents($env));
         }

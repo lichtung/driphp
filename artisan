@@ -29,7 +29,11 @@ case ${ACTION} in
     "doc") # 输出文档
         ${PHPDOC}
     ;;
-
+    "install")
+        # 安装框架
+    bower install
+    composer install
+    ;;
     "rsa")
     rsa_private_key=${HOME_DIR}/runtime/rsa_private.key
     private_key=${HOME_DIR}/runtime/private.key

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace driphp\core\view;
 
+use driphp\Component;
 use driphp\core\Controller;
 use driphp\core\Request;
 use driphp\DripException;
@@ -75,7 +76,7 @@ trait Render
         try {
             $cache = null;
             if ('' === $template) {
-                $template = self::getPrevious();
+                $template = Component::getPrevious();
             }
             list($module, $controller) = self::fetchModuleAndControllerFromControllerName(get_class($context));
 
@@ -123,10 +124,5 @@ trait Render
         return [$_module, strtolower($_controller)];
     }
 
-    public static function getPrevious(string $item = 'function', int $place = 2): string
-    {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
-        return $trace[$place][$item] ?? '';
-    }
 
 }

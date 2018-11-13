@@ -391,6 +391,19 @@ namespace driphp {
         {
             return call_user_func_array([static::factory(), $name], $arguments);
         }
+
+        /**
+         * 获取前面操作的方法
+         * @param string $item
+         * @param int $place
+         * @return string
+         */
+        final public static function getPrevious(string $item = 'function', int $place = 2): string
+        {
+            $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+            return $trace[$place][$item] ?? '';
+        }
+
     }
 
     /**

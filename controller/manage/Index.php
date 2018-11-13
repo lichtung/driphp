@@ -9,6 +9,7 @@
 namespace controller\manage;
 
 
+use driphp\Component;
 use driphp\core\Request;
 use driphp\core\response\View;
 
@@ -16,8 +17,14 @@ class Index
 {
     public function index()
     {
+        return $this->render();
+    }
+
+    protected function render()
+    {
+        $method = Component::getPrevious();
         return new View([
             'cdn' => Request::factory()->getPublicUrl(),
-        ]);
+        ], $method);
     }
 }

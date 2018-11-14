@@ -13,7 +13,7 @@ use driphp\core\Request;
 use driphp\core\Response;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
-use driphp\DripException;
+use driphp\KernelException;
 
 /**
  * Class View
@@ -72,7 +72,7 @@ class View extends Response
 //            }
             $this->output = $twig->render($template . '.twig', $vars);
         } catch (\Throwable $e) {
-            DripException::dispose($e);
+            KernelException::dispose($e);
         }
     }
 

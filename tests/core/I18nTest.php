@@ -34,7 +34,7 @@ class I18nTest extends UniTest
     }
 
 //    /**
-//     * @throws \sharin\DripException
+//     * @throws \sharin\KernelException
 //     * @throws \driphp\throws\io\FileWriteException
 //     */
 //    public function testProjectDefine()

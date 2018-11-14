@@ -67,7 +67,7 @@ abstract class Driver extends PDO implements DriverInterface
                 ]
             );
         } catch (PDOException $e) {
-            throw new ConnectException($e->getMessage());
+            throw new ConnectException($e->getMessage(), $e->getCode());
         }
     }
 
@@ -108,4 +108,10 @@ abstract class Driver extends PDO implements DriverInterface
      * @return string
      */
     abstract public function buildDSN(array $config): string;
+
+    /**
+     * 显示所有得数据库
+     * @return array
+     */
+    abstract public function getDatabases(): array;
 }

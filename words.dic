@@ -57,7 +57,7 @@ imagecopyresampled
 debuild
 buildpath
 testsuite
-
+dbname
 
 
 

@@ -39,7 +39,7 @@ class I18n extends Component
 
     /**
      * @return Component|void
-     * @throws \driphp\DripException
+     * @throws \driphp\KernelException
      */
     protected function initialize()
     {
@@ -81,7 +81,7 @@ class I18n extends Component
 
     /**
      * @return array
-     * @throws \driphp\DripException
+     * @throws \driphp\KernelException
      */
     public function load(): array
     {

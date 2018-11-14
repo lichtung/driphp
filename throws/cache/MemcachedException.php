@@ -9,9 +9,9 @@
 namespace driphp\throws\cache;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class MemcachedException extends DripException
+class MemcachedException extends KernelException
 {
 
     public function __construct($message, $code = 0)

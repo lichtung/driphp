@@ -9,9 +9,9 @@
 namespace driphp\throws;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class DatabaseException extends DripException
+class DatabaseException extends KernelException
 {
     public function getExceptionCode(): int
     {

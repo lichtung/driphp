@@ -159,7 +159,7 @@ class DatatablesX
     /**
      * @return array
      * @throws \driphp\throws\ClassNotFoundException
-     * @throws \driphp\throws\NoDriverAvailableException
+     * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\QueryException
      */
@@ -241,7 +241,7 @@ class DatatablesX
     /**
      * @return false|string
      * @throws \driphp\throws\ClassNotFoundException
-     * @throws \driphp\throws\NoDriverAvailableException
+     * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\QueryException
      */

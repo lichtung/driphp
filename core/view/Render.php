@@ -12,7 +12,7 @@ namespace driphp\core\view;
 use driphp\Component;
 use driphp\core\Controller;
 use driphp\core\Request;
-use driphp\DripException;
+use driphp\KernelException;
 use driphp\throws\io\FileNotFoundException;
 
 /**
@@ -112,7 +112,7 @@ trait Render
             include $compile_view;
             echo ob_get_clean();
         } catch (\Throwable $throwable) {
-            DripException::dispose($throwable);
+            KernelException::dispose($throwable);
         }
     }
 

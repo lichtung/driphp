@@ -9,9 +9,9 @@
 namespace driphp\throws;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class CacheException extends DripException
+class CacheException extends KernelException
 {
 
     public function getExceptionCode(): int

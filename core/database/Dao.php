@@ -19,7 +19,7 @@ use driphp\throws\database\GeneralException;
 use driphp\throws\database\QueryException;
 use driphp\core\database\driver\Driver;
 use driphp\throws\ClassNotFoundException;
-use driphp\throws\NoDriverAvailableException;
+use driphp\throws\DriverNotFoundException;
 
 /**
  * Class Dao  数据库访问对象(Database Access Object)
@@ -28,6 +28,7 @@ use driphp\throws\NoDriverAvailableException;
  *
  * @method string escape($field)
  * @method string compile(array $components)
+ * @method array getDatabases()
  *
  *
  * MySQL不支持嵌套事物，在开启事务的情况下再次开启事务会自动提交上一次的事务
@@ -37,8 +38,7 @@ use driphp\throws\NoDriverAvailableException;
  *
  *
  * @method int lastInsertId($name = null) get auto-inc id of last insert record
- * @method Dao getInstance(array $config = []) static
- * @method Driver drive(string $index = 'default') throw ClassNotFoundException
+ * @method Dao factory(array $config = []) static
  * @package driphp\core
  */
 class Dao extends Component
@@ -49,15 +49,16 @@ class Dao extends Component
         'drivers' => [
             'default' => [
                 'name' => MySQL::class,
-                # CREATE SCHEMA `homestead` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
                 'config' => [
-                    'name' => '',
-                    'user' => '',
-                    'passwd' => '',
+                    # 数据源相关
+                    'name' => 'test',
                     'host' => '127.0.0.1',
                     'port' => 3306,
                     'charset' => 'UTF8',
-                    'dsn' => null,//默认先检查差DSN是否正确,直接写dsn而不设置其他的参数可以提高效率，也可以避免潜在的bug
+                    # 用户相关
+                    'user' => 'root',
+                    'passwd' => '123456',
+                    'dsn' => 'mysql:host=127.0.0.1;dbname=test;port=3306;charset=UTF8',//默认先检查差DSN是否正确,直接写dsn而不设置其他的参数可以提高效率，也可以避免潜在的bug
                 ],
             ],
         ],
@@ -67,6 +68,31 @@ class Dao extends Component
     {
     }
 
+    /**
+     * @param string $index
+     * @return Dao
+     * @throws ClassNotFoundException
+     * @throws DriverNotFoundException
+     * @throws ConnectException
+     */
+    public static function connect(string $index = 'default')
+    {
+        $dao = self::factory(['index' => $index]);
+        $dao->drive($index);
+        return $dao;
+    }
+
+    /**
+     * @param string $index
+     * @return \driphp\DriverInterface|Driver
+     * @throws ClassNotFoundException
+     * @throws DriverNotFoundException
+     * @throws ConnectException 数据库连接失败时抛出
+     */
+    public function drive(string $index = '')
+    {
+        return parent::drive($index);
+    }
 
     /**
      * @var PDOStatement current PDOStatement object
@@ -93,7 +119,7 @@ class Dao extends Component
      * @return array 返回array类型表述查询结果
      * @throws ClassNotFoundException
      * @throws ConnectException
-     * @throws NoDriverAvailableException
+     * @throws DriverNotFoundException
      * @throws QueryException
      */
     public function query(string $sql, array $params = null, bool $fetchAll = true): array
@@ -116,7 +142,7 @@ class Dao extends Component
                 }
             }
         } catch (PDOException $e) {
-            throw new QueryException($e);
+            throw new QueryException($e, (int)$e->getCode());
         }
     }
 
@@ -127,7 +153,7 @@ class Dao extends Component
      * @return int 返回受到影响的行数
      * @throws ExecuteException
      * @throws ConnectException
-     * @throws NoDriverAvailableException
+     * @throws DriverNotFoundException
      * @throws ClassNotFoundException
      */
     public function exec(string $sql, array $params = null): int
@@ -151,7 +177,7 @@ class Dao extends Component
                 }
             }
         } catch (PDOException $e) {
-            throw new ExecuteException($e);
+            throw new ExecuteException($e->getMessage(), (int)$e->getCode());
         }
     }
 
@@ -187,7 +213,7 @@ class Dao extends Component
      * 开启事务
      * @return bool
      * @throws GeneralException 服务事务关闭了自动提交并且嵌套开启了事务，抛出异常，警告"There is already an active transaction"
-     * @throws NoDriverAvailableException
+     * @throws DriverNotFoundException
      * @throws ClassNotFoundException
      * @throws ConnectException
      */

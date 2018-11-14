@@ -9,9 +9,9 @@
 namespace driphp\library\captcha;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class CaptchaException extends DripException
+class CaptchaException extends KernelException
 {
     public function getExceptionCode(): int
     {

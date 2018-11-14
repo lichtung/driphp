@@ -9,9 +9,9 @@
 namespace driphp\library\encrypt\openssl;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-abstract class OpenSSLException extends DripException
+abstract class OpenSSLException extends KernelException
 {
     public function getExceptionCode(): int
     {

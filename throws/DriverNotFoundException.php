@@ -9,13 +9,12 @@
 namespace driphp\throws;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class NoDriverAvailableException extends DripException
+class DriverNotFoundException extends KernelException
 {
     public function getExceptionCode(): int
     {
-
         return 1004;
     }
 

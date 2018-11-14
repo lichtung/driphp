@@ -10,7 +10,7 @@ namespace {
 
     use driphp\core\database\Dao;
     use driphp\service\Excel;
-    use driphp\DripException;
+    use driphp\KernelException;
 
     require __DIR__ . '/../boot.php';
 
@@ -159,6 +159,6 @@ where
 
 
     } catch (Throwable $throwable) {
-        DripException::dispose($throwable);
+        KernelException::dispose($throwable);
     }
 }

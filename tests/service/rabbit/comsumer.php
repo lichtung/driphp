@@ -12,7 +12,7 @@ namespace {
     use PhpAmqpLib\Message\AMQPMessage;
     use driphp\service\rabbit\OnReceiveInterface;
     use driphp\service\RabbitMQ;
-    use driphp\DripException;
+    use driphp\KernelException;
 
     require __DIR__ . '/../../boot.php';
 
@@ -36,7 +36,7 @@ namespace {
 
     try {
         RabbitMQ::getInstance()->queue('asder', true)->receive(new TestConsumer());
-    } catch (DripException $e) {
+    } catch (KernelException $e) {
         echo $e->getMessage();
     }
 }

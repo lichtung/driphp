@@ -202,7 +202,7 @@ class Logger extends Component
      * @throws MethodNotFoundException
      * @throws ParametersInvalidException
      * @throws \driphp\throws\ClassNotFoundException
-     * @throws \driphp\throws\NoDriverAvailableException
+     * @throws \driphp\throws\DriverNotFoundException
      */
     public function __call(string $level, array $arguments)
     {

@@ -12,7 +12,7 @@ namespace driphp\core\database\driver;
 use PDO;
 use driphp\Component;
 use driphp\core\database\Dao;
-use driphp\throws\core\database\ConnectException;
+use driphp\throws\database\ConnectException;
 
 /**
  * Class MySQL
@@ -20,11 +20,6 @@ use driphp\throws\core\database\ConnectException;
  */
 class MySQL extends Driver
 {
-
-    const ERROR_USER_PASSWD_INVALID = 1045; # 不能连接数据库，用户名或密码错误
-    const ERROR_DATABASE_NOT_FOUND = 1049;# 数据库不存在
-    const ERROR_TABLE_NOT_FOUND = 1146;# 数据表不存在
-    const ERROR_FIELD_NOT_FOUND = 1054;# 字段不存在
 
     protected $config = [
         'name' => '',
@@ -132,6 +127,21 @@ class MySQL extends Driver
             $info[$key] = current($val);
         }
         return $info;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDatabases(): array
+    {
+        $result = [];
+        $list = $this->query('show databases;')->fetchAll(self::FETCH_ASSOC);
+        foreach ($list as $item) {
+            if ($name = $item['Database'] ?? '') {
+                $result[] = $name;
+            }
+        }
+        return $result;
     }
 
     /**

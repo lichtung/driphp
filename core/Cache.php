@@ -89,7 +89,7 @@ class Cache extends Component
      * @param int $expire Closure返回值的缓存期
      * @return mixed
      * @throws \driphp\throws\ClassNotFoundException
-     * @throws \driphp\throws\NoDriverAvailableException
+     * @throws \driphp\throws\DriverNotFoundException
      */
     public function get(string $name, $replace = null, $expire = 3600)
     {

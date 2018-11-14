@@ -9,9 +9,9 @@
 namespace driphp\throws;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class ConfigInvalidException extends DripException
+class ConfigInvalidException extends KernelException
 {
 
     public function getExceptionCode(): int

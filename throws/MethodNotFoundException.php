@@ -9,9 +9,9 @@
 namespace driphp\throws;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class MethodNotFoundException extends DripException
+class MethodNotFoundException extends KernelException
 {
     public function getExceptionCode(): int
     {

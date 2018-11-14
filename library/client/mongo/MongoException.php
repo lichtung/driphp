@@ -9,9 +9,9 @@
 namespace driphp\library\client\mongo;
 
 
-use driphp\DripException;
+use driphp\KernelException;
 
-class MongoException extends DripException
+class MongoException extends KernelException
 {
     public function getExceptionCode(): int
     {

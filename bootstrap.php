@@ -91,7 +91,6 @@ namespace {
 
 namespace driphp {
 
-    use driphp\core\database\driver\Driver;
     use driphp\core\Dispatcher;
     use driphp\core\Logger;
     use driphp\core\Request;
@@ -100,21 +99,22 @@ namespace driphp {
     use driphp\throws\ClassNotFoundException;
     use driphp\throws\ConfigInvalidException;
     use driphp\throws\ConfigNotFoundException;
-    use driphp\throws\NoDriverAvailableException;
+    use driphp\throws\DriverNotFoundException;
     use driphp\throws\io\FileWriteException;
     use Throwable;
 
     /**
-     * Class DripException 内置异常
+     * Class KernelException 核心异常,区别于业务异常
      * @package driphp
      */
-    abstract class DripException extends \Exception
+    abstract class KernelException extends \Exception
     {
         /**
          * DriException constructor.
          * @param object|string|int|float $message
+         * @param int $code 错误代号,默认-1表示未知错误
          */
-        public function __construct($message)
+        public function __construct($message, int $code = -1)
         {
             if (!is_string($message)) { # 非字符串，先进行格式化
                 switch (gettype($message)) {
@@ -125,18 +125,12 @@ namespace driphp {
                         $message = (string)$message;
                 }
             }
-            parent::__construct($message, $this->getExceptionCode());
+            parent::__construct($message, $code);
         }
 
         /**
-         * 返回异常的错误代号,可用于隐藏错误信息的情况下断定异常类型
-         * @return int
-         */
-        abstract public function getExceptionCode(): int;
-
-        /**
          * @return void
-         * @throws \ReflectionException|DripException
+         * @throws \ReflectionException|KernelException
          */
         public static function throwing()
         {
@@ -245,9 +239,11 @@ namespace driphp {
         protected $driver = null;
 
         /**
-         * 获取实例
+         * 获取自身实例
+         * 根据传入得配置数组得不同得到不同得实例
          * @param array $config
          * @return Component
+         * @throws
          */
         final public static function factory(array $config = []): Component
         {
@@ -281,7 +277,7 @@ namespace driphp {
          * 获取驱动信息
          * @return array [驱动索引、驱动类、驱动配置]
          */
-        public function driveInfo(): array
+        final public function driveInfo(): array
         {
             return [$this->index, $this->driverName, $this->driverConfig];
         }
@@ -290,22 +286,20 @@ namespace driphp {
         /**
          * 获取驱动实例
          * @param string $index 驱动器角标
-         * @return Driver |object 返回驱动实例
-         * @throws NoDriverAvailableException 适配器未定义
+         * @return DriverInterface  返回驱动实例
+         * @throws DriverNotFoundException 适配器未定义
          * @throws ClassNotFoundException  适配器类不存在
          */
-        public function drive(string $index = ''): DriverInterface
+        public function drive(string $index = '')
         {
             $index and $this->index = $index;
             if (!isset($this->driver)) {
                 if (isset($this->config['drivers'][$this->index])) {
                     $this->driverName = $this->config['drivers'][$this->index]['name'];
                     $this->driverConfig = $this->config['drivers'][$this->index]['config'] ?? [];
-                    $this->driver = Kernel::factory($this->driverName, [
-                        $this->driverConfig, $this
-                    ]);
+                    $this->driver = Kernel::factory($this->driverName, [$this->driverConfig, $this]);
                 } else {
-                    throw new NoDriverAvailableException($this->index);
+                    throw new DriverNotFoundException("driver '{$this->index}' not found");
                 }
             }
             return $this->driver;
@@ -452,10 +446,10 @@ namespace driphp {
             false === ini_set('session.cache_expire', (string)$this->config['session.cache_expire']) and die('set session.cache_expire failed');
 
             set_error_handler(function (int $code, string $message, string $file, int $line) {
-                DripException::dispose(null, $code, $message, $file, $line);
+                KernelException::dispose(null, $code, $message, $file, $line);
             });
             set_exception_handler(function (Throwable $e) {
-                DripException::dispose($e);
+                KernelException::dispose($e);
             });
 
             Kernel::status('init_end');

@@ -49,7 +49,7 @@ class Doctrine extends Service
     /**
      * @throws GeneralException
      * @throws \driphp\throws\ClassNotFoundException
-     * @throws \driphp\throws\NoDriverAvailableException
+     * @throws \driphp\throws\DriverNotFoundException
      */
     protected function initialize()
     {
@@ -71,7 +71,7 @@ class Doctrine extends Service
      * @return Connection
      * @throws DBALException
      * @throws \driphp\throws\ClassNotFoundException
-     * @throws \driphp\throws\NoDriverAvailableException
+     * @throws \driphp\throws\DriverNotFoundException
      */
     public function getConnection(): Connection
     {

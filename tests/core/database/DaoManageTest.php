@@ -10,7 +10,7 @@ namespace tests\core\database;
 
 
 use driphp\core\database\Dao;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 use driphp\throws\database\ConnectException;
 use driphp\throws\database\ExecuteException;
 use driphp\throws\database\GeneralException;
@@ -20,7 +20,7 @@ use driphp\throws\database\QueryException;
  * Class DaoManageTest DAO数据操作测试
  * @package tests\core\database
  */
-class DaoManageTest extends UniTest
+class DaoManageTest extends UnitTest
 {
     /**
      * @throws ConnectException

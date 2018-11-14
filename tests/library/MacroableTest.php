@@ -9,7 +9,7 @@
 namespace driphp\test\library;
 
 use driphp\library\traits\Macroable;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
 
 /**
@@ -22,7 +22,7 @@ class Hello
     use Macroable;
 }
 
-class MacroableTest extends UniTest
+class MacroableTest extends UnitTest
 {
 
     public function testRun()

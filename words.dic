@@ -58,7 +58,7 @@ debuild
 buildpath
 testsuite
 dbname
-
+tablename
 
 
 

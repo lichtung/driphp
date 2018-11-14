@@ -10,9 +10,9 @@ namespace driphp\tests\service\symfony;
 
 
 use driphp\service\symfony\Yaml;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
-class YamlTest extends UniTest
+class YamlTest extends UnitTest
 {
 
     public function testDump()

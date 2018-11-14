@@ -11,9 +11,9 @@ namespace driphp\test\library;
 
 use driphp\core\Chars;
 use driphp\library\encrypt\AES;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
-class AESTest extends UniTest
+class AESTest extends UnitTest
 {
     /**
      * 两种加密方法同时加密解密

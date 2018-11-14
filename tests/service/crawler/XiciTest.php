@@ -12,7 +12,7 @@ namespace driphp\tests\service\crawler;
 use driphp\core\Cache;
 use driphp\library\NetTelnet;
 use driphp\service\crawler\XiciProxyCrawler;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 use Exception;
 
 class proxy
@@ -63,7 +63,7 @@ class proxy
     }
 }
 
-class XiciTest extends UniTest
+class XiciTest extends UnitTest
 {
     /**
      * @throws \driphp\throws\core\ClassNotFoundException

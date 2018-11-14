@@ -11,7 +11,7 @@ namespace driphp\test\database;
 
 
 use driphp\core\database\Dao;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
 /**
  * Class ModelTest
@@ -19,7 +19,7 @@ use driphp\tests\UniTest;
  * TODO
  * @package driphp\test\database
  */
-class ModelTest extends UniTest
+class ModelTest extends UnitTest
 {
     /**
      * @return void
@@ -27,7 +27,7 @@ class ModelTest extends UniTest
      */
     public function testSQLBuilder()
     {
-        $master = Dao::getInstance('master');
+        $master = Dao::factory('right');
         $user = UserModel::getInstance($master);
 
         # test fields

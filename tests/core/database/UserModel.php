@@ -11,6 +11,7 @@ namespace driphp\test\database;
 
 use driphp\core\database\Dao;
 use driphp\core\database\Model;
+use driphp\core\database\ORM;
 
 /**
  * Class UserModel
@@ -19,8 +20,17 @@ use driphp\core\database\Model;
  *
  * @package dripex\test\database
  */
-class UserModel extends Model
+class UserModel extends ORM
 {
+    public static function tablePrefix(): string
+    {
+        return 'test_';
+    }
+
+    public static function tableName(): string
+    {
+        return 'user';
+    }
 
     protected $primaryKey = 'id';
     protected $tableName = 'user';

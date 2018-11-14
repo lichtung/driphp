@@ -14,9 +14,9 @@ use driphp\Kernel;
 use driphp\library\client\Mongo;
 use driphp\library\client\mongo\NotFoundException;
 use driphp\library\client\mongo\IterateHandlerInterface;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
-class MongoTest extends UniTest
+class MongoTest extends UnitTest
 {
     /**
      * 测试获取实例

@@ -14,7 +14,7 @@ use driphp\service\ElasticSearch;
 use driphp\throws\service\elastic\ResourceAlreadyExistsSearchException;
 use driphp\throws\service\ElasticSearchException;
 
-class ElasticSearchTest extends UniTest
+class ElasticSearchTest extends UnitTest
 {
 
     public function testIndex()

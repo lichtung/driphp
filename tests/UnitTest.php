@@ -15,11 +15,11 @@ use Symfony\Component\Yaml\Yaml;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class UniTest
+ * Class UnitTest 单元测试类
  * @method void assertTrue($condition, $message = '') static
  * @package driphp\tests
  */
-class UniTest extends TestCase
+class UnitTest extends TestCase
 {
 
     public function __construct(string $name = null, array $data = [], string $dataName = '')

@@ -11,9 +11,9 @@ namespace driphp\test\library;
 
 use driphp\core\Chars;
 use driphp\library\encrypt\Base64X;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
-class Base64XTest extends UniTest
+class Base64XTest extends UnitTest
 {
     public function testRun()
     {

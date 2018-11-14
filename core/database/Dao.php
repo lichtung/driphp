@@ -29,6 +29,7 @@ use driphp\throws\DriverNotFoundException;
  * @method string escape($field)
  * @method string compile(array $components)
  * @method array getDatabases()
+ * @method array getTables(string $dbName = '')
  *
  *
  * MySQL不支持嵌套事物，在开启事务的情况下再次开启事务会自动提交上一次的事务

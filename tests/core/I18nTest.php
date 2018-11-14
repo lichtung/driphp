@@ -11,9 +11,9 @@ namespace driphp\tests\core;
 
 use driphp\core\I18n;
 use driphp\Kernel;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
-class I18nTest extends UniTest
+class I18nTest extends UnitTest
 {
     public function __construct(string $name = null, array $data = [], string $dataName = '')
     {

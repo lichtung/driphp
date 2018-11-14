@@ -10,9 +10,9 @@ namespace driphp\test\library;
 
 use driphp\core\Chars;
 use driphp\library\encrypt\OpenSSL;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 
-class OpenSSLTest extends UniTest
+class OpenSSLTest extends UnitTest
 {
 
     private $rsa_private_key;

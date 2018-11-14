@@ -120,7 +120,7 @@ class MySQL extends Driver
      */
     public function getTables(string $dbName = ''): array
     {
-        $sql = empty($dbName) ? 'SHOW TABLES ;' : "SHOW TABLES FROM {$dbName};";
+        $sql = empty($dbName) ? 'SHOW TABLES;' : "SHOW TABLES FROM {$dbName};";
         $result = $this->query($sql);
         $info = array();
         foreach ($result as $key => $val) {

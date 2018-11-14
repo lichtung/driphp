@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace driphp\tests\core\cache;
 
 use driphp\core\cache\Redis;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 use driphp\throws\core\RedisConnectException;
 
-class RedisTest extends UniTest
+class RedisTest extends UnitTest
 {
     public function testConnection()
     {

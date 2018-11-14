@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace tests\core\database;
 
 use driphp\core\database\Dao;
-use driphp\tests\UniTest;
+use driphp\tests\UnitTest;
 use driphp\throws\database\ConnectException;
 use driphp\throws\database\ExecuteException;
 use driphp\throws\DriverNotFoundException;
@@ -19,7 +19,7 @@ use driphp\throws\DriverNotFoundException;
  * Class DaoTest DAO基本测试
  * @package tests\core\database
  */
-class DaoTest extends UniTest
+class DaoTest extends UnitTest
 {
     /**
      * @throws ConnectException

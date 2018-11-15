@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace driphp\test\database;
 
 
-use driphp\core\database\Dao;
-use driphp\tests\core\database\orm\UserORM;
+use driphp\database\Dao;
+use driphp\tests\database\orm\UserORM;
 use driphp\tests\UnitTest;
 use driphp\throws\database\exec\DuplicateException;
 
@@ -29,12 +29,15 @@ class ORMTest extends UnitTest
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\ExecuteException
+     * @throws \driphp\throws\database\QueryException
      */
     public function testInstall()
     {
         $user = new UserORM(Dao::connect('right'));
         $user->uninstall();
+        $this->assertTrue($user->installed() === false);
         $user->install();
+        $this->assertTrue($user->installed() === true);
         $this->assertTrue(in_array($user->getTableName(), $user->dao()->getTables()));
     }
 
@@ -44,6 +47,7 @@ class ORMTest extends UnitTest
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\ExecuteException
+     * @throws \driphp\throws\database\NotFoundException
      * @throws \driphp\throws\database\QueryException
      */
     public function testInsertAndFind()
@@ -61,6 +65,9 @@ class ORMTest extends UnitTest
         $this->assertTrue(0 === intval($user1->id));
         $this->assertTrue(1 === intval($user2->id));
         $this->assertTrue(1 === intval($user3->id));
+
+        $this->assertTrue($user2->toArray() === $user3->toArray());
+        $this->assertTrue($user2->username === 'linzhv');
 
         $this->assertTrue($user1 !== $user2);
         $this->assertTrue($user2 !== $user3);
@@ -81,9 +88,9 @@ class ORMTest extends UnitTest
 //     * @return UserORM
 //     * @throws \driphp\throws\core\ClassNotFoundException
 //     * @throws \driphp\throws\core\DriverNotDefinedException
-//     * @throws \driphp\throws\core\database\ConnectException
-//     * @throws \driphp\throws\core\database\ExecuteException
-//     * @throws \driphp\throws\core\database\QueryException
+//     * @throws \driphp\throws\database\ConnectException
+//     * @throws \driphp\throws\database\ExecuteException
+//     * @throws \driphp\throws\database\QueryException
 //     */
 //    public function testGetInstanceAndInstall()
 //    {
@@ -168,10 +175,10 @@ class ORMTest extends UnitTest
 //     * @throws RecordNotFoundException
 //     * @throws \driphp\throws\core\ClassNotFoundException
 //     * @throws \driphp\throws\core\DriverNotDefinedException
-//     * @throws \driphp\throws\core\database\ConnectException
-//     * @throws \driphp\throws\core\database\ExecuteException
-//     * @throws \driphp\throws\core\database\QueryException
-//     * @throws \driphp\throws\core\database\RecordNotUniqueException
+//     * @throws \driphp\throws\database\ConnectException
+//     * @throws \driphp\throws\database\ExecuteException
+//     * @throws \driphp\throws\database\QueryException
+//     * @throws \driphp\throws\database\RecordNotUniqueException
 //     */
 //    public function testUpdate(UserORM $user)
 //    {

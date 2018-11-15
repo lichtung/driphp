@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 
-namespace driphp\tests\core\database\orm;
+namespace driphp\tests\database\orm;
 
-use driphp\core\database\ORM;
+use driphp\database\ORM;
 
 /**
  * Class UserORM 用户ORM测试

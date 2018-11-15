@@ -9,7 +9,7 @@
 namespace tests\core\database;
 
 
-use driphp\core\database\Dao;
+use driphp\database\Dao;
 use driphp\tests\UnitTest;
 use driphp\throws\database\ConnectException;
 use driphp\throws\database\ExecuteException;

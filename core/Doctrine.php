@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Setup;
-use driphp\core\database\Dao;
+use driphp\database\Dao;
 use driphp\throws\database\GeneralException;
 
 /**

@@ -9,7 +9,7 @@
 namespace driphp\library\extra;
 
 
-use driphp\core\database\Dao;
+use driphp\database\Dao;
 use driphp\throws\core\ParameterNotFoundException;
 
 class DatatablesX

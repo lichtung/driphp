@@ -7,16 +7,16 @@
 declare(strict_types=1);
 
 
-namespace driphp\core\database\driver;
+namespace driphp\database\driver;
 
 use PDO;
 use driphp\Component;
-use driphp\core\database\Dao;
+use driphp\database\Dao;
 use driphp\throws\database\ConnectException;
 
 /**
  * Class MySQL
- * @package driphp\core\database\driver
+ * @package driphp\database\driver
  */
 class MySQL extends Driver
 {

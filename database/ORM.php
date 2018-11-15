@@ -6,18 +6,21 @@
  * Time: 19:14
  */
 
-namespace driphp\core\database;
+namespace driphp\database;
 
-use driphp\core\database\builder\Query;
+use driphp\database\builder\Insert;
+use driphp\database\builder\Query;
+use driphp\database\builder\Structure;
 use driphp\throws\database\DataInvalidException;
 use driphp\throws\database\exec\DuplicateException;
 use driphp\throws\database\ExecuteException;
 use driphp\throws\database\FieldInvalidException;
 use driphp\throws\database\InsertException;
+use driphp\throws\database\NotFoundException;
 
 /**
  * Class ORM 内置对象关系映射 (Object Relational Mapping)
- * @package driphp\core\database
+ * @package driphp\database
  */
 abstract class ORM
 {
@@ -119,15 +122,32 @@ abstract class ORM
     }
 
     /**
-     * @return ORM[]
+     * @param array $where
+     * @param int $limit 数量限制,为0表示不限制
+     * @return ORM[] 返回ORM字典,键为记录ID，值为对应的ORM对象
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\QueryException
      */
-    public function select()
+    public function select(array $where, int $limit = 0)
     {
+        list($sql, $bind) = $this->query()->where($where)->limit($limit)->build();
+        $list = $this->dao()->query($sql, $bind);
+        $result = [];
+        foreach ($list as $item) {
+            $orm = new static($this->dao);
+            $orm->setData($item);
+            $result[$item['id']] = $orm;
+        }
+        return $result;
     }
 
     /**
+     * 查找一条数据会返回一个新的对象,带有插入数据的信息
      * @param int $id
      * @return ORM
+     * @throws NotFoundException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
@@ -135,18 +155,20 @@ abstract class ORM
      */
     public function find(int $id)
     {
-        list($sql, $bind) = $this->query()->where(['id' => $id])->limit(1)->build();
-        $data = $this->dao->query($sql, $bind);
-        $orm = new static($this->dao);
-        $orm->setData($data[0] ?? []);
-        return $orm;
+        $map = $this->select(['id' => $id], 1);
+        if (empty($map[$id])) {
+            throw new NotFoundException("ID '$id' not found in '{$this->tableName}'");
+        }
+        return $map[$id];
     }
 
     /**
+     * 插入数据后会返回一个新的对象,带有插入数据的信息
      * @param array $data
      * @return ORM
      * @throws DuplicateException
      * @throws ExecuteException
+     * @throws NotFoundException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
@@ -154,22 +176,9 @@ abstract class ORM
      */
     public function insert(array $data)
     {
-
-        # 默认赋值创建时间和修改时间
-        $data['created_at'] = $data['updated_at'] = (new \DateTime('now', new \DateTimeZone('Asia/Shanghai')))->format('Y-m-d H:i:s');
-
-        $fields = array_keys($data);
-        $values = array_values($data);
-
-        $_fields = '';
-        foreach ($fields as $field) {
-            $_fields .= $this->dao->escape($field) . ',';
-        }
-        $fields = rtrim($_fields, ',');
-        $holder = rtrim(str_repeat('?,', count($values)), ',');
-
+        list($sql, $bind) = (new Insert($this))->fields($data)->build();
         try {
-            if (1 === $this->dao->exec("INSERT INTO `{$this->tableName}` ( {$fields} ) VALUES ( {$holder} );", $values)) {
+            if (1 === $this->dao->exec($sql, $bind)) {
                 $lastInsertId = (int)$this->dao->lastInsertId();
                 return $this->find($lastInsertId);
             } else {
@@ -210,6 +219,7 @@ abstract class ORM
     }
 
     /**
+     * @return void
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
@@ -217,10 +227,20 @@ abstract class ORM
      */
     final public function install()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->tablePrefix()}{$this->tableName()}` ( 
-{$this->_buildStructure()} 
-) ENGINE={$this->tableStorageEngine()} DEFAULT CHARSET=utf8;";
-        $this->dao()->exec($sql);
+        list($sql, $bind) = (new Structure($this))->build();
+        $this->dao()->exec($sql, $bind);
+    }
+
+    /**
+     * @return bool
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function installed(): bool
+    {
+        return count($this->dao()->query('SHOW TABLES LIKE ?;', [$this->tableName])) === 1;
     }
 
     /**
@@ -232,101 +252,7 @@ abstract class ORM
      */
     final public function uninstall()
     {
-        $sql = "DROP TABLE IF EXISTS `{$this->tableName}`; ";
-        $this->dao()->exec($sql);
-    }
-
-    /**
-     * 创建结构
-     * @return string
-     */
-    private function _buildStructure()
-    {
-        $structure = '';
-        $indexKeys = [];
-        $uniqueKeys = [];
-        $tableStructure = $this->structure();
-        if ($tableStructure) {
-            isset($tableStructure['id']) or $tableStructure['id'] = [
-                'type' => 'int(10) unsigned',
-                'notnull' => true,
-                'autoinc' => true,
-                'comment' => '主键',
-            ];
-
-            isset($tableStructure['created_at']) or $tableStructure['created_at'] = [
-                'type' => 'datetime',
-                'notnull' => true,
-                'comment' => '记录添加时间',
-            ];
-            isset($tableStructure['updated_at']) or $tableStructure['updated_at'] = [
-                'type' => 'datetime',
-                'notnull' => true,
-                'comment' => '记录修改时间',
-            ];
-            isset($tableStructure['deleted_at']) or $tableStructure['deleted_at'] = [
-                'type' => 'datetime',
-                'notnull' => false,
-                'comment' => '记录软删除时间,为null时候表示已经删除',
-                'default' => null,
-            ];
-        }
-
-        foreach ($tableStructure as $name => $item) {
-            $type = $item['type'] ?? 'varchar(255)';
-            $notnull = empty($item['notnull']) ? '' : 'NOT NULL';
-            $autoinc = empty($item['autoinc']) ? '' : 'AUTO_INCREMENT';
-            $comment = empty($item['comment']) ? '' : "COMMENT '{$item['comment']}'";
-            if ($type === 'timestamp') {
-                $default = empty($item['default']) ? '' : "DEFAULT {$item['default']}";# timestamp格式 DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,无引号
-            } else {
-                $default = empty($item['default']) ? '' : "DEFAULT '{$item['default']}'";
-            }
-            $charset = empty($item['charset']) ? '' : "CHARACTER SET {$item['charset']}";
-
-            $structure .= " `$name` $type $charset $notnull $default $autoinc $comment ,\n";
-            empty($item['index']) or $indexKeys[] = $name;
-            empty($item['unique']) or $uniqueKeys[] = $name;
-        }
-        # Primary Key
-        if ($primaryKeys = $this->primaryKeys()) {
-            $pk = implode('`,`', $primaryKeys);
-        } else {
-            $pk = $this->primaryKey();
-        }
-        $structure .= " PRIMARY KEY (`{$pk}`),\n";
-        # 如果即是Index,又是UniqueIndex, 保留UniqueIndex
-        foreach ($indexKeys as $index => $indexKey) {
-            if (in_array($indexKey, $uniqueKeys)) {
-                unset($indexKeys[$index]);
-            }
-        }
-        # Index Key
-        if ($indexKeys) $structure .= $this->_buildKeys($indexKeys, 'KEY');
-        # Unique Key
-        if ($uniqueKeys) $structure .= $this->_buildKeys($uniqueKeys, 'UNIQUE KEY');
-        return rtrim($structure, ",\n");
-    }
-
-    /**
-     * @param array $keys
-     * @param string $type Index - 'KEY', UNIQUE - 'UNIQUE KEY'
-     * @return string
-     */
-    private function _buildKeys(array $keys, string $type = 'KEY'): string
-    {
-        $flags = []; # 避免同类键重复
-        $structure = '';
-        foreach ($keys as $item) {
-            if (is_array($item)) {
-                $item = implode('`,`', $item);
-            }
-            $id = sha1($this->tableName . $item . $type);
-            if (isset($flags[$id])) continue;
-            $structure .= " $type `$id` (`$item`),\n";
-            $flags[$id] = true;
-        }
-        return $structure;
+        $this->dao()->exec("DROP TABLE IF EXISTS `{$this->tableName}` ;");
     }
 
     /**

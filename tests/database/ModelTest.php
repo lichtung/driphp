@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace driphp\test\database;
 
 
-use driphp\core\database\Dao;
+use driphp\database\Dao;
 use driphp\tests\UnitTest;
 
 /**

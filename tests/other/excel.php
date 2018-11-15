@@ -8,7 +8,7 @@
 
 namespace {
 
-    use driphp\core\database\Dao;
+    use driphp\database\Dao;
     use driphp\service\Excel;
     use driphp\KernelException;
 

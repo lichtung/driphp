@@ -6,18 +6,18 @@
  */
 declare(strict_types=1);
 
-namespace driphp\core\database;
+namespace driphp\database;
 
 use PDO;
 use PDOStatement;
 use PDOException;
 use driphp\Component;
-use driphp\core\database\driver\MySQL;
+use driphp\database\driver\MySQL;
 use driphp\throws\database\ConnectException;
 use driphp\throws\database\ExecuteException;
 use driphp\throws\database\GeneralException;
 use driphp\throws\database\QueryException;
-use driphp\core\database\driver\Driver;
+use driphp\database\driver\Driver;
 use driphp\throws\ClassNotFoundException;
 use driphp\throws\DriverNotFoundException;
 
@@ -150,14 +150,14 @@ class Dao extends Component
     /**
      * 简单地执行Insert、Delete、Update操作
      * @param string $sql 待查询的SQL语句，如果未设置输入参数则需要保证SQL已经被转义
-     * @param array|null $params 输入参数,具体参考query方法的参数二
+     * @param array $params 输入参数,具体参考query方法的参数二
      * @return int 返回受到影响的行数
      * @throws ExecuteException
      * @throws ConnectException
      * @throws DriverNotFoundException
      * @throws ClassNotFoundException
      */
-    public function exec(string $sql, array $params = null): int
+    public function exec(string $sql, array $params = []): int
     {
         self::$_lastSql[] = $sql;
         self::$_lastParams[] = $params;

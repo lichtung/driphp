@@ -6,12 +6,14 @@
  * Time: 16:59
  */
 
-namespace driphp\core\database\builder;
+namespace driphp\database\builder;
 
+use driphp\database\ORM;
 
-use driphp\core\database\ORM;
-use driphp\throws\database\QueryException;
-
+/**
+ * Class Query 查询生成器
+ * @package driphp\database\builder
+ */
 class Query extends Builder
 {
 
@@ -19,34 +21,6 @@ class Query extends Builder
     {
         parent::__construct($context);
         $this->reset();
-    }
-
-    /**
-     *      $fields ==> array(
-     *          'fieldName' => 'fieldValue',
-     *      );
-     * format :
-     * - INSERT INTO [table_name] VALUES  (value11, value12 ,....),(value21, value22 ,....)
-     * - INSERT INTO table_name (column1, column2,...) VALUES (value11, value12 ,....),(value21, value22 ,....)
-     * @return $this
-     */
-    public function reset()
-    {
-        $this->builder = [
-            'distinct' => false,
-            'table' => $this->tableName,//操作的数据表名称
-            'alias' => '',
-            'fields' => [],# 操作字段，查询时如果为空数组则等效于"*"
-            /** @var array */
-            'join' => null,
-            'where' => null,//操作的where信息
-            'group' => '',
-            'order' => null,
-            'having' => null,
-            'limit' => 10,
-            'offset' => 0,
-        ];
-        return $this;
     }
 
     /**
@@ -58,18 +32,6 @@ class Query extends Builder
     {
         $this->builder['distinct'] = $distinct;
         return $this;
-    }
-
-    /**
-     * @param array $fields
-     * @throws QueryException
-     */
-    public function fields(array $fields)
-    {
-        $structure = $this->context->structure();
-        foreach ($fields as $index => $item) {
-            if (!isset($structure[$index])) throw new QueryException("fields '$index' not found in {$this->tableName}");
-        }
     }
 
     /**
@@ -139,16 +101,6 @@ class Query extends Builder
         return $this->join($join, 'LEFT OUTER');
     }
 
-    /**
-     * 设置where条件
-     * @param array $where
-     * @return $this
-     */
-    public function where(array $where)
-    {
-        $this->builder['where'] = $where;
-        return $this;
-    }
 
     public function build(): array
     {
@@ -161,11 +113,13 @@ class Query extends Builder
         } else {
             $fields = ' * ';
         }
-        if ($where = $this->builder['where'] ?? false) {
+        if (!empty($this->builder['where'])) {
             if (is_array($this->builder['where'])) {
                 list($where, $bind,) = $this->_parseWhere($this->builder['where']);
+                $where = "WHERE {$where}";
+            } else {
+                $where = '';
             }
-            $where = "WHERE {$where}";
         } else { # where 子句不能为空
             $where = '';
         }

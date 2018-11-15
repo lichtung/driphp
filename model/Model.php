@@ -9,7 +9,7 @@
 namespace driphp\model;
 
 
-use driphp\core\database\ORM;
+use driphp\database\ORM;
 
 class Model extends ORM
 {

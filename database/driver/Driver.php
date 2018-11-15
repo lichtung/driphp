@@ -7,12 +7,12 @@
 declare(strict_types=1);
 
 
-namespace driphp\core\database\driver;
+namespace driphp\database\driver;
 
 use PDO;
 use PDOException;
 use driphp\Component;
-use driphp\core\database\Dao;
+use driphp\database\Dao;
 use driphp\DriverInterface;
 use driphp\throws\database\ConnectException;
 
@@ -21,7 +21,7 @@ use driphp\throws\database\ConnectException;
  *
  *
  *
- * @package driphp\core\database\driver
+ * @package driphp\database\driver
  */
 abstract class Driver extends PDO implements DriverInterface
 {

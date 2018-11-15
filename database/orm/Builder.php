@@ -64,10 +64,27 @@ abstract class Builder
     }
 
     /**
+     * 解析where
+     * @param array $where
+     * @return array
+     */
+    protected function parseWhere(array $where): array
+    {
+        $_where = ' 1 ';
+        $bind = [];
+        foreach ($where as $index => $value) {
+            $_where .= "AND `$index` = ? ";
+            $bind[] = $value;
+        }
+        return [$_where, $bind];
+    }
+
+    /**
      * 创建SQL语句
+     * @param bool $reset 是否重置查询条件
      * @return array 返回SQL语句和输入绑定参数(防注入)
      */
-    abstract public function build(): array;
+    abstract public function build(bool $reset = true): array;
 
     /**
      * 重置查询/执行生成器
@@ -95,5 +112,11 @@ abstract class Builder
             'offset' => 0,
         ];
         return $this;
+    }
+
+
+    public function getLocalDatetime(): string
+    {
+        return (new \DateTime('now', new \DateTimeZone('Asia/Shanghai')))->format('Y-m-d H:i:s');
     }
 }

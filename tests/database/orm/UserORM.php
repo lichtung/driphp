@@ -14,13 +14,9 @@ use driphp\database\ORM;
 /**
  * Class UserORM 用户ORM测试
  *
- * @property int $id
  * @property string $username   账号
  * @property string $password   密码,默认为123456的md5+sha1加密后的值
  * @property string $email      电子邮件
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
  *
  * @package dripex\test\database
  */

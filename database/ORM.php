@@ -8,19 +8,23 @@
 
 namespace driphp\database;
 
-use driphp\database\builder\Insert;
-use driphp\database\builder\Query;
-use driphp\database\builder\Structure;
+use driphp\database\orm\Insert;
+use driphp\database\orm\Query;
+use driphp\database\orm\Structure;
+use driphp\database\orm\Update;
 use driphp\throws\database\DataInvalidException;
 use driphp\throws\database\exec\DuplicateException;
 use driphp\throws\database\ExecuteException;
 use driphp\throws\database\FieldInvalidException;
-use driphp\throws\database\InsertException;
 use driphp\throws\database\NotFoundException;
 
 /**
  * Class ORM 内置对象关系映射 (Object Relational Mapping)
- * @package driphp\database
+ * @property int $id
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
+ * @package driphp\core\database
  */
 abstract class ORM
 {
@@ -125,6 +129,7 @@ abstract class ORM
      * @param array $where
      * @param int $limit 数量限制,为0表示不限制
      * @return ORM[] 返回ORM字典,键为记录ID，值为对应的ORM对象
+     * @throws DataInvalidException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
@@ -132,21 +137,14 @@ abstract class ORM
      */
     public function select(array $where, int $limit = 0)
     {
-        list($sql, $bind) = $this->query()->where($where)->limit($limit)->build();
-        $list = $this->dao()->query($sql, $bind);
-        $result = [];
-        foreach ($list as $item) {
-            $orm = new static($this->dao);
-            $orm->setData($item);
-            $result[$item['id']] = $orm;
-        }
-        return $result;
+        return $this->query()->where($where)->limit($limit)->fetchAll();
     }
 
     /**
      * 查找一条数据会返回一个新的对象,带有插入数据的信息
      * @param int $id
      * @return ORM
+     * @throws DataInvalidException
      * @throws NotFoundException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
@@ -155,17 +153,14 @@ abstract class ORM
      */
     public function find(int $id)
     {
-        $map = $this->select(['id' => $id], 1);
-        if (empty($map[$id])) {
-            throw new NotFoundException("ID '$id' not found in '{$this->tableName}'");
-        }
-        return $map[$id];
+        return $this->query()->where(['id' => $id])->limit(1)->fetch();
     }
 
     /**
      * 插入数据后会返回一个新的对象,带有插入数据的信息
      * @param array $data
      * @return ORM
+     * @throws DataInvalidException
      * @throws DuplicateException
      * @throws ExecuteException
      * @throws NotFoundException
@@ -174,16 +169,12 @@ abstract class ORM
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\QueryException
      */
-    public function insert(array $data)
+    public function insert(array $data = [])
     {
-        list($sql, $bind) = (new Insert($this))->fields($data)->build();
+        if (empty($data)) $data = $this->newValues;
         try {
-            if (1 === $this->dao->exec($sql, $bind)) {
-                $lastInsertId = (int)$this->dao->lastInsertId();
-                return $this->find($lastInsertId);
-            } else {
-                throw new InsertException('Insert failed');
-            }
+            $lastInsertId = (new Insert($this))->fields($data)->exec();
+            return $this->find($lastInsertId);
         } catch (ExecuteException $exception) {
             $message = $exception->getMessage();
             if (false !== strpos($message, 'Integrity constraint violation')) {
@@ -194,10 +185,22 @@ abstract class ORM
     }
 
     /**
-     * @return ORM
+     * @param array $fields 更新字段字典
+     * @return int 更新影响条数
+     * @throws DataInvalidException
+     * @throws ExecuteException
+     * @throws NotFoundException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\QueryException
      */
-    public function update()
+    public function update(array $fields = []): int
     {
+        $fields or $fields = $this->newValues;
+        $count = (new Update($this))->where(['id' => 1])->fields($fields)->exec();
+        $count and $this->setData($this->find($this->id)->toArray());
+        return $count;
     }
 
     /**
@@ -215,7 +218,6 @@ abstract class ORM
      */
     public function hardDelete()
     {
-
     }
 
     /**
@@ -284,6 +286,7 @@ abstract class ORM
         return $this->data[$name] ?? null;
     }
 
+
     /**
      * @param string $name
      * @param $value
@@ -294,7 +297,45 @@ abstract class ORM
         if (!isset($this->structure()[$name])) {
             throw new FieldInvalidException("field '$name' not found in {$this->tableName}");
         }
-        $this->data[$name] = $value;
+        # 如果有数据则保存到 oldValues 中作为原先的值
+        if (isset($this->data[$name])) {
+            $this->oldValues[$name] = $this->data[$name];
+        }
+        $this->newValues[$name] = $this->data[$name] = $value;
+    }
+
+    /** @var array 修改或者插入的字段 */
+    private $newValues = [];
+    /** @var array 修改之前的数据 */
+    private $oldValues = [];
+
+    /**
+     * @return array
+     */
+    public function getNewValues(): array
+    {
+        return $this->newValues;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOldValues(): array
+    {
+        return $this->oldValues;
+    }
+
+    /**
+     * 重置修改,将旧的值替换回原来的位置
+     * @return $this
+     */
+    final public function reset()
+    {
+        foreach ($this->oldValues as $name => $value) {
+            $this->data[$name] = $value;
+        }
+        $this->oldValues = $this->newValues = [];
+        return $this;
     }
 
     /**

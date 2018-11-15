@@ -9,6 +9,8 @@
 namespace driphp\database\builder;
 
 use driphp\database\ORM;
+use driphp\throws\database\NotFoundException;
+use driphp\throws\database\QueryException;
 
 /**
  * Class Query 查询生成器
@@ -102,12 +104,16 @@ class Query extends Builder
     }
 
 
-    public function build(): array
+    public function build(bool $reset = true): array
     {
         if ($fields = $this->builder['fields']) {
             $_fields = '';
-            foreach ($fields as $field => $value) {
-                $_fields .= $this->dao->escape($field) . ',';
+            foreach ($fields as $field) { # 测试
+                if (stripos($field, ' as ') !== false) {
+                    $_fields .= $field . ','; # 如 "count(1) as cc"
+                } else {
+                    $_fields .= $this->dao->escape($field) . ',';
+                }
             }
             $fields = rtrim($_fields, ',');
         } else {
@@ -115,7 +121,7 @@ class Query extends Builder
         }
         if (!empty($this->builder['where'])) {
             if (is_array($this->builder['where'])) {
-                list($where, $bind,) = $this->_parseWhere($this->builder['where']);
+                list($where, $bind,) = $this->parseWhere($this->builder['where']);
                 $where = "WHERE {$where}";
             } else {
                 $where = '';
@@ -141,9 +147,71 @@ class Query extends Builder
             'limit' => $this->builder['limit'],
             'offset' => $this->builder['offset'],
         ]);
+        $reset and $this->reset();
         return [$sql, $bind ?? []];
     }
 
+    /**
+     * 获取数量
+     * @return int
+     * @throws QueryException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     */
+    public function count(): int
+    {
+        $this->builder['fields'] = ['count(1) as cc'];
+        list($sql, $bind) = $this->build(false);
+        $list = $this->dao->query($sql, $bind);
+        if (empty($list)) {
+            throw new QueryException('count empty');
+        }
+        return intval($list[0]['cc'] ?? 0);
+    }
+
+    /**
+     * @return mixed
+     * @throws NotFoundException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function fetch()
+    {
+        $where = $this->builder['where'];
+        $list = $this->fetchAll();
+        if (empty($list)) {
+            throw new NotFoundException($where);
+        }
+        return array_shift($list);
+    }
+
+    /**
+     * @return array
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function fetchAll()
+    {
+        list($sql, $bind) = $this->build();
+        $list = $this->dao->query($sql, $bind);
+        $result = [];
+        $className = get_class($this->context);
+        foreach ($list as $item) {
+            /** @var ORM $orm */
+            $orm = new $className($this->dao);
+            $orm->setData($item);
+            $result[$item['id']] = $orm;
+        }
+        return $result;
+
+    }
 
     public function whereOr()
     {
@@ -220,19 +288,4 @@ class Query extends Builder
         return $this;
     }
 
-    /**
-     * 解析where
-     * @param array $where
-     * @return array
-     */
-    private function _parseWhere(array $where): array
-    {
-        $_where = ' 1 ';
-        $bind = $raw = [];
-        foreach ($where as $index => $item) {
-            $_where .= "AND `$index` = ? ";
-            $raw[$item] = $bind[] = $item;
-        }
-        return [$_where, $bind, $raw];
-    }
 }

@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace driphp\test\database;
 
-
 use driphp\database\Dao;
 use driphp\tests\database\orm\UserORM;
 use driphp\tests\UnitTest;
@@ -17,8 +16,6 @@ use driphp\throws\database\exec\DuplicateException;
 
 /**
  * Class ORMTest
- *
- * TODO
  *
  * @package driphp\test\database
  */
@@ -46,6 +43,7 @@ class ORMTest extends UnitTest
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
      * @throws \driphp\throws\database\ExecuteException
      * @throws \driphp\throws\database\NotFoundException
      * @throws \driphp\throws\database\QueryException
@@ -59,6 +57,16 @@ class ORMTest extends UnitTest
             'username' => 'linzhv',
             'email' => 'linzhv@outlook.com',
         ]);
+        $this->assertTrue([] === $user1->toArray());
+        $user1->username = '784855684';
+        $user1->email = '784855684@qq.com';
+        # 新值会被设置 旧值仍然为空
+        $user4 = $user1->insert();
+        # 新值会被设置 旧值仍然为空
+        $this->assertTrue(['username' => '784855684', 'email' => '784855684@qq.com'] === $user1->getNewValues());
+        $this->assertTrue($user1->toArray() === $user1->getNewValues());
+        $this->assertTrue([] === $user1->getOldValues());
+
         /** @var UserORM $user3 */
         $user3 = $user1->find(1);
 
@@ -71,7 +79,9 @@ class ORMTest extends UnitTest
 
         $this->assertTrue($user1 !== $user2);
         $this->assertTrue($user2 !== $user3);
+        $this->assertTrue($user3 !== $user4);
         $this->assertTrue($user1 !== $user3);
+        $this->assertTrue($user1 !== $user4);
         # 插入重复数据抛出DuplicateException
         try {
             $user1->insert([
@@ -82,6 +92,57 @@ class ORMTest extends UnitTest
         } catch (DuplicateException $exception) {
             $this->assertTrue(true);
         }
+    }
+
+    /**
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function testSelectAndCount()
+    {
+        /** @var UserORM $user1 */
+        $user1 = new UserORM(Dao::connect('right'));
+
+        $this->assertTrue(2 === $user1->query()->count());
+        $this->assertTrue(1 === $user1->query()->where(['email' => 'linzhv@outlook.com'])->count());
+        $this->assertTrue(1 === $user1->query()->where(['email' => '784855684@qq.com'])->count());
+        $this->assertTrue(0 === $user1->query()->where(['email' => 'no-user@qq.com'])->count());
+
+        /** @var UserORM[] $list */
+        $list = $user1->query()->fetchAll();
+        $this->assertTrue(2 === count($list));
+        $outlook = array_shift($list);
+        $this->assertTrue('linzhv@outlook.com' === $outlook->email);
+        $qq = array_shift($list);
+        $this->assertTrue('784855684@qq.com' === $qq->email);
+    }
+
+    /**
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\ExecuteException
+     * @throws \driphp\throws\database\NotFoundException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function testUpdate()
+    {
+        /** @var UserORM $user1 */
+        $user1 = new UserORM(Dao::connect('right'));
+        /** @var UserORM $user2 */
+        $user2 = $user1->query()->where(['email' => 'linzhv@outlook.com'])->fetch();
+        $this->assertTrue('linzhv' === $user2->username);
+        $user2->username = 'linzh';
+        $this->assertTrue(['username' => 'linzh'] === $user2->getNewValues());
+        $this->assertTrue(['username' => 'linzhv'] === $user2->getOldValues());
+        $oldUpdatedAt = $user2->updated_at;
+        sleep(1);
+        $user2->update();
+        $this->assertTrue($user2->updated_at !== $oldUpdatedAt);
     }
 
 //    /**

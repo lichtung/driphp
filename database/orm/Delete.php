@@ -9,7 +9,11 @@
 namespace driphp\database\builder;
 
 
-class Delete
+class Delete extends Execute
 {
+    public function build(): array
+    {
+        // TODO: Implement build() method.
+    }
 
 }

@@ -11,7 +11,7 @@ namespace driphp\database\builder;
 
 class Structure extends Builder
 {
-    function build(): array
+    public function build(bool $reset = true): array
     {
         $sql = "CREATE TABLE IF NOT EXISTS `{$this->tableName}` ( 
 {$this->buildFields()} 

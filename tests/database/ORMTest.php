@@ -40,6 +40,37 @@ class ORMTest extends UnitTest
     }
 
     /**
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function testQueryBuilder()
+    {
+        $orm = new UserORM(Dao::connect('right'));
+        list($sql,) = $orm->query()->distinct(true)
+            ->fields(['username', 'email'])
+            ->alias('t')
+            ->join('{{tba}} on tba.k = t.v')
+            ->innerJoin('{{tbb}} on tbc.k = t.v')
+            ->leftJoin('{{tbc}} on tbc.k = t.v')
+            ->having('count(id) > 0')
+            ->where([
+                'username' => 'lzh',
+                'email' => 'linzhv@qq.com',
+            ])->limit(2)->offset(1)
+            ->group('username')
+            ->order('username desc')->build();
+//        dumpout($sql);
+        $this->assertTrue($this->compare($sql, 'SELECT DISTINCT `username`,`email` FROM test_user as t
+      JOIN test_tba on tba.k = t.v
+      INNER JOIN test_tbb on tbc.k = t.v
+      LEFT OUTER JOIN test_tbc on tbc.k = t.v
+      WHERE  deleted_at IS NULL  AND  `username` = ? AND `email` = ?
+      GROUP BY `username` HAVING count(id) > 0 ORDER BY `username` desc  LIMIT 1,2 ;'));
+    }
+
+    /**
      * @throws DuplicateException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
@@ -176,6 +207,15 @@ class ORMTest extends UnitTest
         $this->assertTrue($list[1]['deleted_at'] === null);
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\ExecuteException
+     * @throws \driphp\throws\database\QueryException
+     */
     public function testHardDelete()
     {
         /** @var UserORM $user1 */
@@ -192,129 +232,18 @@ class ORMTest extends UnitTest
         $this->assertTrue(1 === count($list));
         $this->assertTrue($list[0]['deleted_at'] !== null);
     }
-//    /**
-//     * @return UserORM
-//     * @throws \driphp\throws\core\ClassNotFoundException
-//     * @throws \driphp\throws\core\DriverNotDefinedException
-//     * @throws \driphp\throws\database\ConnectException
-//     * @throws \driphp\throws\database\ExecuteException
-//     * @throws \driphp\throws\database\QueryException
-//     */
-//    public function testGetInstanceAndInstall()
-//    {
-//        $master = Dao::getInstance('master');
-//        $user = UserORM::getInstance(0, $master);
-//        $user->uninstall();
-//        $this->assertFalse($user->installed());
-//        try {
-//            $user->install();
-//        } catch (DatabaseException $exception) {
-//            dumpout($user->getLastSql(), $exception->getMessage(), $exception->getCode());
-//        }
-//        $this->assertTrue($user->installed());
-//        return $user;
-//    }
-//
-//    /**
-//     * @depends testGetInstanceAndInstall
-//     * @param UserORM $user
-//     * @return UserORM
-//     * @throws
-//     */
-//    public function testInsert(UserORM $user)
-//    {
-//        $user->username = 'linzhv';
-//        $user->email = 'linzhv@qq.com';
-//        $this->assertTrue($user->insert(false));
-//        $this->assertEquals(
-//            'INSERT INTO `test_user` ( `username`,`email` ) VALUES ( ?,? );',
-//            $user->getLastSql());
-//        $this->assertArrayEqual(['linzhv', 'linzhv@qq.com'], $user->getLastParams());
-//
-//
-//        $user2 = UserORM::getInstance(0, $user->dao());
-//        $user2->username = 'linzhv2';
-//        $user2->email = 'linzhv2@qq.com';
-//        $this->assertTrue($user2->insert(true));
-//
-//        return $user;
-//    }
-//
-//    /**
-//     * @depends testInsert
-//     * @param UserORM $user
-//     * @return UserORM
-//     * @throws
-//     */
-//    public function testFind(UserORM $user)
-//    {
-//        # 刚插入的数据不会自动刷新
-//        $this->assertArrayEqual([
-//            'username' => 'linzhv',
-//            'email' => 'linzhv@qq.com',
-//        ], $user->data());
-//        # 没有强制刷新
-//        $this->assertArrayEqual([
-//            'username' => 'linzhv',
-//            'email' => 'linzhv@qq.com',
-//        ], $user->find()->data());
-//        # 强制刷新
-//        $this->assertTrue(count($user->find(true)->data()) > 2);
-//
-//
-//        $user = UserORM::getInstance(1234567, $user->dao());
-//        try {
-//            $user->find();
-//            $this->assertTrue(false);
-//        } catch (RecordNotFoundException $exception) {
-//            # id为1的记录是刚刚添加的
-//            $user = UserORM::getInstance(1, $user->dao());
-//            $user->find();
-//            $this->assertTrue('linzhv' === $user->username);
-//            $this->assertTrue('linzhv@qq.com' === $user->email);
-//        }
-//        return $user;
-//    }
-//
-//    /**
-//     * @depends testFind
-//     * @param UserORM $user
-//     * @return UserORM
-//     * @throws RecordNotFoundException
-//     * @throws \driphp\throws\core\ClassNotFoundException
-//     * @throws \driphp\throws\core\DriverNotDefinedException
-//     * @throws \driphp\throws\database\ConnectException
-//     * @throws \driphp\throws\database\ExecuteException
-//     * @throws \driphp\throws\database\QueryException
-//     * @throws \driphp\throws\database\RecordNotUniqueException
-//     */
-//    public function testUpdate(UserORM $user)
-//    {
-//        $user->username = 'lich4ung';
-//        $this->assertTrue($user->update());
-//        $user->find(false);
-//        $this->assertTrue('lich4ung' === $user->username);
-//        $user->find(true);
-//        $this->assertTrue('lich4ung' === $user->username);
-//        return $user;
-//    }
-//
-//    /**
-//     * @depends testUpdate
-//     * @param UserORM $user
-//     * @return UserORM
-//     * @throws
-//     */
-//    public function testDelete(UserORM $user)
-//    {
-//        $this->assertTrue($user->delete());
-//        $this->assertTrue(empty($user->data()));
-//        try {
-//            UserORM::getInstance(1, $user->dao())->find(true);
-//            $this->assertTrue(false);
-//        } catch (RecordNotFoundException $exception) {
-//            $this->assertTrue(true);
-//        }
-//        return $user;
-//    }
+
+    /**
+     * @param string $sql1
+     * @param string $sql2
+     * @return bool
+     */
+    private function compare(string $sql1, string $sql2)
+    {
+        $sql1 = str_replace(["\r", "\n", "\t", ' '], '', $sql1);
+        $sql2 = str_replace(["\r", "\n", "\t", ' '], '', $sql2);
+        if ($sql1 !== $sql2) var_dump("\n" . $sql1 . PHP_EOL . $sql2 . "\n");
+        return $sql1 === $sql2;
+    }
+
 }

@@ -45,7 +45,10 @@ abstract class Builder
     public function fields(array $fields)
     {
         $structure = $this->context->structure();
-        foreach ($fields as $index => $item) {
+        foreach ($fields as $index => $_) {
+            if (is_numeric($index)) {
+                $index = $_; # ->fields(['username', 'email']) 查询是是这样的结构
+            }
             if (in_array($index, ['created_at', 'updated_at', 'deleted_at'])) continue; # 这三个字段无法修改
             if (!isset($structure[$index])) throw new QueryException("fields '$index' not found in {$this->tableName}");
         }
@@ -71,13 +74,13 @@ abstract class Builder
      */
     protected function parseWhere(array $where): array
     {
-        $_where = ' 1 ';
+        $_where = '';
         $bind = [];
         foreach ($where as $index => $value) {
             $_where .= "AND `$index` = ? ";
             $bind[] = $value;
         }
-        return [$_where, $bind];
+        return [ltrim($_where, 'AND'), $bind];
     }
 
     /**

@@ -230,18 +230,19 @@ class Query extends Builder
     {
     }
 
-    public function orderBy(string... $fields)
+    public function order(string... $fields)
     {
         if ($fields) {
             $buffer = '';
             foreach ($fields as $field) {
                 $field = trim($field);
+                $direct = '';
                 if (strpos($field, ' ')) {
                     $field = explode(' ', $field);
-                    $buffer .= $this->dao->escape($field[0]) . ' ' . $field[1] . ',';
-                } else {
-                    $buffer .= $this->dao->escape($field) . ',';
+                    $direct = $field[1];
+                    $field = $field[0];
                 }
+                $buffer .= $this->dao->escape($field) . ' ' . $direct . ',';
             }
             $buffer = rtrim($buffer, ',');
             $this->builder['order'] = " ORDER BY {$buffer} ";
@@ -249,12 +250,17 @@ class Query extends Builder
         return $this;
     }
 
-    public function groupBy(string... $fields)
+    public function group(string... $fields)
     {
         if ($fields) {
             $buffer = '';
             foreach ($fields as $field) {
-                $buffer .= $this->dao->escape($field) . ',';
+                if (strpos($field, '.')) {
+                    $array = explode('.', $field);
+                    $buffer .= $array[0] . '.' . $this->dao->escape($array[1]) . ',';
+                } else {
+                    $buffer .= $this->dao->escape($field) . ',';
+                }
             }
             $buffer = rtrim($buffer, ',');
             $this->builder['group'] = " GROUP BY {$buffer} ";

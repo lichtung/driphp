@@ -6,14 +6,16 @@
  * Time: 10:50
  */
 
-namespace driphp\database\builder;
+namespace driphp\database\orm;
 
 
 class Delete extends Execute
 {
-    public function build(): array
+    public function build(bool $reset = true): array
     {
-        // TODO: Implement build() method.
+        list($where, $bind) = $this->parseWhere($this->builder['where']);
+        $sql = "DELETE FROM {$this->tableName} WHERE {$where} LIMIT 1;";
+        return [$sql, $bind];
     }
 
 }

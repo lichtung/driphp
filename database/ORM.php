@@ -8,6 +8,8 @@
 
 namespace driphp\database;
 
+use driphp\core\Kits;
+use driphp\database\orm\Delete;
 use driphp\database\orm\Insert;
 use driphp\database\orm\Query;
 use driphp\database\orm\Structure;
@@ -198,7 +200,7 @@ abstract class ORM
     public function update(array $fields = []): int
     {
         $fields or $fields = $this->newValues;
-        $count = (new Update($this))->where(['id' => 1])->fields($fields)->exec();
+        $count = (new Update($this))->where(['id' => $this->id])->fields($fields)->exec();
         $count and $this->setData($this->find($this->id)->toArray());
         return $count;
     }
@@ -206,18 +208,29 @@ abstract class ORM
     /**
      * 软删除一条数据
      * @return bool
+     * @throws DataInvalidException
+     * @throws ExecuteException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\QueryException
      */
-    public function delete()
+    public function delete(): bool
     {
-
+        return (new Update($this))->where(['id' => $this->id])->fields(['deleted_at' => Kits::getLocalDatetime()])->exec() > 0;
     }
 
     /**
-     * 硬删除
-     * @return void
+     * 硬删除一条数据
+     * @return bool
+     * @throws ExecuteException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
      */
-    public function hardDelete()
+    public function hardDelete(): bool
     {
+        return (new Delete($this))->where(['id' => $this->id])->exec() > 0;
     }
 
     /**

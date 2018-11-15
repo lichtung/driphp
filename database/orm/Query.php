@@ -6,7 +6,7 @@
  * Time: 16:59
  */
 
-namespace driphp\database\builder;
+namespace driphp\database\orm;
 
 use driphp\database\ORM;
 use driphp\throws\database\NotFoundException;
@@ -14,7 +14,7 @@ use driphp\throws\database\QueryException;
 
 /**
  * Class Query 查询生成器
- * @package driphp\database\builder
+ * @package driphp\database\orm
  */
 class Query extends Builder
 {
@@ -119,15 +119,12 @@ class Query extends Builder
         } else {
             $fields = ' * ';
         }
+        $where = ' WHERE deleted_at IS NULL ';
         if (!empty($this->builder['where'])) {
             if (is_array($this->builder['where'])) {
-                list($where, $bind,) = $this->parseWhere($this->builder['where']);
-                $where = "WHERE {$where}";
-            } else {
-                $where = '';
+                list($_where, $bind) = $this->parseWhere($this->builder['where']);
+                $where .= ' AND ' . $_where;
             }
-        } else { # where 子句不能为空
-            $where = '';
         }
         $tableName = $this->builder['table'] ?: $this->tableName;
         if ($this->builder['alias']) {

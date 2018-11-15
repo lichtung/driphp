@@ -6,7 +6,7 @@
  * Time: 10:34
  */
 
-namespace driphp\database\builder;
+namespace driphp\database\orm;
 
 
 class Structure extends Builder

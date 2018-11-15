@@ -6,13 +6,14 @@
  * Time: 10:41
  */
 
-namespace driphp\database\builder;
+namespace driphp\database\orm;
 
+use driphp\core\Kits;
 use driphp\throws\database\ExecuteException;
 
 /**
  * Class Insert 插入生成器
- * @package driphp\database\builder
+ * @package driphp\database\orm
  */
 class Insert extends Execute
 {
@@ -21,7 +22,7 @@ class Insert extends Execute
     {
         $data = $this->builder['fields'];
         # 默认赋值创建时间和修改时间
-        $data['created_at'] = $data['updated_at'] = $this->getLocalDatetime();
+        $data['created_at'] = $data['updated_at'] = Kits::getLocalDatetime();
 
         $fields = array_keys($data);
         $binds = array_values($data);
@@ -47,8 +48,7 @@ class Insert extends Execute
      */
     public function exec(): int
     {
-        list($sql, $bind) = $this->build();
-        if (1 !== $this->dao->exec($sql, $bind)) {
+        if (!parent::exec()) {
             throw new ExecuteException('insert failed');
         }
         return $this->dao->lastInsertId();

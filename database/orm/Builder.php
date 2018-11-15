@@ -6,7 +6,7 @@
  * Time: 16:59
  */
 
-namespace driphp\database\builder;
+namespace driphp\database\orm;
 
 use driphp\database\Dao;
 use driphp\database\ORM;
@@ -14,7 +14,7 @@ use driphp\throws\database\QueryException;
 
 /**
  * Class Builder 生成器
- * @package driphp\database\builder
+ * @package driphp\database\orm
  */
 abstract class Builder
 {
@@ -46,6 +46,7 @@ abstract class Builder
     {
         $structure = $this->context->structure();
         foreach ($fields as $index => $item) {
+            if (in_array($index, ['created_at', 'updated_at', 'deleted_at'])) continue; # 这三个字段无法修改
             if (!isset($structure[$index])) throw new QueryException("fields '$index' not found in {$this->tableName}");
         }
         $this->builder['fields'] = $fields;
@@ -114,9 +115,4 @@ abstract class Builder
         return $this;
     }
 
-
-    public function getLocalDatetime(): string
-    {
-        return (new \DateTime('now', new \DateTimeZone('Asia/Shanghai')))->format('Y-m-d H:i:s');
-    }
 }

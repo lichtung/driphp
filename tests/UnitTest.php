@@ -46,4 +46,15 @@ class UnitTest extends TestCase
         sort($array2);
         $this->assertTrue($array1 === $array2);
     }
+
+    protected function rightHere()
+    {
+        $this->assertTrue(true);
+    }
+
+    protected function wrongHere()
+    {
+        $this->assertTrue(false);
+    }
+
 }

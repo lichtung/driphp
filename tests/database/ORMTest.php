@@ -13,6 +13,7 @@ use driphp\database\Dao;
 use driphp\tests\database\orm\UserORM;
 use driphp\tests\UnitTest;
 use driphp\throws\database\exec\DuplicateException;
+use driphp\throws\database\NotFoundException;
 
 /**
  * Class ORMTest
@@ -143,8 +144,54 @@ class ORMTest extends UnitTest
         sleep(1);
         $user2->update();
         $this->assertTrue($user2->updated_at !== $oldUpdatedAt);
+        $this->assertTrue($user2->username === 'linzh');
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\ExecuteException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function testSoftDelete()
+    {
+        /** @var UserORM $user1 */
+        $user1 = new UserORM(Dao::connect('right'));
+
+        $user2 = $user1->find(1);
+        $this->assertTrue($user2->delete());
+        try {
+            $user1->find(1);
+            $this->wrongHere();
+        } catch (NotFoundException $exception) {
+            $this->rightHere();
+        }
+
+        $list = $user1->dao()->query("select * from {$user1->getTableName()} ;");
+        $this->assertTrue(2 === count($list));
+        $this->assertTrue($list[0]['deleted_at'] !== null);
+        $this->assertTrue($list[1]['deleted_at'] === null);
+    }
+
+    public function testHardDelete()
+    {
+        /** @var UserORM $user1 */
+        $user1 = new UserORM(Dao::connect('right'));
+        $user2 = $user1->find(2);
+        $this->assertTrue($user2->hardDelete());
+        try {
+            $user1->find(2);
+            $this->wrongHere();
+        } catch (NotFoundException $exception) {
+            $this->rightHere();
+        }
+        $list = $user1->dao()->query("select * from {$user1->getTableName()} ;");
+        $this->assertTrue(1 === count($list));
+        $this->assertTrue($list[0]['deleted_at'] !== null);
+    }
 //    /**
 //     * @return UserORM
 //     * @throws \driphp\throws\core\ClassNotFoundException

@@ -58,27 +58,54 @@ class ORMTest extends UnitTest
             ->having('count(id) > 0')
             ->where([
                 'username' => 'lzh',
+                'phone' => '15648265437',
+                'OR',
+                'nickname' => '重晃',
+                'OR',
                 [
+                    'username' => 'lzh',
                     'phone' => '15648265437',
+                    'OR',
+                    'nickname' => '重晃',
+                    'OR',
                     'age' => [
-                        'connector' => 'or',
-                        'operator' => 'in',
+                        'operator' => 'between',
                         'value' => [27, 28],
                     ],
+                    [# 再次嵌套
+                        'username' => 'lzh',
+                        'phone' => '15648265437',
+                        'OR',
+                        'nickname' => '重晃',
+                        'OR',
+                        'age' => [
+                            'operator' => 'between',
+                            'value' => [27, 28],
+                        ],
+                    ],
                 ]
-            ])->where(['email' => [
-                'connector' => 'OR',
-                'value' => 'linzhv@qq.com',
-            ]])->limit(2)->offset(1)
+            ])->where([
+                'OR',
+                'email' => [
+                    'operator' => 'notin',
+                    'value' => ['linzhv@qq.com', 'linzhv@qq.com', 'linzhv@qq.com'],
+                ],
+            ])->limit(2)->offset(1)
             ->group('username')
             ->order('username desc')->build();
-        dumpout($sql);
         $this->assertTrue($this->compare($sql, 'SELECT DISTINCT `username`,`email` FROM test_user as t
       JOIN test_tba on tba.k = t.v
       INNER JOIN test_tbb on tbc.k = t.v
       LEFT OUTER JOIN test_tbc on tbc.k = t.v
-      WHERE  deleted_at IS NULL  AND  `username` = ? AND ( `age` = ? AND `phone` = ? ) OR `email` = ? 
-      GROUP BY `username` HAVING count(id) > 0 ORDER BY `username` desc  LIMIT 1,2 ;'));
+      WHERE  deleted_at IS NULL  AND  `username` = ? AND `phone` = ? OR `nickname` = ? OR 
+      ( `username` = ? AND `phone` = ? OR `nickname` = ?  OR `age` BETWEEN ? AND ? 
+        AND ( `username` = ? AND `phone` = ? OR `nickname` = ?  OR `age` BETWEEN ? AND ? ) 
+      )
+      OR `email` NOT IN (?,?,?)
+      GROUP BY `username` 
+      HAVING count(id) > 0 
+      ORDER BY `username` desc  
+      LIMIT 1,2 ;'));
     }
 
     /**
@@ -253,7 +280,7 @@ class ORMTest extends UnitTest
     {
         $sql1 = str_replace(["\r", "\n", "\t", ' '], '', $sql1);
         $sql2 = str_replace(["\r", "\n", "\t", ' '], '', $sql2);
-        if ($sql1 !== $sql2) var_dump("\n" . $sql1 . PHP_EOL . $sql2 . "\n");
+        if ($sql1 !== $sql2) var_export("\n" . $sql1 . PHP_EOL . $sql2 . "\n");
         return $sql1 === $sql2;
     }
 

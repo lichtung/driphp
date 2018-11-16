@@ -69,6 +69,9 @@ abstract class Builder
         return $this;
     }
 
+
+    private $orFlag = false;
+
     /**
      * 解析where
      * 'field_name' => [
@@ -82,41 +85,57 @@ abstract class Builder
      */
     protected function parseWhere(array $where): array
     {
+        $this->orFlag = false;
         $_where = '';
         $bind = [];
         foreach ($where as $index => $value) {
-            if (is_array($value)) {
-                $connector = $value['connector'] ?? 'AND'; #
-                if (is_numeric($index)) {
-                    list($__where, $__bind) = $this->parseWhere($value);
-                    $_where .= "{$connector} ( {$__where} )";
-                    $bind = array_merge($bind, $__bind);
-                } else {
-                    $operator = strtoupper($value['operator'] ?? '=');
-                    switch ($operator) {
-                        case '=':
-                        case '!=':
-                        case 'LIKE':
-                            $_where .= "{$connector} `{$index}` {$operator} ? ";
-                            $bind[] = $value['value'];
-                            break;
-                        case 'BETWEEN':
-                            $_where .= "{$connector} `{$index}` {$operator} ? AND ? ";
-                            $bind = array_merge($bind, $value['value']); # 两个值丢到bind里面
-                            break;
-                        case 'IN':
-                        case 'NOTIN':
-                            $holder = rtrim(str_repeat(' ? ,', count($value['value'])), ',');
-                            $_where .= "{$connector} `{$index}` {$operator} ( {$holder} ) ";
-                            $bind = array_merge($bind, $value['value']); # 多个值丢到bind里面
-                            break;
-                        default:
-                            throw new GeneralException("invalid operator '$operator'");
-                    }
+            if (is_numeric($index) and is_string($value)) {
+                # 遇到一个值是'OR'
+                $value = strtoupper($value);
+                if ($value === 'OR') {
+                    $this->orFlag = true; # 遇到 or 设置flag
                 }
             } else {
-                $_where .= "AND `{$index}` = ? ";
-                $bind[] = $value;
+                if ($this->orFlag) {
+                    $connector = 'OR';
+                    $this->orFlag = false; # 用一次即废
+                } else {
+                    $connector = 'AND';
+                }
+
+                if (is_array($value)) {
+                    if (is_numeric($index)) {
+                        list($__where, $__bind) = $this->parseWhere($value);
+                        $_where .= "{$connector} ( {$__where} )";
+                        $bind = array_merge($bind, $__bind);
+                    } else {
+                        # operator 和 value 是有效的
+                        $operator = strtoupper($value['operator'] ?? '=');
+                        switch ($operator) {
+                            case '=':
+                            case '!=':
+                            case 'LIKE':
+                                $_where .= "{$connector} `{$index}` {$operator} ? ";
+                                $bind[] = $value['value'];
+                                break;
+                            case 'BETWEEN':
+                                $_where .= "{$connector} `{$index}` {$operator} ? AND ? ";
+                                $bind = array_merge($bind, $value['value']); # 两个值丢到bind里面
+                                break;
+                            case 'IN':
+                            case 'NOTIN':
+                                $holder = rtrim(str_repeat(' ? ,', count($value['value'])), ',');
+                                $_where .= "{$connector} `{$index}` {$operator} ( {$holder} ) ";
+                                $bind = array_merge($bind, $value['value']); # 多个值丢到bind里面
+                                break;
+                            default:
+                                throw new GeneralException("invalid operator '$operator'");
+                        }
+                    }
+                } else {
+                    $_where .= "{$connector} `{$index}` = ? ";
+                    $bind[] = $value;
+                }
             }
         }
         return [' ' . ltrim($_where, 'ANDOR'), $bind]; # and or 剔除

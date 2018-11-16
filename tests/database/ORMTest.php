@@ -49,7 +49,7 @@ class ORMTest extends UnitTest
     public function testQueryBuilder()
     {
         $orm = new UserORM(Dao::connect('right'));
-        list($sql,) = $orm->query()->distinct(true)
+        list($sql, $bind) = $orm->query()->distinct(true)
             ->fields(['username', 'email'])
             ->alias('t')
             ->join('{{tba}} on tba.k = t.v')
@@ -88,11 +88,15 @@ class ORMTest extends UnitTest
                 'OR',
                 'email' => [
                     'operator' => 'notin',
-                    'value' => ['linzhv@qq.com', 'linzhv@qq.com', 'linzhv@qq.com'],
+                    'value' => ['linzhv@qq.com', 'linzh@qq.com', 'lin@qq.com'],
                 ],
             ])->limit(2)->offset(1)
             ->group('username')
             ->order('username desc')->build();
+        $this->assertTrue($bind === [
+                'lzh', '15648265437', '重晃', 'lzh', '15648265437', '重晃', 27, 28, 'lzh', '15648265437',
+                '重晃', 27, 28, 'linzhv@qq.com', 'linzh@qq.com', 'lin@qq.com',
+            ]);
         $this->assertTrue($this->compare($sql, 'SELECT DISTINCT `username`,`email` FROM test_user as t
       JOIN test_tba on tba.k = t.v
       INNER JOIN test_tbb on tbc.k = t.v

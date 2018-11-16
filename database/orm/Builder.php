@@ -70,23 +70,6 @@ abstract class Builder
     }
 
     /**
-     * @param array $where
-     * @return Builder
-     */
-    public function whereOr(array $where)
-    {
-        foreach ($where as $key => $item) {
-            if (is_array($item)) {
-                # continue
-            } else {
-                $where["*{$key}"] = $item;
-                unset($where[$key]);
-            }
-        }
-        return $this->where($where);
-    }
-
-    /**
      * 解析where
      * 'field_name' => [
      *      'connector' => 'AND', # OR

@@ -103,7 +103,11 @@ class Query extends Builder
         return $this->join($join, 'LEFT OUTER');
     }
 
-
+    /**
+     * @param bool $reset
+     * @return array
+     * @throws \driphp\throws\database\GeneralException
+     */
     public function build(bool $reset = true): array
     {
         if ($fields = $this->builder['fields']) {
@@ -208,18 +212,6 @@ class Query extends Builder
         }
         return $result;
 
-    }
-
-    public function whereIn()
-    {
-    }
-
-    public function whereNotIn()
-    {
-    }
-
-    public function whereBetween()
-    {
     }
 
     public function order(string... $fields)

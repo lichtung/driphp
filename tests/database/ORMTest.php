@@ -43,6 +43,7 @@ class ORMTest extends UnitTest
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\GeneralException
      * @throws \driphp\throws\database\QueryException
      */
     public function testQueryBuilder()

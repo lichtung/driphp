@@ -210,14 +210,6 @@ class Query extends Builder
 
     }
 
-    public function whereOr()
-    {
-    }
-
-    public function whereAnd()
-    {
-    }
-
     public function whereIn()
     {
     }

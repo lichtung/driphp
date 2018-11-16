@@ -24,6 +24,4 @@ abstract class Execute extends Builder
         list($sql, $bind) = $this->build();
         return $this->dao->exec($sql, $bind);
     }
-
-
 }

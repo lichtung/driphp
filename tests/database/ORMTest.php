@@ -57,16 +57,26 @@ class ORMTest extends UnitTest
             ->having('count(id) > 0')
             ->where([
                 'username' => 'lzh',
-                'email' => 'linzhv@qq.com',
-            ])->limit(2)->offset(1)
+                [
+                    'phone' => '15648265437',
+                    'age' => [
+                        'connector' => 'or',
+                        'operator' => 'in',
+                        'value' => [27, 28],
+                    ],
+                ]
+            ])->where(['email' => [
+                'connector' => 'OR',
+                'value' => 'linzhv@qq.com',
+            ]])->limit(2)->offset(1)
             ->group('username')
             ->order('username desc')->build();
-//        dumpout($sql);
+        dumpout($sql);
         $this->assertTrue($this->compare($sql, 'SELECT DISTINCT `username`,`email` FROM test_user as t
       JOIN test_tba on tba.k = t.v
       INNER JOIN test_tbb on tbc.k = t.v
       LEFT OUTER JOIN test_tbc on tbc.k = t.v
-      WHERE  deleted_at IS NULL  AND  `username` = ? AND `email` = ?
+      WHERE  deleted_at IS NULL  AND  `username` = ? AND ( `age` = ? AND `phone` = ? ) OR `email` = ? 
       GROUP BY `username` HAVING count(id) > 0 ORDER BY `username` desc  LIMIT 1,2 ;'));
     }
 

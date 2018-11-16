@@ -59,8 +59,8 @@ buildpath
 testsuite
 dbname
 tablename
-
-
+ANDOR
+notin
 
 
 

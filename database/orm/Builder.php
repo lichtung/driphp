@@ -10,6 +10,7 @@ namespace driphp\database\orm;
 
 use driphp\database\Dao;
 use driphp\database\ORM;
+use driphp\throws\database\GeneralException;
 use driphp\throws\database\QueryException;
 
 /**
@@ -34,6 +35,7 @@ abstract class Builder
         $this->context = $context;
         $this->dao = $context->dao();
         $this->tableName = $this->context->tablePrefix() . $this->context->tableName();
+        $this->reset();
     }
 
 
@@ -47,7 +49,7 @@ abstract class Builder
         $structure = $this->context->structure();
         foreach ($fields as $index => $_) {
             if (is_numeric($index)) {
-                $index = $_; # ->fields(['username', 'email']) 查询是是这样的结构
+                $index = $_; # ->fields(['username', 'email']) 查询是是这样的结构(只有值没有键，用于筛选查询字段)
             }
             if (in_array($index, ['created_at', 'updated_at', 'deleted_at'])) continue; # 这三个字段无法修改
             if (!isset($structure[$index])) throw new QueryException("fields '$index' not found in {$this->tableName}");
@@ -63,24 +65,78 @@ abstract class Builder
      */
     public function where(array $where)
     {
-        $this->builder['where'] = $where;
+        $this->builder['where'] = array_merge($this->builder['where'], $where);
         return $this;
     }
 
     /**
+     * @param array $where
+     * @return Builder
+     */
+    public function whereOr(array $where)
+    {
+        foreach ($where as $key => $item) {
+            if (is_array($item)) {
+                # continue
+            } else {
+                $where["*{$key}"] = $item;
+                unset($where[$key]);
+            }
+        }
+        return $this->where($where);
+    }
+
+    /**
      * 解析where
+     * 'field_name' => [
+     *      'connector' => 'AND', # OR
+     *      'operator'  => '=', # != like between in notin
+     *      'value'     => '', # operator为between时为双值数组 in/notin 时为数组
+     * ]
      * @param array $where
      * @return array
+     * @throws GeneralException
      */
     protected function parseWhere(array $where): array
     {
         $_where = '';
         $bind = [];
         foreach ($where as $index => $value) {
-            $_where .= "AND `$index` = ? ";
-            $bind[] = $value;
+            if (is_array($value)) {
+                $connector = $value['connector'] ?? 'AND'; #
+                if (is_numeric($index)) {
+                    list($__where, $__bind) = $this->parseWhere($value);
+                    $_where .= "{$connector} ( {$__where} )";
+                    $bind = array_merge($bind, $__bind);
+                } else {
+                    $operator = strtoupper($value['operator'] ?? '=');
+                    switch ($operator) {
+                        case '=':
+                        case '!=':
+                        case 'LIKE':
+                            $_where .= "{$connector} `{$index}` {$operator} ? ";
+                            $bind[] = $value['value'];
+                            break;
+                        case 'BETWEEN':
+                            $_where .= "{$connector} `{$index}` {$operator} ? AND ? ";
+                            $bind = array_merge($bind, $value['value']); # 两个值丢到bind里面
+                            break;
+                        case 'IN':
+                        case 'NOTIN':
+                            $holder = rtrim(str_repeat(' ? ,', count($value['value'])), ',');
+                            $_where .= "{$connector} `{$index}` {$operator} ( {$holder} ) ";
+                            $bind = array_merge($bind, $value['value']); # 多个值丢到bind里面
+                            break;
+                        default:
+                            throw new GeneralException("invalid operator '$operator'");
+                    }
+                }
+            } else {
+                $_where .= "AND `{$index}` = ? ";
+                $bind[] = $value;
+            }
         }
-        return [ltrim($_where, 'AND'), $bind];
+        return [' ' . ltrim($_where, 'ANDOR'), $bind]; # and or 剔除
     }
 
     /**

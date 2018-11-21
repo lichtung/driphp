@@ -129,6 +129,15 @@ namespace driphp {
         }
 
         /**
+         * @return string
+         */
+        public function __toString(): string
+        {
+            return get_class($this) . ' ' . $this->getMessage();
+        }
+
+
+        /**
          * @return void
          * @throws \ReflectionException|KernelException
          */

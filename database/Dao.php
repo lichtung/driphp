@@ -255,5 +255,33 @@ class Dao extends Component
         }
     }
 
+    /**
+     * 显示数据表结构
+     * @param string $database
+     * @param string $table
+     * @return array 返回字段列表
+     * [
+     *  [
+     *      'Field' => 'id',
+     *      'Type' => 'int(10) unsigned',
+     *      'Null' => 'NO',
+     *      'Key' => 'PRI',
+     *      'Default' => NULL,
+     *      'Extra' => 'auto_increment',
+     *      'Privileges' => 'select,insert,update,references',
+     *      'Comment' => '自增ID',
+     *  ],...
+     * ]
+     * @throws ClassNotFoundException
+     * @throws ConnectException
+     * @throws DriverNotFoundException
+     * @throws QueryException
+     */
+    public function describe(string $table): array
+    {
+
+        $list = $this->query("SHOW FULL COLUMNS FROM {$table};"); # 显示的结构
+        return $list;
+    }
 
 }

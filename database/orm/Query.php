@@ -159,6 +159,7 @@ class Query extends Builder
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\GeneralException
      */
     public function count(): int
     {
@@ -174,11 +175,12 @@ class Query extends Builder
     /**
      * @return mixed
      * @throws NotFoundException
+     * @throws QueryException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\DataInvalidException
-     * @throws \driphp\throws\database\QueryException
+     * @throws \driphp\throws\database\GeneralException
      */
     public function fetch()
     {
@@ -192,11 +194,12 @@ class Query extends Builder
 
     /**
      * @return array
+     * @throws QueryException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\DataInvalidException
-     * @throws \driphp\throws\database\QueryException
+     * @throws \driphp\throws\database\GeneralException
      */
     public function fetchAll()
     {

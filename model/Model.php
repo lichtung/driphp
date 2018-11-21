@@ -11,7 +11,11 @@ namespace driphp\model;
 
 use driphp\database\ORM;
 
-class Model extends ORM
+abstract class Model extends ORM
 {
 
+    public function tablePrefix(): string
+    {
+        return 'drip_';
+    }
 }

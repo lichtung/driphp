@@ -244,6 +244,15 @@ abstract class ORM
     {
         list($sql, $bind) = (new Structure($this))->build();
         $this->dao()->exec($sql, $bind);
+        $this->onInstalled();
+    }
+
+    /**
+     * 安装时调起
+     * @return void
+     */
+    protected function onInstalled()
+    {
     }
 
     /**
@@ -358,6 +367,42 @@ abstract class ORM
     final public function __toString(): string
     {
         return json_encode($this->toArray());
+    }
+
+    /**
+     * @return string
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function generateDocumentDescription(): string
+    {
+        $list = $this->dao()->describe($this->tableName);
+        $properties = '';
+        $map = [
+            'char' => 'string', # char varchar
+            'test' => 'string', # char varchar
+            'datetime' => '\Datetime|string', # char datetime
+            'timestamp' => '\Datetime|string', # char datetime
+            'date' => 'string', # date
+            'int' => 'int', # int tinyint smallint
+        ];
+        foreach ($list as $item) {
+            $field = $item['Field'];
+            if (in_array($field, ['id', 'created_at', 'updated_at', 'deleted_at'])) continue;
+            $type = $item['Type'];
+            $t = 'mixed';
+            $comment = str_replace("\n", ' ', $item['Comment'] ?? '');
+            foreach ($map as $key => $val) {
+                if (false !== stripos($type, $key)) {
+                    $t = $val;
+                    break;
+                }
+            }
+            $properties .= " * @property {$t} \${$field} {$comment}\n";
+        }
+        return $properties;
     }
 
 }

@@ -63,7 +63,7 @@ class Structure extends Builder
             if ($type === 'timestamp') {
                 $default = empty($item['default']) ? '' : "DEFAULT {$item['default']}";# timestamp格式 DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,无引号
             } else {
-                $default = empty($item['default']) ? '' : "DEFAULT '{$item['default']}'";
+                $default = isset($item['default']) ? "DEFAULT '{$item['default']}'" : ''; # '' 则 default ''
             }
             $charset = empty($item['charset']) ? '' : "CHARACTER SET {$item['charset']}";
 

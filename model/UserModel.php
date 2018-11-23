@@ -9,6 +9,8 @@
 namespace driphp\model;
 
 use driphp\throws\project\PasswordException;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Class UserModel
@@ -74,15 +76,17 @@ class UserModel extends Model
 
     /**
      * 插入初始化数据
+     * @throws PasswordException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\DataInvalidException
      * @throws \driphp\throws\database\ExecuteException
+     * @throws \driphp\throws\database\GeneralException
      * @throws \driphp\throws\database\NotFoundException
      * @throws \driphp\throws\database\QueryException
+     * @throws \driphp\throws\database\ValidateException
      * @throws \driphp\throws\database\exec\DuplicateException
-     * @throws PasswordException
      */
     protected function onInstalled()
     {
@@ -112,5 +116,19 @@ class UserModel extends Model
         return md5($password);
     }
 
+    protected function validation(): array
+    {
+        return [
+            'username' => [
+                new Length(['min' => 4, 'max' => 64])
+            ],
+            'nickname' => [
+                new Length(['min' => 4, 'max' => 64])
+            ],
+            'email' => [
+                new Email(['message' => 'The email \'{{ value }}\' is not a valid email.',])
+            ],
+        ];
+    }
 
 }

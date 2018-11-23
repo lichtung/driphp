@@ -9,6 +9,8 @@
 namespace driphp\database\orm;
 
 
+use driphp\throws\database\DefinitionException;
+
 class Structure extends Builder
 {
     public function build(bool $reset = true): array
@@ -22,37 +24,20 @@ class Structure extends Builder
     /**
      * 创建结构
      * @return string
+     * @throws DefinitionException
      */
     private function buildFields()
     {
         $structure = '';
         $indexKeys = [];
         $uniqueKeys = [];
+        $foreignKeys = [];
         $tableStructure = $this->context->structure();
         if ($tableStructure) {
-            isset($tableStructure['id']) or $tableStructure['id'] = [
-                'type' => 'int(10) unsigned',
-                'notnull' => true,
-                'autoinc' => true,
-                'comment' => '主键',
-            ];
-
-            isset($tableStructure['created_at']) or $tableStructure['created_at'] = [
-                'type' => 'datetime',
-                'notnull' => true,
-                'comment' => '记录添加时间',
-            ];
-            isset($tableStructure['updated_at']) or $tableStructure['updated_at'] = [
-                'type' => 'datetime',
-                'notnull' => true,
-                'comment' => '记录修改时间',
-            ];
-            isset($tableStructure['deleted_at']) or $tableStructure['deleted_at'] = [
-                'type' => 'datetime',
-                'notnull' => false,
-                'comment' => '记录软删除时间,为null时候表示已经删除',
-                'default' => null,
-            ];
+            # 添加默认字段
+            foreach ($this->context->definedFields() as $k => $v) {
+                isset($tableStructure[$k]) or $tableStructure[$k] = $v;
+            }
         }
 
         foreach ($tableStructure as $name => $item) {
@@ -70,6 +55,10 @@ class Structure extends Builder
             $structure .= " `$name` $type $charset $notnull $default $autoinc $comment ,\n";
             empty($item['index']) or $indexKeys[] = $name;
             empty($item['unique']) or $uniqueKeys[] = $name;
+            if (!empty($item['foreign'])) {
+                $item['foreign']['_field'] = $name;
+                $foreignKeys[] = $item['foreign'];
+            }
         }
         # Primary Key
         if ($primaryKeys = $this->context->primaryKeys()) {
@@ -88,6 +77,8 @@ class Structure extends Builder
         if ($indexKeys) $structure .= $this->_buildKeys($indexKeys, 'KEY');
         # Unique Key
         if ($uniqueKeys) $structure .= $this->_buildKeys($uniqueKeys, 'UNIQUE KEY');
+        # foreign Key
+        if ($foreignKeys) $structure .= $this->_buildForeignKeys($foreignKeys);
         return rtrim($structure, ",\n");
     }
 
@@ -108,6 +99,33 @@ class Structure extends Builder
             if (isset($flags[$id])) continue;
             $structure .= " $type `$id` (`$item`),\n";
             $flags[$id] = true;
+        }
+        return $structure;
+    }
+
+    /**
+     * MySQL上restrict同no action @see https://stackoverflow.com/questions/5809954/mysql-restrict-and-no-action
+     * @param array $foreignKeys
+     * @return string
+     * @throws DefinitionException
+     */
+    private function _buildForeignKeys(array $foreignKeys)
+    {
+        $structure = '';
+        foreach ($foreignKeys as $foreignKey) {
+            $table = $foreignKey['table'] ?? '';
+            $field = $foreignKey['field'] ?? '';
+            if (empty($table)) {
+                throw new DefinitionException('foreign key require table name');
+            }
+            if (empty($field)) {
+                throw new DefinitionException('foreign key require target field ');
+            }
+            $prefix = $foreignKey['prefix'] ?? $this->context->tablePrefix(); # 前缀默认去当前表的前缀
+            $ondelete = $foreignKey['ondelete'] ?? 'CASCADE'; # 默认级联，在父表上update/delete记录时，同步update/delete掉子表的匹配记录
+            $onupdate = $foreignKey['onupdate'] ?? 'RESTRICT'; # 如果子表中有匹配的记录,则不允许对父表对应候选键进行update/delete操作
+            $key = md5(serialize($foreignKey));
+            $structure .= "CONSTRAINT `{$key}` FOREIGN KEY (`{$foreignKey['_field']}`) REFERENCES `{$prefix}{$table}` (`{$field}`) ON DELETE {$ondelete} ON UPDATE {$onupdate},\n";
         }
         return $structure;
     }

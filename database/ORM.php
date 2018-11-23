@@ -19,17 +19,28 @@ use driphp\throws\database\exec\DuplicateException;
 use driphp\throws\database\ExecuteException;
 use driphp\throws\database\FieldInvalidException;
 use driphp\throws\database\NotFoundException;
+use driphp\throws\database\ValidateException;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Class ORM 内置对象关系映射 (Object Relational Mapping)
- * @property int $id
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
+ * @property int $id 主键ID
+ * @property string $created_at 创建时间，无法手动设置
+ * @property string $updated_at 修改时间，无法手动设置
+ * @property string $deleted_at 删除时间，为null时表示未删除，调用delete
  * @package driphp\core\database
  */
 abstract class ORM
 {
+    /**
+     * 返回数据库名称
+     * @return string
+     */
+    public function databaseName(): string
+    {
+        return '';
+    }
+
     /**
      * 数据表前缀
      * @return string
@@ -55,7 +66,7 @@ abstract class ORM
      * 主键
      * @return string
      */
-    public function primaryKey()
+    public function primaryKey(): string
     {
         return 'id';
     }
@@ -81,12 +92,50 @@ abstract class ORM
      *          index   boolean     表示是否设置索引,可以加快查询,排序操作,但是会影响修改的速度  @see https://www.cnblogs.com/whgk/p/6179612.html
      *          unique  boolean     表示是否是唯一索引
      *          default string      默认值,如timestamp可以是'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+     *          foreign array       表示外键
+     *                  table       string  参考表名称，不含前缀
+     *                  field       string  参考字段，不能为空
+     *                  prefix      string  参考表的前缀
+     *                  ondelete    string  父表删除时子表（本表）对应的操作,默认为 CASCADE
+     *                  onupdate    string  父表修改时子表（本表）对应的操作,默认为 RESTRICT
      *
      *  系统会预定于一些字段,如 id(自增主键),created_at(记录添加时间),updated_at(记录修改时间),deleted_at(记录软删除时间)
      *  用户自定义的同名字段会覆盖这些预定义的配置
      * @return array
      */
     abstract public function structure(): array;
+
+    /**
+     * 默认字段
+     * @return array
+     */
+    public function definedFields(): array
+    {
+        return [
+            'id' => [
+                'type' => 'int(10) unsigned',
+                'notnull' => true,
+                'autoinc' => true,
+                'comment' => '主键',
+            ],
+            'created_at' => [
+                'type' => 'datetime',
+                'notnull' => true,
+                'comment' => '记录添加时间',
+            ],
+            'updated_at' => [
+                'type' => 'datetime',
+                'notnull' => true,
+                'comment' => '记录修改时间',
+            ],
+            'deleted_at' => [
+                'type' => 'datetime',
+                'notnull' => false,
+                'comment' => '记录软删除时间,为null时候表示已经删除',
+                'default' => null,
+            ],
+        ];
+    }
 
     /** @var Dao */
     private $dao;
@@ -136,6 +185,7 @@ abstract class ORM
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\QueryException
+     * @throws \driphp\throws\database\GeneralException
      */
     public function select(array $where, int $limit = 0)
     {
@@ -151,6 +201,7 @@ abstract class ORM
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\GeneralException
      * @throws \driphp\throws\database\QueryException
      */
     public function find(int $id)
@@ -170,11 +221,14 @@ abstract class ORM
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\QueryException
+     * @throws \driphp\throws\database\GeneralException
+     * @throws ValidateException 验证不通过抛出
      */
     public function insert(array $data = [])
     {
         if (empty($data)) $data = $this->newValues;
         try {
+            $this->validate($data);
             $lastInsertId = (new Insert($this))->fields($data)->exec();
             return $this->find($lastInsertId);
         } catch (ExecuteException $exception) {
@@ -196,10 +250,13 @@ abstract class ORM
      * @throws \driphp\throws\DriverNotFoundException
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\QueryException
+     * @throws \driphp\throws\database\GeneralException
+     * @throws ValidateException
      */
     public function update(array $fields = []): int
     {
         $fields or $fields = $this->newValues;
+        $this->validate($fields);
         $count = (new Update($this))->where(['id' => $this->id])->fields($fields)->exec();
         $count and $this->setData($this->find($this->id)->toArray());
         return $count;
@@ -208,7 +265,6 @@ abstract class ORM
     /**
      * 软删除一条数据
      * @return bool
-     * @throws DataInvalidException
      * @throws ExecuteException
      * @throws \driphp\throws\ClassNotFoundException
      * @throws \driphp\throws\DriverNotFoundException
@@ -400,9 +456,53 @@ abstract class ORM
                     break;
                 }
             }
-            $properties .= " * @property {$t} \${$field} {$comment}\n";
+            $properties .= "@property {$t} \${$field} {$comment}\n";
         }
         return $properties;
     }
+
+    private static $_validator = null;
+
+    /**
+     * @return \Symfony\Component\Validator\Validator\ValidatorInterface
+     */
+    final protected function getValidator()
+    {
+        if (self::$_validator === null) {
+            class_exists(Validation::class, false) or require_once(__DIR__ . '/../vendor/autoload.php');
+            self::$_validator = Validation::createValidator();
+        }
+        return self::$_validator;
+    }
+
+    /**
+     * @param array $data
+     * @throws ValidateException
+     */
+    final protected function validate(array $data)
+    {
+        $validation = $this->validation();
+        if ($validation) {
+            $validator = $this->getValidator();
+            foreach ($validation as $name => $rule) {
+                if (isset($data[$name])) {
+                    $violations = $validator->validate($data[$name], $rule);
+                    if (0 !== count($violations)) {
+                        // there are errors, now you can show them
+                        foreach ($violations as $violation) {
+                            throw new ValidateException($violation->getMessage());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 定义模型时返回的验证规则
+     * @see https://symfony.com/doc/current/validation.html
+     * @return array
+     */
+    abstract protected function validation(): array;
 
 }

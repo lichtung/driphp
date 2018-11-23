@@ -16,3 +16,8 @@ data/env.yaml
 # bower 安装目录
 public/develop.feature
 public/static/library
+
+# openssl 秘钥生存目录
+data/rsa_private.key
+data/private.key
+data/rsa_public.key

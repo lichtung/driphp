@@ -35,9 +35,9 @@ case ${ACTION} in
     composer install
     ;;
     "rsa")
-    rsa_private_key=${HOME_DIR}/runtime/rsa_private.key
-    private_key=${HOME_DIR}/runtime/private.key
-    rsa_rsa_public=${HOME_DIR}/runtime/rsa_public.key
+    rsa_private_key=${HOME_DIR}/data/rsa_private.key
+    private_key=${HOME_DIR}/data/private.key
+    rsa_rsa_public=${HOME_DIR}/data/rsa_public.key
 
     # 生成 RSA 私钥
     openssl genrsa -out ${rsa_private_key} 1024

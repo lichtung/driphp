@@ -90,7 +90,7 @@ class OpenSSL extends Component
      */
     public static function generate(string $outputDir = ''): string
     {
-        $outputDir or $outputDir = __DIR__ . '/../../runtime/';
+        $outputDir or $outputDir = __DIR__ . '/../../data/';
         if (!is_dir($outputDir)) mkdir($outputDir, 0777, true);
         $rsa_private_key = $outputDir . '/rsa_private_key.pem';
         $private_key = $outputDir . '/private_key.pem';

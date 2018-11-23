@@ -62,5 +62,25 @@ tablename
 ANDOR
 notin
 initorm
+Rbca
+ondelete
+onupdate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

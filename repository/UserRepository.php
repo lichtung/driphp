@@ -34,8 +34,10 @@ class UserRepository extends Repository
      * @throws \driphp\throws\database\ConnectException
      * @throws \driphp\throws\database\DataInvalidException
      * @throws \driphp\throws\database\ExecuteException
+     * @throws \driphp\throws\database\GeneralException
      * @throws \driphp\throws\database\NotFoundException
      * @throws \driphp\throws\database\QueryException
+     * @throws \driphp\throws\database\ValidateException
      * @throws \driphp\throws\database\exec\DuplicateException
      * @throws \driphp\throws\project\PasswordException
      */
@@ -52,6 +54,11 @@ class UserRepository extends Repository
         /** @var UserModel $model */
         $model = $model->insert();
         return $model;
+    }
+
+    public function validate()
+    {
+
     }
 
 }

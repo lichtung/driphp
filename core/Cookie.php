@@ -15,7 +15,7 @@ use driphp\Component;
 /**
  * Class Cookie
  *
- * @method Cookie getInstance(array $config = []) static
+ * @method Cookie factory(array $config = []) static
  *
  * @package driphp\core
  */
@@ -93,21 +93,11 @@ class Cookie extends Component
     /**
      * Cookie获取
      * @param string $name cookie名称
-     * @return string|null cookie不存在时返回null
+     * @return string 不存在时返回空字符串
      */
-    public function get($name)
+    public function get(string $name): string
     {
-        if (isset($this->source[$name])) {
-            $value = $this->source[$name];
-            $value = substr($value, 6);
-            $value = json_decode($value, true);
-            array_walk($value, function (&$val) {
-                empty($val) or $val = urldecode($val);
-            });
-            return $value;
-        } else {
-            return null;
-        }
+        return $this->source[$name] ?? '';
     }
 
     /**

@@ -32,14 +32,14 @@ class Redirect extends Response
         if (strpos($url, 'http') !== 0) {
             $url = Request::factory()->getPublicUrl() . str_replace(["\n", "\r"], ' ', $url);
         }
-        $message or $message = "Redirection after {$time} seconds'{$url}'！";
-        if (headers_sent()) {
-            $this->output = '';
-            exit("<meta http-equiv='Refresh' content='{$time};URL={$url}'>{$message}");
-        }
         if (0 === $time) {
             $this->setHeader('Location', $url);
         } else {
+            $message or $message = "Redirection after {$time} seconds'{$url}'！";
+            if (headers_sent()) {
+                $this->output = '';
+                exit("<meta http-equiv='Refresh' content='{$time};URL={$url}'>{$message}");
+            }
             $this->setHeader('refresh', "{$time};url={$url}");
             $this->output = $message;
         }

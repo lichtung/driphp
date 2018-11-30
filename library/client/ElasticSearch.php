@@ -18,6 +18,11 @@ use Elasticsearch\ConnectionPool\Selectors\StickyRoundRobinSelector;
 use Elasticsearch\Serializers\SmartSerializer;
 use driphp\Component;
 
+/**
+ * Class ElasticSearch
+ * @method ElasticSearch factory(array $config) static
+ * @package driphp\library\client
+ */
 class ElasticSearch extends Component
 {
 

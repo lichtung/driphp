@@ -83,44 +83,46 @@ class AES extends Component
     /**
      * 加密
      * @param string $buffer 待加密的字符串
-     * @return mixed|string
+     * @param bool $encode 是否编码后返回（base64）
+     * @return string
      */
-    public function encrypt($buffer)
+    public function encrypt(string $buffer, bool $encode = false): string
     {
+
         if ($this->_method) {
             $result = $this->_cipher->update($buffer);
-            if ($this->_ivSent) {
-                return $result;
-            } else {
+            if (!$this->_ivSent) {
                 $this->_ivSent = true;
-                return $this->_cipherIv . $result;
+                $result = $this->_cipherIv . $result;
             }
         } else {
-            return self::substitute(self::$_encryptTable, $buffer);
+            $result = self::substitute(self::$_encryptTable, $buffer);
         }
+        return $encode ? urlencode(base64_encode($result)) : $result;
     }
 
     /**
      * 解密
      * @param string $buffer 待解密的字符串
+     * @param bool $decode 是否先进行base64解码
      * @return string
      */
-    public function decrypt($buffer)
+    public function decrypt(string $buffer, bool $decode = false): string
     {
+        $decode and $buffer = base64_decode(urldecode($buffer));
         if ($this->_method) {
             if (!$this->_decipher) {
                 $decipher_iv_len = self::AVAILABLE_METHODS[$this->_method][1];
                 $decipher_iv = substr($buffer, 0, $decipher_iv_len);
                 $this->_decipher = $this->getDecipher($this->_key, $this->_method, $decipher_iv);
                 $result = $this->_decipher->update(substr($buffer, $decipher_iv_len));
-                return $result;
             } else {
                 $result = $this->_decipher->update($buffer);
-                return $result;
             }
         } else {
-            return self::substitute(self::$_decryptTable, $buffer);
+            $result = self::substitute(self::$_decryptTable, $buffer);
         }
+        return $result;
     }
 
     /**

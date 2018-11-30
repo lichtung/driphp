@@ -13,6 +13,11 @@ use driphp\throws\database\DefinitionException;
 
 class Structure extends Builder
 {
+    /**
+     * @param bool $reset
+     * @return array
+     * @throws DefinitionException
+     */
     public function build(bool $reset = true): array
     {
         $sql = "CREATE TABLE IF NOT EXISTS `{$this->tableName}` ( 
@@ -36,7 +41,13 @@ class Structure extends Builder
         if ($tableStructure) {
             # 添加默认字段
             foreach ($this->context->definedFields() as $k => $v) {
-                isset($tableStructure[$k]) or $tableStructure[$k] = $v;
+                if (!isset($tableStructure[$k])) {
+                    if ($k === 'id') {
+                        $tableStructure = array_merge(['id' => $v], $tableStructure); # id放在最前面
+                    } else {
+                        $tableStructure[$k] = $v;
+                    }
+                }
             }
         }
 

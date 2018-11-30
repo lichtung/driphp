@@ -77,6 +77,36 @@ class Request extends Component
     const LANG_EN_US = 'en_US';
 
     /**
+     * 获取请求的所有头部
+     * @return array
+     */
+    public function getHeaders(): array
+    {
+        if (empty($headers)) {
+            if (!function_exists('getallheaders')) {
+                $headers = [];
+                foreach ($_SERVER as $name => $value) {
+                    if (substr($name, 0, 5) == 'HTTP_') {
+                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+                    }
+                }
+                $this->headers = $headers;
+            } else {
+                $this->headers = getallheaders();
+            }
+        }
+        return $this->headers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserAgent(): string
+    {
+        return $_SERVER['HTTP_USER_AGENT'] ?? '';
+    }
+
+    /**
      * @see https://stackoverflow.com/questions/5483851/manually-parse-raw-multipart-form-data-data-with-php
      */
     protected function initialize()
@@ -172,7 +202,7 @@ class Request extends Component
     public function getClientIP(): string
     {
         if (DRI_LOAN_BALANCE_ON) return $_SERVER['REMOTE_ADDR'] ?? '';
-        return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? '';
+        return $_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? '';
     }
 
 

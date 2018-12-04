@@ -21,7 +21,6 @@ use driphp\KernelException;
  */
 class View extends Response
 {
-
     /**
      * @param string $template The template name,default using the method name
      * @param array $vars An array of parameters to pass to the template

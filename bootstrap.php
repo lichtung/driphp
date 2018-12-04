@@ -48,11 +48,11 @@ namespace {
     const DRI_PATH_CONFIG = DRI_PATH_PROJECT . 'config/'; # 配置目录
     const DRI_PATH_DATA = DRI_PATH_PROJECT . 'data/'; # 数据目录
     const DRI_PATH_VENDOR = DRI_PATH_PROJECT . 'vendor/'; # 第三方目录
-    const DRI_PATH_RUNTIME = DRI_PATH_PROJECT . 'runtime/'; # 运行时目录
     const DRI_PATH_PUBLIC = DRI_PATH_PROJECT . 'public/'; # 公共资源 (css, js, image...) 或者公开脚本
     const DRI_PATH_CONTROLLER = DRI_PATH_PROJECT . 'controller/'; # 控制器目录
     const DRI_PATH_MODEL = DRI_PATH_PROJECT . 'model/'; # 模型目录
     const DRI_PATH_VIEW = DRI_PATH_PROJECT . 'view/'; # 模板文件目录
+    defined('DRI_PATH_RUNTIME') or define('DRI_PATH_RUNTIME', DRI_IS_WIN ? DRI_PATH_PROJECT . 'runtime/' : '/tmp/' . DRI_PROJECT_NAME . '/'); # 运行时目录:windows权限弱，写在项目的runtime目录下，linux写在tmp目录下
 
     # 编码
     const DRI_CHARSET_UTF8 = 'UTF-8';

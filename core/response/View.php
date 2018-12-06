@@ -37,14 +37,14 @@ class View extends Response
             # Loaders are responsible for loading templates from a resource such as the file system.
             # Twig_Loader_Filesystem loads templates from the file system.
             # This loader can find templates in folders on the file system and is the preferred way to load them:
-            $loader = new Twig_Loader_Filesystem(DRI_PATH_PROJECT . "view/{$theme}/{$modules}/{$controller}");
+            $loader = new Twig_Loader_Filesystem(DRI_PATH_PROJECT . "view/{$theme}/{$modules}");
 
             # Instances of Twig_Environment are used to store the configuration and extensions,
             # and are used to load templates from the file system or other locations.
-            $twig = new Twig_Environment($loader, array(
+            $twig = new Twig_Environment($loader, [
                 # When set to true, the generated templates have a __toString() method that you can use to display the
                 # generated nodes (default to false).
-                'debug' => false,
+                'debug' => DRI_DEBUG_ON,
                 # When developing with Twig, it's useful to recompile the template whenever the source code changes.
                 # If you don't provide a value for the auto_reload option, it will be determined automatically based on the debug value.
                 'auto_reload' => true,
@@ -65,11 +65,11 @@ class View extends Response
 //            'autoescape' => '',
                 #  A flag that indicates which optimizations to apply (default to -1 -- all optimizations are enabled; set it to 0 to disable).
                 'optimizations' => -1,
-            ));
+            ]);
 //            foreach ($this->_functions as $name => $callable) {
 //                $twig->addFunction(new Twig_Function($name, $callable));
 //            }
-            $this->output = $twig->render($template . '.twig', $vars);
+            $this->output = $twig->render($controller . '/' . $template . '.twig', $vars);
         } catch (\Throwable $e) {
             KernelException::dispose($e);
         }

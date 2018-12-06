@@ -37,13 +37,13 @@ class Index extends Base
     }
 
     /**
-     * 获取服务器信息
+     * 获取服务状态
      *
      * 查看系统版本号 [cat /etc/redhat-release] => “CentOS Linux release 7.5.1804 (Core)”
      * 查看主机名    [cat /etc/hostname] => 'centos74'
      * @return array
      */
-    protected function getServerInfo()
+    protected function status()
     {
         return [];
     }

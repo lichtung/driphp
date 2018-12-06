@@ -6,6 +6,7 @@
  */
 
 namespace {
+
     use driphp\Kernel;
     use Symfony\Component\Yaml\Yaml;
 

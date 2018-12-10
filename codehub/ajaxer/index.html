@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script src="js/lazerloader.js"></script>
+    <script>
+
+        $(function () {
+            new Lazerloader().start({
+                url: 'source.php',
+                firstTplId: 'tp_one',
+                secondTplId: 'tp_two',
+                containerSelector: 'body',
+                delay: 1500
+            });
+        });
+
+    </script>
+</head>
+<!-- 模板中的class对应返回接送数据的键名 -->
+<div id="tp_one" style="width: 500px;height: 30px;background: #eeeeee;display: none;">
+    <b>总数</b>
+    <span class="total"> </span>
+    <b>数据1</b>
+    <span class="data01"> </span>
+    <b>数据2</b>
+    <span class="data02"> </span>
+</div>
+<div id="tp_two" style="width: 500px;height: 30px;background: #DDDDDD;display: none;">
+    <b>数据1</b>
+    <span class="data01"> </span>
+    <b>数据2</b>
+    <span class="data02"> </span>
+</div>
+</body>
+</html>

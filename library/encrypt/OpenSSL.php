@@ -8,7 +8,6 @@
 
 namespace driphp\library\encrypt;
 
-use Exception;
 use driphp\Component;
 use driphp\library\encrypt\openssl\KeyResourceException;
 
@@ -110,7 +109,6 @@ class OpenSSL extends Component
      * @param string $plainData 加密数据
      * @param bool $encode 加密后的数据包含特殊字符串，是否对之进行编码
      * @return string
-     * @throws Exception
      */
     public function encryptInPrivate(string $plainData, bool $encode = false): string
     {
@@ -123,7 +121,6 @@ class OpenSSL extends Component
      * @param bool $isPrivate 是否用私钥加密
      * @param bool $encode 加密后的数据包含特殊字符串,是否对之进行编码
      * @return string
-     * @throws Exception
      */
     public function encrypt(string $plainData, bool $isPrivate = true, bool $encode = false): string
     {
@@ -151,7 +148,6 @@ class OpenSSL extends Component
      * @param bool $isPublic
      * @param bool $decode
      * @return string
-     * @throws Exception
      */
     public function decrypt(string $data, bool $isPublic = true, bool $decode = false): string
     {
@@ -180,7 +176,6 @@ class OpenSSL extends Component
      * @param string $data 加密后的数据
      * @param boolean $decode 是否对数据进行解码
      * @return string
-     * @throws Exception
      */
     public function decryptInPublic(string $data, bool $decode = false): string
     {
@@ -192,7 +187,6 @@ class OpenSSL extends Component
      * @param string $data 加密数据
      * @param bool $encode 加密后的数据包含特殊字符串
      * @return string
-     * @throws Exception
      */
     public function encryptInPublic(string $data, bool $encode = false): string
     {
@@ -204,7 +198,6 @@ class OpenSSL extends Component
      * @param string $data 加密后的数据
      * @param boolean $decode 是否对数据进行解码
      * @return string
-     * @throws Exception
      */
     public function decryptInPrivate(string $data, bool $decode = false): string
     {

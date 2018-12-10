@@ -23,6 +23,44 @@ class UserRepository extends Repository
     }
 
     /**
+     * @param string $name
+     * @return UserModel
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\GeneralException
+     * @throws \driphp\throws\database\NotFoundException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function findByName(string $name): UserModel
+    {
+        $className = $this->modelName();
+        /** @var UserModel $model */
+        $model = new $className($this->dao);
+        return $model->query()->where(['username' => $name])->fetch();
+    }
+
+    /**
+     * @param string $email
+     * @return UserModel
+     * @throws \driphp\throws\ClassNotFoundException
+     * @throws \driphp\throws\DriverNotFoundException
+     * @throws \driphp\throws\database\ConnectException
+     * @throws \driphp\throws\database\DataInvalidException
+     * @throws \driphp\throws\database\GeneralException
+     * @throws \driphp\throws\database\NotFoundException
+     * @throws \driphp\throws\database\QueryException
+     */
+    public function findByEmail(string $email): UserModel
+    {
+        $className = $this->modelName();
+        /** @var UserModel $model */
+        $model = new $className($this->dao);
+        return $model->query()->where(['email' => $email])->fetch();
+    }
+
+    /**
      * @param string $username
      * @param string $password
      * @param string $email

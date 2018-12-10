@@ -184,7 +184,7 @@ namespace driphp {
             } else {
                 if (DRI_IS_AJAX) {
                     # ajax下输出json
-                    exit(new JSON($information));
+                    exit(new JSON(['code' => -1, 'message' => $message, 'data' => []])); # 返回标准格式的json字符串
                 } else {
                     # 展示错误模板
                     if (DRI_DEBUG_ON) {

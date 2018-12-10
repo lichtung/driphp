@@ -10,6 +10,7 @@ namespace controller\manage;
 
 use driphp\Component;
 use driphp\core\Request;
+use driphp\core\response\JSON;
 use driphp\core\response\View;
 use driphp\service\manage\Sign;
 
@@ -29,11 +30,41 @@ abstract class Base
         return Sign::factory()->getUserId();
     }
 
-    protected function render()
+    /**
+     * 渲染页面
+     * @param array $data
+     * @return View
+     */
+    protected function render(array $data = []): View
     {
         $method = Component::getPrevious();
-        return new View([
+        $data = array_merge([
             'cdn' => Request::factory()->getPublicUrl(),
-        ], $method);
+        ], $data);
+        return new View($data, $method);
+    }
+
+    /**
+     * 返回正确的JSON响应
+     * @param array $data
+     * @param string $message
+     * @return JSON
+     */
+    protected function success(array $data = [], string $message = ''): JSON
+    {
+        return new JSON([
+            'code' => 0,
+            'data' => $data,
+            'message' => $message,
+        ]);
+    }
+
+    protected function fail(string $message, int $code = -1, array $data = [])
+    {
+        return new JSON([
+            'code' => $code,
+            'data' => $data,
+            'message' => $message,
+        ]);
     }
 }

@@ -3,36 +3,32 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-    <script src="js/jquery-1.7.2.min.js"></script>
-    <script src="js/lazerloader.js"></script>
+    <script src="js/jquery-1.7.2.js"></script>
+    <script src="js/lazerloader.min.js"></script>
+    <style>
+    </style>
     <script>
 
         $(function () {
-            new Lazerloader().start({
-                url: 'source.php',
-                firstTplId: 'tp_one',
-                secondTplId: 'tp_two',
-                containerSelector: 'body',
-                delay: 1500
-            });
+             new Lazerloader().init({url:'source.php',tplid:'tp_one' ,ctnselector:'body',delay:300,size:2}).start();
         });
 
     </script>
 </head>
-<!-- 模板中的class对应返回接送数据的键名 -->
-<div id="tp_one" style="width: 500px;height: 30px;background: #eeeeee;display: none;">
-    <b>总数</b>
-    <span class="total"> </span>
-    <b>数据1</b>
-    <span class="data01"> </span>
-    <b>数据2</b>
-    <span class="data02"> </span>
-</div>
-<div id="tp_two" style="width: 500px;height: 30px;background: #DDDDDD;display: none;">
-    <b>数据1</b>
-    <span class="data01"> </span>
-    <b>数据2</b>
-    <span class="data02"> </span>
-</div>
+<body>
+    <!-- 模板中的class对应返回接送数据的键名 -->
+    <div id="tp_one" style="width: 800px;height: auto;background: #eeeeee;display: none;border:1px;" >
+        <b class="tagindex"></b>
+        <span class="bigtitle"> </span>
+        <span class="midtitle"> 这里是中标题
+            <span class="data02"></span> 第
+            <span class="data03"></span>数据
+        </span>
+        <p class="smatitle"> 这里是大标题
+            <span class="data05"></span> -》
+            <span class="data06"></span> -》
+            <span class="data07"></span> -》
+        </p>
+    </div>
 </body>
 </html>
